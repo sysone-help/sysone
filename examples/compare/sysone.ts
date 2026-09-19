@@ -1,14 +1,14 @@
 import { createSysone } from 'sysone';
-import { typesafe } from 'sysone/providers/typesafe';
+import { vercel } from 'sysone/providers/vercel';
 
 export async function checkReply(
   input: string,
-  apiKey = process.env.TYPESAFE_API_KEY,
+  apiKey = process.env.AI_GATEWAY_API_KEY,
   transport = globalThis.fetch,
 ) {
   const sys = createSysone({
-    provider: typesafe({ apiKey, fetch: transport }),
-    model: 'jev-latest',
+    provider: vercel({ apiKey, fetch: transport }),
+    model: 'typesafe-ai/jev',
   });
   const { decision, probability } = await sys.check(input, 'Does this message need a reply?');
   return { decision, probability };

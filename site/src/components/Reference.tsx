@@ -73,7 +73,9 @@ console.log(result.decision, result.probability);
             <Code label="Terminal">{`node demo.mjs`}</Code>
             <p className="doc-note">
               Save the example as demo.mjs after setting your provider key. This uses your own
-              account; the playground above uses the shared account.
+              account; the playground above uses the shared account. Examples default to Jev through
+              Vercel AI Gateway.{' '}
+              <a href="https://vercel.com/ai-gateway/models/jev">Current Jev pricing ↗</a>
             </p>
           </article>
           <article id="size" className="section-anchor">

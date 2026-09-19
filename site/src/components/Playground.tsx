@@ -4,9 +4,10 @@ import type { EvaluationResult } from 'sysone';
 import { examples, scenarios, scenarioFromSearch, parseCriteria, type Mode } from '../examples';
 import { Code } from './Code';
 import { Result } from './Result';
+import { RunMetrics } from './RunMetrics';
 
 const modes: Mode[] = ['predicate', 'classifier', 'rubric'];
-type Run = EvaluationResult & { elapsedMs: number };
+type Run = EvaluationResult & { elapsedMs: number; responseMs: number };
 
 export function Playground() {
   const [scenario, setScenario] = useState('predicate');
@@ -71,6 +72,7 @@ export function Playground() {
         instructions,
         ...(mode !== 'predicate' ? { criteria: parseCriteria(mode, criteria) } : {}),
       };
+      const start = performance.now();
       const response = await fetch('/api/evaluate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -82,7 +84,8 @@ export function Playground() {
         throw new Error('Could not read the server response. Try again shortly.');
       });
       if (!response.ok) throw new Error(data.error ?? 'Evaluation failed.');
-      if (!controller.signal.aborted) setResult(data);
+      if (!controller.signal.aborted)
+        setResult({ ...data, responseMs: Math.round(performance.now() - start) });
     } catch (cause) {
       if (!controller.signal.aborted)
         setError(cause instanceof Error ? cause.message : 'Evaluation failed.');
@@ -284,11 +287,7 @@ console.log(result.answers.score);`
                 Cancel
               </button>
             )}
-            <span>
-              {result
-                ? `${result.elapsedMs} ms · ${result.metadata.usage?.inputTokens ?? '—'} input tokens`
-                : '1 request · shared access'}
-            </span>
+            <span>1 request · shared access</span>
           </div>
         </div>
         <div className="output">
@@ -327,6 +326,7 @@ console.log(result.answers.score);`
             )
           ) : (
             <div className="result-panel">
+              {result && <RunMetrics {...result} />}
               <div className="answer-space" aria-live="polite" aria-busy={loading}>
                 {error ? (
                   <div className="error" role="alert">

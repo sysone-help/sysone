@@ -6,9 +6,9 @@
 
 ```ts
 import { createSysone } from 'sysone';
-import { typesafe } from 'sysone/providers/typesafe';
+import { vercel } from 'sysone/providers/vercel';
 
-const sys = createSysone({ provider: typesafe(), model: 'jev-latest' });
+const sys = createSysone({ provider: vercel(), model: 'typesafe-ai/jev' });
 const result = await sys.check('Can you send the proposal?', 'Does this message need a reply?');
 // { decision: 'yes' | 'no' | 'uncertain', probability, metadata }
 ```
@@ -61,7 +61,9 @@ Once published to the registry:
 npm install sysone
 ```
 
-Node.js 22+ and ESM. Set `TYPESAFE_API_KEY` on your server. The Vercel adapter uses `AI_GATEWAY_API_KEY` and native fetch; no additional packages are needed. See the [complete library reference](packages/sysone/README.md).
+Node.js 22+ and ESM. Set `AI_GATEWAY_API_KEY` on your server. The examples default to Jev through Vercel AI Gateway, using native fetch with no additional packages. TypeSafe direct remains available with `typesafe()` and `TYPESAFE_API_KEY`. See the [complete library reference](packages/sysone/README.md).
+
+Vercel lists Jev as free during a promotion ending September 25, 2026. [Check current pricing](https://vercel.com/ai-gateway/models/jev). The playground shows each request's reported Gateway cost in USD, browser response time, server evaluation time and input tokens. Missing cost is shown as unavailable, never assumed to be zero.
 
 See [open evaluation models and compatibility](research/open-evaluation-models.md) for OpenJev, Bespoke Nimble and Kotoba. The HTTP adapter is contract-tested; open model GPU inference has not been tested by this project.
 

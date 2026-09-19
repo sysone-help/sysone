@@ -8,9 +8,9 @@ Ask questions in plain language. Get answers your code can use.
 
 ```ts
 import { createSysone } from 'sysone';
-import { typesafe } from 'sysone/providers/typesafe';
+import { vercel } from 'sysone/providers/vercel';
 
-const sys = createSysone({ provider: typesafe(), model: 'jev-latest' });
+const sys = createSysone({ provider: vercel(), model: 'typesafe-ai/jev' });
 const result = await sys.check(
   'Could you send the updated proposal?',
   'Does this message need a reply?',
@@ -35,16 +35,16 @@ The initial npm publication is being prepared. Until the registry listing is ava
 npm install https://github.com/sysone-help/sysone/releases/download/v0.5.0/sysone-0.5.0.tgz
 ```
 
-Node.js 22+ and ESM. The library has zero runtime, optional or peer dependencies. All providers use native fetch. Save the first example as `demo.mjs`, set `TYPESAFE_API_KEY` in your server environment, then run `node demo.mjs`.
+Node.js 22+ and ESM. The library has zero runtime, optional or peer dependencies. All providers use native fetch. Save the first example as `demo.mjs`, set `AI_GATEWAY_API_KEY` in your server environment, then run `node demo.mjs`.
 
-To use Vercel AI Gateway, set `AI_GATEWAY_API_KEY` and replace the client configuration:
+The examples default to Jev through Vercel AI Gateway. [Check current pricing](https://vercel.com/ai-gateway/models/jev); its free promotion ends September 25, 2026. To use TypeSafe directly, set `TYPESAFE_API_KEY` and replace the client configuration:
 
 ```ts
 import { createSysone } from 'sysone';
-import { vercel } from 'sysone/providers/vercel';
+import { typesafe } from 'sysone/providers/typesafe';
 
-const sys = createSysone({ provider: vercel(), model: 'typesafe-ai/jev' });
-// Reads AI_GATEWAY_API_KEY from the server environment.
+const sys = createSysone({ provider: typesafe(), model: 'jev-latest' });
+// Reads TYPESAFE_API_KEY from the server environment.
 ```
 
 No additional packages are needed for Vercel, TypeSafe or compatible HTTP servers. Provider entry points are separate and the package supports tree shaking. Never put a provider secret in client-side application code.

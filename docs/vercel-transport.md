@@ -9,6 +9,7 @@ The wire contract was checked against the official [`gateway-evaluation-model.ts
 - Headers: `ai-gateway-protocol-version: 0.0.1`, `ai-gateway-auth-method: api-key`, `ai-evaluation-model-specification-version: 4`, and `ai-model-id` containing the caller's chosen model.
 - JSON body: `{ state, questions }`. Boolean questions use `boolean`, not the native TypeSafe `noul` spelling.
 - Responses preserve answer evidence, declared rounding, token usage and namespaced `providerMetadata`. The wire contract does not provide a distinct resolved model version, so none is invented.
+- The playground reads `metadata.providerMetadata.gateway.cost` as the reported USD charge, preserving zero and distinguishing missing/invalid cost. It does not substitute `marketCost`, which can be nonzero during a free promotion. Browser response time includes the full request and JSON read; `elapsedMs` measures the server-to-Gateway round trip and validation, not isolated model inference. Threshold changes reuse both evidence and metrics.
 - Cancellation reaches the native fetch and body-reading operation. There are no automatic retries, fallbacks or telemetry calls.
 - HTTP/network errors are sanitized `PROVIDER_ERROR`s. Invalid JSON, evidence or metadata uses `INVALID_RESPONSE`; neither exposes provider bodies or credentials.
 

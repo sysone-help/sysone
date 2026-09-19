@@ -7,10 +7,19 @@ test('published comparison sends identical Jev requests and makes identical deci
   for (const probability of [0, 0.2, 0.21, 0.5, 0.79, 0.8, 1]) {
     const requests: unknown[] = [];
     const transport: typeof fetch = async (url, init) => {
-      requests.push({ url: String(url), body: JSON.parse(String(init?.body)) });
+      const headers: Record<string, string> = {};
+      new Headers(init?.headers).forEach((value, key) => {
+        headers[key] = value;
+      });
+      requests.push({
+        url: String(url),
+        headers,
+        body: JSON.parse(String(init?.body)),
+      });
       assert.equal(new Headers(init?.headers).get('Authorization'), 'Bearer fixture');
+      assert.equal(new Headers(init?.headers).get('ai-model-id'), 'typesafe-ai/jev');
       assert.ok(init?.signal instanceof AbortSignal);
-      return Response.json({ answers: { result: { type: 'noul', noul: probability } } });
+      return Response.json({ answers: { result: { type: 'boolean', probability } } });
     };
     assert.deepEqual(
       await native('Please reply', 'fixture', transport),
@@ -28,7 +37,7 @@ test('both examples reject HTTP failures and invalid probabilities', async () =>
     for (const probability of [-1, 2, '0.9', null]) {
       await assert.rejects(
         evaluate('input', 'fixture', async () =>
-          Response.json({ answers: { result: { type: 'noul', noul: probability } } }),
+          Response.json({ answers: { result: { type: 'boolean', probability } } }),
         ),
       );
     }

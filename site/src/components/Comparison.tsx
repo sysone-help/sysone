@@ -15,7 +15,7 @@ export function Comparison() {
         </a>
       </div>
       <p>
-        Both examples call Jev directly through TypeSafe. Both return <code>yes</code>,{' '}
+        Both examples call Jev through Vercel AI Gateway. Both return <code>yes</code>,{' '}
         <code>no</code> or <code>uncertain</code> at the same 80% threshold, with a 30-second
         timeout. Neither needs a provider SDK.
       </p>
