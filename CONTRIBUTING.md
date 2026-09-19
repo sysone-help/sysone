@@ -12,7 +12,7 @@ Before a pull request, run `npm run check` and `npm pack --dry-run -w sysone`. U
 
 ## Releases
 
-The package lives in `packages/sysone`. Set its version, update `CHANGELOG.md`, run the checks and inspect the package contents. Publish the initial package with a maintainer's authenticated npm session. Configure the npm trusted publisher for `sysone-help/sysone`, workflow `release.yml`, before using automated releases. The workflow uses OIDC and provenance; it does not require a long-lived npm token.
+The package lives in `packages/sysone`. Set its version, update `CHANGELOG.md`, run the checks and inspect the package contents. Publish the initial package with a maintainer's authenticated npm session. Configure the npm trusted publisher for `sysone-help/sysone`, workflow `release.yml`, and set the GitHub repository variable `NPM_TRUSTED_PUBLISHING=true` before using automated releases. The workflow uses OIDC and provenance; it does not require a long-lived npm token. Until that setup is complete, the publishing job is deliberately skipped.
 
 For later releases, create a GitHub release with a matching `vX.Y.Z` tag. The workflow verifies that the package version matches the release tag before publishing. The first release may be published manually; do not publish it a second time through the workflow.
 

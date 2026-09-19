@@ -28,6 +28,14 @@ Independent, MIT-licensed, and not affiliated with TypeSafe or Vercel.
 
 ## Install
 
+The initial npm publication is being prepared. Until the registry listing is available, install the [GitHub release package](https://github.com/sysone-help/sysone/releases/tag/v0.1.0):
+
+```sh
+npm install https://github.com/sysone-help/sysone/releases/download/v0.1.0/sysone-0.1.0.tgz
+```
+
+After npm publication, the equivalent registry command is:
+
 Node.js 22+ and ESM. The core and direct TypeSafe adapter have no runtime dependencies.
 
 ```sh

@@ -21,6 +21,14 @@ The first model integration is [Jev](https://docs.typesafe.ai), through TypeSafe
 
 ## Install
 
+The first npm publication is awaiting maintainer authentication. The same package is available as a GitHub release asset:
+
+```sh
+npm install https://github.com/sysone-help/sysone/releases/download/v0.1.0/sysone-0.1.0.tgz
+```
+
+Once published to the registry:
+
 ```sh
 npm install sysone
 ```

@@ -7,7 +7,7 @@ permissions:
   id-token: write
 jobs:
   publish:
-    if: startsWith(github.event.release.tag_name, 'v')
+    if: startsWith(github.event.release.tag_name, 'v') && vars.NPM_TRUSTED_PUBLISHING == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

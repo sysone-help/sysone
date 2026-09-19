@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Code } from './components/Code';
 import { Mark, Arrow } from './components/Symbols';
 import { Playground } from './components/Playground';
+import { installCommand, npmPublished, releaseUrl } from './release';
 const repo = 'https://github.com/sysone-help/sysone';
 
 export function App() {
@@ -53,8 +54,14 @@ export function App() {
               </a>
             </div>
             <div className="install-inline">
-              <span>$</span>
-              <code>npm install sysone</code>
+              {npmPublished ? (
+                <>
+                  <span>$</span>
+                  <code>npm install sysone</code>
+                </>
+              ) : (
+                <a href={releaseUrl}>Download Sysone 0.1.0 ↗</a>
+              )}
               <span className="license">MIT licensed</span>
             </div>
           </div>
@@ -185,6 +192,12 @@ export function App() {
                   Use Node.js 22 or later and ESM. Keep provider credentials in your server
                   environment.
                 </p>
+                {!npmPublished && (
+                  <p className="doc-note">
+                    The first npm publication is pending. Install the same package from the GitHub
+                    release below; the imports and API are unchanged.
+                  </p>
+                )}
                 <div className="provider-toggle" aria-label="Installation provider">
                   <button
                     aria-pressed={provider === 'vercel'}
@@ -201,8 +214,8 @@ export function App() {
                 </div>
                 <Code label="Terminal">
                   {provider === 'vercel'
-                    ? 'npm install sysone ai@7.0.105 @ai-sdk/gateway@4.0.85\n\n# Set AI_GATEWAY_API_KEY in your server environment'
-                    : 'npm install sysone\n\n# Set TYPESAFE_API_KEY in your server environment'}
+                    ? `${installCommand}\nnpm install ai@7.0.105 @ai-sdk/gateway@4.0.85\n\n# Set AI_GATEWAY_API_KEY in your server environment`
+                    : `${installCommand}\n\n# Set TYPESAFE_API_KEY in your server environment`}
                 </Code>
                 <Code>{`import { createSysone, predicate } from "sysone";
 import { ${provider} } from "sysone/providers/${provider}";
@@ -387,8 +400,8 @@ typesafe("jev-latest", { apiKey: process.env.TYPESAFE_API_KEY })`}</Code>
           <a href={repo}>
             GitHub <Arrow />
           </a>
-          <a href="https://www.npmjs.com/package/sysone">
-            npm <Arrow />
+          <a href={npmPublished ? 'https://www.npmjs.com/package/sysone' : releaseUrl}>
+            {npmPublished ? 'npm' : 'Releases'} <Arrow />
           </a>
           <a href="#privacy">Privacy</a>
         </div>
