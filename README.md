@@ -2,35 +2,22 @@
 
 **Typed decisions for TypeScript.** Ask a question, inspect the evidence, keep control of what happens next.
 
-<!-- size:start -->
-
-**Zero dependencies. 3.9 kB min+gzip, including all providers.**
-
-| Included JavaScript  | Minified | Minified + gzip |
-| -------------------- | -------: | --------------: |
-| Core                 |  7,586 B |         2,720 B |
-| Core + TypeSafe      | 10,268 B |         3,662 B |
-| Core + Vercel        |  9,052 B |         3,268 B |
-| Core + custom HTTP   |  9,904 B |         3,526 B |
-| Core + all providers | 11,255 B |         3,914 B |
-
-Measured on 0.4.0 with all core exports retained, esbuild 0.28.2, ESM/ES2022 and gzip level 9 (zlib 1.3.1.zlib-ng). Gzip sizes can vary slightly between compression versions. Bundle sizes exclude types/docs and are not the package download size. No third-party runtime code is bundled.
-
-[Reproduce the measurement](https://github.com/sysone-help/sysone/blob/main/scripts/package-size.mjs): `npm run build && npm run size`. CI enforces a 4,000-byte gzip budget for the complete bundle. Build/test tools belong to the private workspace, not your installation.
-<!-- size:end -->
-
 [Playground & docs](https://sysone.help) · [Library reference](packages/sysone/README.md) · [Contributing](CONTRIBUTING.md)
 
 ```ts
-import { createSysone, predicate } from 'sysone';
+import { createSysone } from 'sysone';
 import { typesafe } from 'sysone/providers/typesafe';
 
 const sys = createSysone({ provider: typesafe(), model: 'jev-latest' });
-const needsReply = predicate('Does this message need a reply?');
-
-const result = await sys.check('Can you send the proposal?', needsReply);
+const result = await sys.check('Can you send the proposal?', 'Does this message need a reply?');
 // { decision: 'yes' | 'no' | 'uncertain', probability, metadata }
 ```
+
+**Try it without setup:** [run Jev in the playground](https://sysone.help/#playground). No sign-up. To use it in your app, [install the library](#install) and set your provider key.
+
+## Why add a library?
+
+Native fetch is already dependency-free. Sysone adds decisions with an uncertain state, validated responses and collection operations without a provider SDK. The [native vs Sysone comparison](https://sysone.help/#comparison) uses [executable examples](examples/compare) with matching request/decision tests. The [official TypeSafe SDK](https://docs.typesafe.ai/sdk/javascript) also supports typed questions; use it when its broader native API suits your application.
 
 `predicate`, `classifier` and `rubric` define reusable questions. `check`, `evaluate`, `filter`, `partition` and `rank` execute them. Definitions are pure data; requests are explicit, cancellable, and never retried automatically.
 
@@ -63,6 +50,25 @@ npm install sysone
 Node.js 22+ and ESM. Set `TYPESAFE_API_KEY` on your server. The Vercel adapter uses `AI_GATEWAY_API_KEY` and native fetch; no additional packages are needed. See the [complete library reference](packages/sysone/README.md).
 
 See [open evaluation models and compatibility](research/open-evaluation-models.md) for OpenJev, Bespoke Nimble and Kotoba. The HTTP adapter is contract-tested; open model GPU inference has not been tested by this project.
+
+## Size and dependencies
+
+<!-- size:start -->
+
+**Zero dependencies. 3.9 kB min+gzip, including all providers.**
+
+| Included JavaScript  | Minified | Minified + gzip |
+| -------------------- | -------: | --------------: |
+| Core                 |  7,586 B |         2,720 B |
+| Core + TypeSafe      | 10,268 B |         3,662 B |
+| Core + Vercel        |  9,052 B |         3,268 B |
+| Core + custom HTTP   |  9,904 B |         3,526 B |
+| Core + all providers | 11,255 B |         3,914 B |
+
+Measured on 0.4.0 with all core exports retained, esbuild 0.28.2, ESM/ES2022 and gzip level 9 (zlib 1.3.1.zlib-ng). Gzip sizes can vary slightly between compression versions. Bundle sizes exclude types/docs and are not the package download size. No third-party runtime code is bundled.
+
+[Reproduce the measurement](https://github.com/sysone-help/sysone/blob/main/scripts/package-size.mjs): `npm run build && npm run size`. CI enforces a 4,000-byte gzip budget for the complete bundle. Build/test tools belong to the private workspace, not your installation.
+<!-- size:end -->
 
 ## Repository
 

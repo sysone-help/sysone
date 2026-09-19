@@ -21,3 +21,9 @@ Validation: tested direct decisions, collections, empty questions rejected befor
 Added side-by-side native HTTP and Sysone examples, sourced at build time from the actual tested files. Explicitly describes the common behavior and the extra validation Sysone performs. Acknowledges that native fetch has zero dependencies and that the official SDK already has inferred types. No invented speed/cost win or padded SDK-size comparison.
 
 Validation: site build and prerender, with both implementations included in static HTML. Source generation avoids an independently maintained marketing snippet.
+
+## 4. Make the first successful run obvious
+
+Moved the README's measurement table below the runnable example. Added direct links to try, install and compare. The site quickstart defaults to the same provider as the playground, names a runnable `demo.mjs` file, prints the result and includes its run command. Removed duplicate, not-yet-available npm installation commands from the package guide. Documented plain questions alongside reusable definitions.
+
+Validation: site TypeScript compilation; examples use ESM JavaScript syntax that can run directly without installing a TS runner. Provider credentials remain server-side and separate from model IDs.

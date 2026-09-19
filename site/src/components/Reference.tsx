@@ -6,7 +6,7 @@ import { installCommand, npmPublished } from '../release';
 import size from '../../../packages/sysone/size.json';
 const repo = 'https://github.com/sysone-help/sysone';
 export function Reference() {
-  const [provider, setProvider] = useState<'vercel' | 'typesafe'>('typesafe');
+  const [provider, setProvider] = useState<'vercel' | 'typesafe'>('vercel');
   return (
     <section id="docs" className="documentation section-anchor">
       <div className="section-top">
@@ -57,17 +57,23 @@ export function Reference() {
                 ? `${installCommand}\n\n# Set AI_GATEWAY_API_KEY in your server environment`
                 : `${installCommand}\n\n# Set TYPESAFE_API_KEY in your server environment`}
             </Code>
-            <Code>{`import { createSysone, predicate } from "sysone";
+            <Code label="demo.mjs · JavaScript and TypeScript compatible">{`import { createSysone } from "sysone";
 import { ${provider} } from "sysone/providers/${provider}";
 
 const sys = createSysone({
   provider: ${provider}(),
   model: "${provider === 'vercel' ? 'typesafe-ai/jev' : 'jev-latest'}",
 });
-const needsReply = predicate("Does this message need a reply?");
-
-const result = await sys.check("Can you send the proposal?", needsReply);
+const result = await sys.check(
+  "Can you send the proposal?", "Does this message need a reply?",
+);
+console.log(result.decision, result.probability);
 // { decision: "yes" | "no" | "uncertain", probability, metadata }`}</Code>
+            <Code label="Terminal">{`node demo.mjs`}</Code>
+            <p className="doc-note">
+              Save the example as demo.mjs after setting your provider key. This uses your own
+              account; the playground above uses the shared account.
+            </p>
           </article>
           <article id="size" className="section-anchor">
             <h3>Small by design</h3>

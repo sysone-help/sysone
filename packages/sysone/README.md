@@ -2,35 +2,19 @@
 
 **Typed decisions for TypeScript.**
 
-<!-- size:start -->
-
-**Zero dependencies. 3.9 kB min+gzip, including all providers.**
-
-| Included JavaScript  | Minified | Minified + gzip |
-| -------------------- | -------: | --------------: |
-| Core                 |  7,586 B |         2,720 B |
-| Core + TypeSafe      | 10,268 B |         3,662 B |
-| Core + Vercel        |  9,052 B |         3,268 B |
-| Core + custom HTTP   |  9,904 B |         3,526 B |
-| Core + all providers | 11,255 B |         3,914 B |
-
-Measured on 0.4.0 with all core exports retained, esbuild 0.28.2, ESM/ES2022 and gzip level 9 (zlib 1.3.1.zlib-ng). Gzip sizes can vary slightly between compression versions. Bundle sizes exclude types/docs and are not the package download size. No third-party runtime code is bundled.
-
-[Reproduce the measurement](https://github.com/sysone-help/sysone/blob/main/scripts/package-size.mjs): `npm run build && npm run size`. CI enforces a 4,000-byte gzip budget for the complete bundle. Build/test tools belong to the private workspace, not your installation.
-<!-- size:end -->
-
 Ask questions in plain language. Get answers your code can use.
 
 [Interactive playground](https://sysone.help/#playground) · [Documentation](https://sysone.help/#docs) · [GitHub](https://github.com/sysone-help/sysone)
 
 ```ts
-import { createSysone, predicate } from 'sysone';
+import { createSysone } from 'sysone';
 import { typesafe } from 'sysone/providers/typesafe';
 
 const sys = createSysone({ provider: typesafe(), model: 'jev-latest' });
-const needsReply = predicate('Does this message need a reply?');
-
-const result = await sys.check('Could you send the updated proposal?', needsReply);
+const result = await sys.check(
+  'Could you send the updated proposal?',
+  'Does this message need a reply?',
+);
 
 if (result.decision === 'yes') {
   // Your next step.
@@ -51,19 +35,9 @@ The initial npm publication is being prepared. Until the registry listing is ava
 npm install https://github.com/sysone-help/sysone/releases/download/v0.4.0/sysone-0.4.0.tgz
 ```
 
-After npm publication, the equivalent registry command is:
+Node.js 22+ and ESM. The library has zero runtime, optional or peer dependencies. All providers use native fetch. Save the first example as `demo.mjs`, set `TYPESAFE_API_KEY` in your server environment, then run `node demo.mjs`.
 
-Node.js 22+ and ESM. The entire library has zero runtime, optional or peer dependencies. All providers use native fetch.
-
-```sh
-npm install sysone
-```
-
-Set `TYPESAFE_API_KEY` in your server environment. To use your Vercel AI Gateway account instead:
-
-```sh
-npm install sysone
-```
+To use Vercel AI Gateway, set `AI_GATEWAY_API_KEY` and replace the client configuration:
 
 ```ts
 import { createSysone } from 'sysone';
@@ -74,6 +48,8 @@ const sys = createSysone({ provider: vercel(), model: 'typesafe-ai/jev' });
 ```
 
 No additional packages are needed for Vercel, TypeSafe or compatible HTTP servers. Provider entry points are separate and the package supports tree shaking. Never put a provider secret in client-side application code.
+
+`check`, `filter` and `partition` also accept a question string directly. Use `predicate()` when reusing a question or defining explicit yes/no criteria.
 
 ## Define questions
 
@@ -292,6 +268,25 @@ The default timeout is 30 seconds per request. Provided adapters honor the combi
 - `PROVIDER_ERROR`
 
 Provider error bodies, headers, credentials and raw requests are not included in errors. Cancellation and timeout use their native abort reasons. Malformed provider responses use `INVALID_RESPONSE`. The Vercel adapter calls the experimental Gateway evaluation protocol directly; see [transport details](https://github.com/sysone-help/sysone/blob/main/docs/vercel-transport.md).
+
+## Size and dependencies
+
+<!-- size:start -->
+
+**Zero dependencies. 3.9 kB min+gzip, including all providers.**
+
+| Included JavaScript  | Minified | Minified + gzip |
+| -------------------- | -------: | --------------: |
+| Core                 |  7,586 B |         2,720 B |
+| Core + TypeSafe      | 10,268 B |         3,662 B |
+| Core + Vercel        |  9,052 B |         3,268 B |
+| Core + custom HTTP   |  9,904 B |         3,526 B |
+| Core + all providers | 11,255 B |         3,914 B |
+
+Measured on 0.4.0 with all core exports retained, esbuild 0.28.2, ESM/ES2022 and gzip level 9 (zlib 1.3.1.zlib-ng). Gzip sizes can vary slightly between compression versions. Bundle sizes exclude types/docs and are not the package download size. No third-party runtime code is bundled.
+
+[Reproduce the measurement](https://github.com/sysone-help/sysone/blob/main/scripts/package-size.mjs): `npm run build && npm run size`. CI enforces a 4,000-byte gzip budget for the complete bundle. Build/test tools belong to the private workspace, not your installation.
+<!-- size:end -->
 
 ## Playground and project
 
