@@ -74,3 +74,11 @@ Validation: preset resolution tests, desktop/mobile browser checks, mocked infer
 - Complete bundle: 3,914 bytes min+gzip; core + Vercel: 3,268 bytes. Zero external runtime packages. Both remain within existing CI budgets.
 
 The final desktop pass also removed nested scrolling from the comparison: both complete implementations remain readable in the page flow, including their decision logic.
+
+### Release verification
+
+[Version 0.5.0](https://github.com/sysone-help/sysone/releases/tag/v0.5.0) includes the installable tarball and SHA256 checksum. [CI run 35429453973](https://github.com/sysone-help/sysone/actions/runs/35429453973) passed on Node 22 and 24, including all 39 tests, type checks, normal installation and size budgets.
+
+The production candidate was exercised through its actual Jev/Vercel endpoint in all three modes: reply probability .91, arithmetic routed to calculator, and a contradicted answer scored at rubric level 0. These are smoke checks, not an accuracy or latency benchmark. The native TypeSafe comparison was tested with documented-contract fixtures, not a live TypeSafe credential.
+
+Npm authentication still returns HTTP 401. The site correctly uses the GitHub release installation URL; no registry publication is claimed.
