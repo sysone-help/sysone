@@ -107,9 +107,10 @@ const result = await sys.check("Can you send the proposal?", needsReply);
             </div>
             <p className="doc-note">
               Version {size.version}. All core exports retained, esbuild {size.esbuild}, ESM/ES2022,
-              gzip level {size.gzipLevel}. These are JavaScript bundle sizes, not package download
-              size or this website's size. Types and docs are excluded. CI enforces a 4,000-byte
-              gzip budget for the complete bundle.
+              gzip level {size.gzipLevel} (zlib {size.zlib}). Compression versions may differ
+              slightly. These are JavaScript bundle sizes, not package download size or this
+              website's size. Types and docs are excluded. CI enforces a 4,000-byte gzip budget for
+              the complete bundle.
             </p>
             <p>
               <a href={`${repo}/blob/main/scripts/package-size.mjs`}>
