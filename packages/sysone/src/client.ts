@@ -93,6 +93,7 @@ export function createSysone({
     return result as EvaluationResult<Q>;
   }
 
+  /** Returns a decision object, not a boolean. Network failures throw, never become uncertainty. */
   async function check(
     state: Input,
     question: Predicate | string,

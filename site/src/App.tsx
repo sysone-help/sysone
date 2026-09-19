@@ -46,8 +46,8 @@ export function App() {
         <div className="project-description">
           <h1>Evaluation models, in TypeScript.</h1>
           <p>
-            Define a condition, a set of labels, or a rubric. Inspect the evidence before using it
-            in code.
+            Turn text into decisions, typed labels and ranked lists. Try Jev here, then copy the
+            TypeScript into your app.
           </p>
           <p className="library-footprint">
             <strong>Zero dependencies.</strong> {(size.bundles.all.gzipBytes / 1000).toFixed(1)} kB

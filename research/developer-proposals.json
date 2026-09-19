@@ -1,0 +1,326 @@
+{
+  "date": "2026-09-19",
+  "note": "Advisory model judgments, not independent usability or accuracy measurements. No human study. Candidates authored by this project; no blind randomization. Hosted Jev through Vercel.",
+  "evaluations": [
+    {
+      "id": "api-ergonomics",
+      "request": {
+        "mode": "classifier",
+        "state": "We are designing a zero-dependency TS library for evaluation models. Provider and model are explicit. Which API best serves each criterion? A: await sys.check(text, predicate(\"Needs a reply?\")); returns {decision: \"yes\"|\"no\"|\"uncertain\", probability, metadata}. B: await sys.check(text, \"Needs a reply?\"); returns the same object. predicate remains available for reusable questions and explicit yes/no criteria. C: if (await sys.if(text, \"Needs a reply?\")) { reply(); }; returns boolean and hides uncertain evidence. All network operations are async.",
+        "instructions": "Which API minimizes setup and ceremony for a one-off question, while keeping its result explicit? Choose on this criterion only.",
+        "criteria": {
+          "A": "Proposal A",
+          "B": "Proposal B",
+          "C": "Proposal C"
+        }
+      },
+      "response": {
+        "answers": {
+          "result": {
+            "type": "choice",
+            "choice": "B",
+            "probabilities": {
+              "B": 0.89,
+              "C": 0.1,
+              "A": 0.01
+            }
+          }
+        },
+        "metadata": {
+          "provider": "vercel",
+          "requestedModel": "typesafe-ai/jev",
+          "usage": {
+            "inputTokens": 462,
+            "outputTokens": 38
+          },
+          "rounding": {
+            "probabilityDecimals": 2,
+            "scoreDecimals": 2
+          },
+          "providerMetadata": {
+            "typesafe": {
+              "confidence": {
+                "result": 0.83
+              }
+            },
+            "gateway": {
+              "routing": {
+                "originalModelId": "typesafe-ai/jev",
+                "resolvedProvider": "typesafe-ai",
+                "fallbacksAvailable": [],
+                "planningReasoning": "System credentials planned for: typesafe-ai. Total execution order: typesafe-ai(system)",
+                "canonicalSlug": "typesafe-ai/jev",
+                "finalProvider": "typesafe-ai",
+                "modelAttemptCount": 1,
+                "modelAttempts": [
+                  {
+                    "canonicalSlug": "typesafe-ai/jev",
+                    "success": true,
+                    "providerAttemptCount": 1,
+                    "providerAttempts": [
+                      {
+                        "provider": "typesafe-ai",
+                        "credentialType": "system",
+                        "success": true,
+                        "startTime": 1789802682705,
+                        "endTime": 1789802682849,
+                        "statusCode": 200
+                      }
+                    ]
+                  }
+                ],
+                "totalProviderAttemptCount": 1
+              },
+              "cost": "0",
+              "marketCost": "0.000019404",
+              "surchargeCost": "0",
+              "gatewayCost": "0",
+              "generationId": "gen_01M2W8V6724RAR7RKARR12WNVS"
+            }
+          }
+        },
+        "elapsedMs": 388
+      }
+    },
+    {
+      "id": "api-control",
+      "request": {
+        "mode": "classifier",
+        "state": "We are designing a zero-dependency TS library for evaluation models. Provider and model are explicit. Which API best serves each criterion? A: await sys.check(text, predicate(\"Needs a reply?\")); returns {decision: \"yes\"|\"no\"|\"uncertain\", probability, metadata}. B: await sys.check(text, \"Needs a reply?\"); returns the same object. predicate remains available for reusable questions and explicit yes/no criteria. C: if (await sys.if(text, \"Needs a reply?\")) { reply(); }; returns boolean and hides uncertain evidence. All network operations are async.",
+        "instructions": "Which API best balances ease of use with visible uncertainty and access to evidence? Choose on this criterion only.",
+        "criteria": {
+          "A": "Proposal A",
+          "B": "Proposal B",
+          "C": "Proposal C"
+        }
+      },
+      "response": {
+        "answers": {
+          "result": {
+            "type": "choice",
+            "choice": "B",
+            "probabilities": {
+              "A": 0.27,
+              "B": 0.73,
+              "C": 0
+            }
+          }
+        },
+        "metadata": {
+          "provider": "vercel",
+          "requestedModel": "typesafe-ai/jev",
+          "usage": {
+            "inputTokens": 458,
+            "outputTokens": 38
+          },
+          "rounding": {
+            "probabilityDecimals": 2,
+            "scoreDecimals": 2
+          },
+          "providerMetadata": {
+            "typesafe": {
+              "confidence": {
+                "result": 0.59
+              }
+            },
+            "gateway": {
+              "routing": {
+                "originalModelId": "typesafe-ai/jev",
+                "resolvedProvider": "typesafe-ai",
+                "fallbacksAvailable": [],
+                "planningReasoning": "System credentials planned for: typesafe-ai. Total execution order: typesafe-ai(system)",
+                "canonicalSlug": "typesafe-ai/jev",
+                "finalProvider": "typesafe-ai",
+                "modelAttemptCount": 1,
+                "modelAttempts": [
+                  {
+                    "canonicalSlug": "typesafe-ai/jev",
+                    "success": true,
+                    "providerAttemptCount": 1,
+                    "providerAttempts": [
+                      {
+                        "provider": "typesafe-ai",
+                        "credentialType": "system",
+                        "success": true,
+                        "startTime": 1789802683414,
+                        "endTime": 1789802683566,
+                        "statusCode": 200
+                      }
+                    ]
+                  }
+                ],
+                "totalProviderAttemptCount": 1
+              },
+              "cost": "0",
+              "marketCost": "0.000019236",
+              "surchargeCost": "0",
+              "gatewayCost": "0",
+              "generationId": "gen_01M2W8V703GQVS8JEQXFWV4PTJ"
+            }
+          }
+        },
+        "elapsedMs": 194
+      }
+    },
+    {
+      "id": "api-reuse",
+      "request": {
+        "mode": "classifier",
+        "state": "We are designing a zero-dependency TS library for evaluation models. Provider and model are explicit. Which API best serves each criterion? A: await sys.check(text, predicate(\"Needs a reply?\")); returns {decision: \"yes\"|\"no\"|\"uncertain\", probability, metadata}. B: await sys.check(text, \"Needs a reply?\"); returns the same object. predicate remains available for reusable questions and explicit yes/no criteria. C: if (await sys.if(text, \"Needs a reply?\")) { reply(); }; returns boolean and hides uncertain evidence. All network operations are async.",
+        "instructions": "Which API best supports both one-off questions and reuse without unnecessarily expanding the public API? Choose on this criterion only.",
+        "criteria": {
+          "A": "Proposal A",
+          "B": "Proposal B",
+          "C": "Proposal C"
+        }
+      },
+      "response": {
+        "answers": {
+          "result": {
+            "type": "choice",
+            "choice": "B",
+            "probabilities": {
+              "A": 0.1,
+              "C": 0,
+              "B": 0.9
+            }
+          }
+        },
+        "metadata": {
+          "provider": "vercel",
+          "requestedModel": "typesafe-ai/jev",
+          "usage": {
+            "inputTokens": 460,
+            "outputTokens": 38
+          },
+          "rounding": {
+            "probabilityDecimals": 2,
+            "scoreDecimals": 2
+          },
+          "providerMetadata": {
+            "typesafe": {
+              "confidence": {
+                "result": 0.85
+              }
+            },
+            "gateway": {
+              "routing": {
+                "originalModelId": "typesafe-ai/jev",
+                "resolvedProvider": "typesafe-ai",
+                "fallbacksAvailable": [],
+                "planningReasoning": "System credentials planned for: typesafe-ai. Total execution order: typesafe-ai(system)",
+                "canonicalSlug": "typesafe-ai/jev",
+                "finalProvider": "typesafe-ai",
+                "modelAttemptCount": 1,
+                "modelAttempts": [
+                  {
+                    "canonicalSlug": "typesafe-ai/jev",
+                    "success": true,
+                    "providerAttemptCount": 1,
+                    "providerAttempts": [
+                      {
+                        "provider": "typesafe-ai",
+                        "credentialType": "system",
+                        "success": true,
+                        "startTime": 1789802684099,
+                        "endTime": 1789802684244,
+                        "statusCode": 200
+                      }
+                    ]
+                  }
+                ],
+                "totalProviderAttemptCount": 1
+              },
+              "cost": "0",
+              "marketCost": "0.00001932",
+              "surchargeCost": "0",
+              "gatewayCost": "0",
+              "generationId": "gen_01M2W8V7N2PKH0P8R3P01K3GZD"
+            }
+          }
+        },
+        "elapsedMs": 200
+      }
+    },
+    {
+      "id": "heading",
+      "request": {
+        "mode": "classifier",
+        "state": "Choose a main heading for an independent, free educational site promoting a tiny TS library, not selling a product. Page has a live Jev playground, TypeScript examples, native fetch comparison and docs. Audience: developers trying evaluation models. A: Evaluation models, in TypeScript. B: Ask in plain language. Branch in TypeScript. C: The ultimate AI decision platform. The library supports check, evaluate, partition, filter and rank. It does not execute branches for the user.",
+        "instructions": "Which heading most clearly connects the library to a concrete developer benefit without hype or suggesting a commercial platform?",
+        "criteria": {
+          "A": "Proposal A",
+          "B": "Proposal B",
+          "C": "Proposal C"
+        }
+      },
+      "response": {
+        "answers": {
+          "result": {
+            "type": "choice",
+            "choice": "A",
+            "probabilities": {
+              "A": 0.82,
+              "C": 0,
+              "B": 0.18
+            }
+          }
+        },
+        "metadata": {
+          "provider": "vercel",
+          "requestedModel": "typesafe-ai/jev",
+          "usage": {
+            "inputTokens": 439,
+            "outputTokens": 38
+          },
+          "rounding": {
+            "probabilityDecimals": 2,
+            "scoreDecimals": 2
+          },
+          "providerMetadata": {
+            "typesafe": {
+              "confidence": {
+                "result": 0.74
+              }
+            },
+            "gateway": {
+              "routing": {
+                "originalModelId": "typesafe-ai/jev",
+                "resolvedProvider": "typesafe-ai",
+                "fallbacksAvailable": [],
+                "planningReasoning": "System credentials planned for: typesafe-ai. Total execution order: typesafe-ai(system)",
+                "canonicalSlug": "typesafe-ai/jev",
+                "finalProvider": "typesafe-ai",
+                "modelAttemptCount": 1,
+                "modelAttempts": [
+                  {
+                    "canonicalSlug": "typesafe-ai/jev",
+                    "success": true,
+                    "providerAttemptCount": 1,
+                    "providerAttempts": [
+                      {
+                        "provider": "typesafe-ai",
+                        "credentialType": "system",
+                        "success": true,
+                        "startTime": 1789802684700,
+                        "endTime": 1789802684884,
+                        "statusCode": 200
+                      }
+                    ]
+                  }
+                ],
+                "totalProviderAttemptCount": 1
+              },
+              "cost": "0",
+              "marketCost": "0.000018438",
+              "surchargeCost": "0",
+              "gatewayCost": "0",
+              "generationId": "gen_01M2W8V87S0PMSP5WEWC2HTAHH"
+            }
+          }
+        },
+        "elapsedMs": 238
+      }
+    }
+  ]
+}

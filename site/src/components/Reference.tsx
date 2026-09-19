@@ -22,6 +22,7 @@ export function Reference() {
         <aside className="docs-nav">
           <a href="#installation">Installation</a>
           <a href="#size">Size & dependencies</a>
+          <a href="#choose">Choose a function</a>
           <a href="#definitions">Reusable questions</a>
           <a href="#collections">Working with lists</a>
           <a href="#providers">Adapters</a>
@@ -123,6 +124,53 @@ console.log(result.decision, result.probability);
                 Reproduce with npm run build &amp;&amp; npm run size ↗
               </a>
             </p>
+          </article>
+          <article id="choose" className="section-anchor">
+            <h3>Which function do I need?</h3>
+            <dl className="behavior-list">
+              <div>
+                <dt>
+                  <code>check</code>
+                </dt>
+                <dd>One yes/no question. Returns a decision, probability and metadata.</dd>
+              </div>
+              <div>
+                <dt>
+                  <code>evaluate</code>
+                </dt>
+                <dd>
+                  Several questions about one input. Typed labels, scores and raw probabilities in
+                  one request.
+                </dd>
+              </div>
+              <div>
+                <dt>
+                  <code>partition</code>
+                </dt>
+                <dd>Split a list into yes, no and uncertain. Keep the original items.</dd>
+              </div>
+              <div>
+                <dt>
+                  <code>filter</code>
+                </dt>
+                <dd>Keep only yes items. Use partition if uncertain items need review.</dd>
+              </div>
+              <div>
+                <dt>
+                  <code>rank</code>
+                </dt>
+                <dd>Order a list by a descriptive rubric. Highest score first.</dd>
+              </div>
+            </dl>
+            <p>
+              <code>check</code> returns an object, not a boolean. Read its decision explicitly:
+            </p>
+            <Code>{`const result = await sys.check(message, "Needs a reply?");
+if (result.decision === "yes") {
+  console.log("Take the yes branch");
+}
+// Treat "no" and "uncertain" according to your application's policy.
+// Network errors throw; they are not an "uncertain" answer.`}</Code>
           </article>
           <article id="definitions" className="section-anchor">
             <h3>Definitions and evaluation</h3>

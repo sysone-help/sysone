@@ -33,6 +33,20 @@ const sys = createSysone({ provider: gateway, model: 'typesafe-ai/jev' });
 // Another client can reuse gateway with another available evaluation model ID.
 ```
 
+## Choose an operation
+
+| Need                                     | Use                             | Requests     |
+| ---------------------------------------- | ------------------------------- | ------------ |
+| Yes / no / uncertain                     | `check(text, "Question?")`      | One          |
+| Several questions, one input             | `evaluate(input, questions)`    | One          |
+| Keep yes items and review uncertain ones | `partition(items, "Question?")` | One per item |
+| Keep only yes items                      | `filter(items, "Question?")`    | One per item |
+| Sort against a descriptive scale         | `rank(items, rubric)`           | One per item |
+
+`check` returns an object: read `result.decision`, not the truthiness of the result itself. Network errors throw; they never become `uncertain`.
+
+[Executable routing and RAG recipes](examples/recipes) · [Try the recipes on the site](https://sysone.help/#recipes).
+
 ## Install
 
 The first npm publication is awaiting maintainer authentication. The same package is available as a GitHub release asset:

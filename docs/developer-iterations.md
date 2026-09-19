@@ -51,3 +51,11 @@ Validation: build/typecheck; existing boundary tests cover the same decision rul
 Added typed, reusable recipes for routing with two questions in one call, partitioning RAG context while preserving uncertain items and original IDs, and ranking passages against a descriptive rubric. The site renders the repository files directly through generated snippets. Each recipe states its request count and concurrency behavior. No new runtime dependency or API surface was needed.
 
 Validation: repository typecheck now includes examples and tests; recipe tests verify batched routing, review behavior and original-object preservation. Existing rank tests cover ordering and equal-score stability.
+
+## 9. Evaluate alternatives and clarify API selection
+
+Used hosted Jev to compare three API approaches on ceremony, explicit control/evidence, and reuse, plus three headings on clarity. It selected the string-question API in all three API questions and the existing factual heading. Kept that heading, made the supporting sentence concrete, and added an operation chooser to the README and reference. Explicitly explained that `check` returns an object: testing its truthiness is not a yes/no decision.
+
+Evidence: [full prompts, responses and model metadata](../research/developer-proposals.json). Jev assigned selected-candidate probabilities of .89, .73 and .90 for the API and .82 for the existing heading. These are subjective model judgments, not usability scores or independent user research. Candidate order was not randomized. Implementation decisions also rely on type checks, parity tests and preserving uncertainty.
+
+Validation: site typecheck. The API remains five execution methods and three reusable definition factories; no `if`/`switch` wrappers or silent action execution were added.
