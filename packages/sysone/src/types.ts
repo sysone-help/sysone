@@ -1,4 +1,5 @@
-export type Json = string | number | boolean | null | { readonly [key: string]: Json } | readonly Json[];
+export type Json =
+  string | number | boolean | null | { readonly [key: string]: Json } | readonly Json[];
 export type Input = string | { readonly [key: string]: Json } | readonly Json[];
 
 export interface Predicate {
@@ -18,20 +19,28 @@ export interface Rubric {
 }
 export type Question = Predicate | Classifier | Rubric;
 export type Questions = Readonly<Record<string, Question>>;
-export interface BooleanAnswer { readonly type: 'boolean'; readonly probability: number }
+export interface BooleanAnswer {
+  readonly type: 'boolean';
+  readonly probability: number;
+}
 export interface ChoiceAnswer<Key extends string = string> {
-  readonly type: 'choice'; readonly choice: Key;
+  readonly type: 'choice';
+  readonly choice: Key;
   readonly probabilities?: Readonly<Record<Key, number>>;
   readonly confidence?: number;
 }
 export interface ScoreAnswer {
-  readonly type: 'score'; readonly score: number;
+  readonly type: 'score';
+  readonly score: number;
   readonly probabilities?: Readonly<Record<string, number>>;
   readonly confidence?: number;
 }
 export type Answer = BooleanAnswer | ChoiceAnswer | ScoreAnswer;
-export type AnswerFor<Q extends Question> = Q extends Predicate ? BooleanAnswer
-  : Q extends Classifier<infer Key> ? ChoiceAnswer<Key> : ScoreAnswer;
+export type AnswerFor<Q extends Question> = Q extends Predicate
+  ? BooleanAnswer
+  : Q extends Classifier<infer Key>
+    ? ChoiceAnswer<Key>
+    : ScoreAnswer;
 export type AnswersFor<Q extends Questions> = { readonly [Key in keyof Q]: AnswerFor<Q[Key]> };
 export interface EvaluationMetadata {
   readonly provider: string;
@@ -41,18 +50,25 @@ export interface EvaluationMetadata {
   readonly usage?: { readonly inputTokens?: number; readonly outputTokens?: number };
   readonly rounding?: { readonly probabilityDecimals?: number; readonly scoreDecimals?: number };
 }
-export interface EvaluationRequest { readonly state: Input; readonly questions: Questions }
+export interface EvaluationRequest {
+  readonly state: Input;
+  readonly questions: Questions;
+}
 export interface EvaluationResult<Q extends Questions = Questions> {
   readonly answers: AnswersFor<Q>;
   readonly metadata: EvaluationMetadata;
 }
-export interface CallOptions { readonly signal?: AbortSignal }
+export interface CallOptions {
+  readonly signal?: AbortSignal;
+}
 export interface EvaluationModel {
   readonly provider: string;
   readonly modelId: string;
   evaluate(request: EvaluationRequest, options?: CallOptions): Promise<EvaluationResult>;
 }
-export interface CheckOptions extends CallOptions { readonly minProbability?: number }
+export interface CheckOptions extends CallOptions {
+  readonly minProbability?: number;
+}
 export interface CheckResult extends BooleanAnswer {
   readonly decision: 'yes' | 'no' | 'uncertain';
   readonly metadata: EvaluationMetadata;
@@ -61,7 +77,11 @@ export interface CollectionOptions<T> extends CheckOptions {
   readonly select?: (item: T) => Input;
   readonly concurrency?: number;
 }
-export interface Partition<T> { readonly yes: T[]; readonly no: T[]; readonly uncertain: T[] }
+export interface Partition<T> {
+  readonly yes: T[];
+  readonly no: T[];
+  readonly uncertain: T[];
+}
 export interface Ranked<T> {
   readonly item: T;
   readonly score: number;

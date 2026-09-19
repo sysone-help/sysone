@@ -29,12 +29,12 @@ Node.js 22+ and ESM. Set `TYPESAFE_API_KEY` on your server. The Vercel adapter a
 
 ## Repository
 
-| Directory | Purpose |
-| --- | --- |
-| `packages/sysone` | Published library, declarations, adapter and contract tests |
-| `site` | Educational website and interactive playground |
-| `api` | Shared playground endpoint; fixed model, bounded input, server-side credential |
-| `.github/workflows` | Continuous integration and release automation |
+| Directory           | Purpose                                                                        |
+| ------------------- | ------------------------------------------------------------------------------ |
+| `packages/sysone`   | Published library, declarations, adapter and contract tests                    |
+| `site`              | Educational website and interactive playground                                 |
+| `api`               | Shared playground endpoint; fixed model, bounded input, server-side credential |
+| `.github/workflows` | Continuous integration and release automation                                  |
 
 ```sh
 npm ci

@@ -4,13 +4,26 @@
   "description": "Typed decisions for TypeScript. Predicates, classifiers and collections powered by evaluation models.",
   "type": "module",
   "sideEffects": false,
-  "files": ["dist", "README.md", "LICENSE"],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
-    "./providers/typesafe": { "types": "./dist/providers/typesafe.d.ts", "import": "./dist/providers/typesafe.js" },
-    "./providers/vercel": { "types": "./dist/providers/vercel.d.ts", "import": "./dist/providers/vercel.js" },
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./providers/typesafe": {
+      "types": "./dist/providers/typesafe.d.ts",
+      "import": "./dist/providers/typesafe.js"
+    },
+    "./providers/vercel": {
+      "types": "./dist/providers/vercel.d.ts",
+      "import": "./dist/providers/vercel.js"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {
@@ -19,14 +32,42 @@
     "test": "tsx --test tests/*.test.ts",
     "prepack": "npm run build"
   },
-  "peerDependencies": { "ai": "7.0.105", "@ai-sdk/gateway": "4.0.85" },
-  "peerDependenciesMeta": { "ai": { "optional": true }, "@ai-sdk/gateway": { "optional": true } },
-  "engines": { "node": ">=22" },
+  "peerDependencies": {
+    "ai": "7.0.105",
+    "@ai-sdk/gateway": "4.0.85"
+  },
+  "peerDependenciesMeta": {
+    "ai": {
+      "optional": true
+    },
+    "@ai-sdk/gateway": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=22"
+  },
   "license": "MIT",
   "author": "Sysone contributors",
   "homepage": "https://sysone.help",
-  "repository": { "type": "git", "url": "git+https://github.com/sysone-help/sysone.git", "directory": "packages/sysone" },
-  "bugs": { "url": "https://github.com/sysone-help/sysone/issues" },
-  "keywords": ["typescript", "jev", "system-one", "classification", "evaluation", "ai"],
-  "publishConfig": { "access": "public", "registry": "https://registry.npmjs.org/" }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sysone-help/sysone.git",
+    "directory": "packages/sysone"
+  },
+  "bugs": {
+    "url": "https://github.com/sysone-help/sysone/issues"
+  },
+  "keywords": [
+    "typescript",
+    "jev",
+    "system-one",
+    "classification",
+    "evaluation",
+    "ai"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
 }

@@ -3,7 +3,11 @@ import type { EvaluationModel, Input } from '../src/index.js';
 
 export async function assertInference(model: EvaluationModel) {
   const sys = createSysone({ model });
-  const result = await sys.evaluate('Hello', { reply: predicate('Reply?'), team: classifier({ sales: 'Sales', support: 'Support' }), quality: rubric('Quality', ['low', 'high']) });
+  const result = await sys.evaluate('Hello', {
+    reply: predicate('Reply?'),
+    team: classifier({ sales: 'Sales', support: 'Support' }),
+    quality: rubric('Quality', ['low', 'high']),
+  });
   const choice: 'sales' | 'support' = result.answers.team.choice;
   const probability: number = result.answers.reply.probability;
   const score: number = result.answers.quality.score;

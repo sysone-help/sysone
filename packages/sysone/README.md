@@ -72,11 +72,11 @@ const urgency = rubric('How urgent is this message?', [
 
 Definitions make no network calls and can be reused with any compatible client.
 
-| Definition | Arguments | Evidence |
-| --- | --- | --- |
-| `predicate` | Instructions; optional `{ true, false }` descriptions | Probability of yes |
-| `classifier` | 2–255 labels with descriptions; optional instructions | Selected label; optional distribution and provider confidence |
-| `rubric` | Instructions; 2–10 ordered level descriptions | Expected zero-based level index; optional distribution and provider confidence |
+| Definition   | Arguments                                             | Evidence                                                                       |
+| ------------ | ----------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `predicate`  | Instructions; optional `{ true, false }` descriptions | Probability of yes                                                             |
+| `classifier` | 2–255 labels with descriptions; optional instructions | Selected label; optional distribution and provider confidence                  |
+| `rubric`     | Instructions; 2–10 ordered level descriptions         | Expected zero-based level index; optional distribution and provider confidence |
 
 Classifier categories are mutually exclusive. Include an `other` category when appropriate. Rubric scores may be fractional: on three levels, `1.7` is between the second and third levels. It is not a 0–100 score.
 
@@ -90,8 +90,8 @@ const { answers, metadata } = await sys.evaluate(message, {
 });
 
 answers.needsReply.probability; // number
-answers.team.choice;           // 'billing' | 'support' | 'other'
-answers.urgency.score;         // number, from 0 to 2 for this rubric
+answers.team.choice; // 'billing' | 'support' | 'other'
+answers.urgency.score; // number, from 0 to 2 for this rubric
 metadata.requestedModel;
 ```
 
@@ -107,9 +107,12 @@ const result = await sys.check(message, needsReply, {
 });
 
 switch (result.decision) {
-  case 'yes':       break; // P(yes) >= 0.85
-  case 'no':        break; // P(yes) <= 0.15
-  case 'uncertain': break; // Between the thresholds
+  case 'yes':
+    break; // P(yes) >= 0.85
+  case 'no':
+    break; // P(yes) <= 0.15
+  case 'uncertain':
+    break; // Between the thresholds
 }
 ```
 
@@ -119,17 +122,17 @@ The default threshold is `0.8`. Valid thresholds are greater than `0.5` and at m
 
 ```ts
 const { yes, no, uncertain } = await sys.partition(messages, needsReply, {
-  select: message => message.body,
+  select: (message) => message.body,
   minProbability: 0.85,
   concurrency: 4,
 });
 
 const actionable = await sys.filter(messages, needsReply, {
-  select: message => message.body,
+  select: (message) => message.body,
 });
 
 const ranked = await sys.rank(messages, urgency, {
-  select: message => message.body,
+  select: (message) => message.body,
 });
 // [{ item, score, answer, metadata }] — highest score first
 ```
