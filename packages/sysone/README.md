@@ -4,7 +4,7 @@
 
 Ask questions in plain language. Get answers your code can use.
 
-[Interactive playground](https://sysone.help/#playground) · [Documentation](https://sysone.help/#docs) · [GitHub](https://github.com/sysone-help/sysone)
+[Interactive playground](https://sysone.help/#playground) · [Documentation](https://sysone.help/docs) · [GitHub](https://github.com/sysone-help/sysone)
 
 ```ts
 import { createSysone } from 'sysone';
@@ -29,10 +29,8 @@ Independent, MIT-licensed, and not affiliated with TypeSafe or Vercel.
 
 ## Install
 
-The initial npm publication is being prepared. Until the registry listing is available, install the [GitHub release package](https://github.com/sysone-help/sysone/releases/tag/v0.5.0):
-
 ```sh
-npm install https://github.com/sysone-help/sysone/releases/download/v0.5.0/sysone-0.5.0.tgz
+npm install sysone
 ```
 
 Node.js 22+ and ESM. The library has zero runtime, optional or peer dependencies. All providers use native fetch. Save the first example as `demo.mjs`, set `AI_GATEWAY_API_KEY` in your server environment, then run `node demo.mjs`.
@@ -283,7 +281,7 @@ Provider error bodies, headers, credentials and raw requests are not included in
 | Core + custom HTTP   |  9,904 B |         3,526 B |
 | Core + all providers | 11,255 B |         3,914 B |
 
-Measured on 0.5.0 with all core exports retained, esbuild 0.28.2, ESM/ES2022 and gzip level 9 (zlib 1.3.1.zlib-ng). Gzip sizes can vary slightly between compression versions. Bundle sizes exclude types/docs and are not the package download size. No third-party runtime code is bundled.
+Measured on 0.5.1 with all core exports retained, esbuild 0.28.2, ESM/ES2022 and gzip level 9 (zlib 1.3.1.zlib-ng). Gzip sizes can vary slightly between compression versions. Bundle sizes exclude types/docs and are not the package download size. No third-party runtime code is bundled.
 
 [Reproduce the measurement](https://github.com/sysone-help/sysone/blob/main/scripts/package-size.mjs): `npm run build && npm run size`. CI enforces a 4,000-byte gzip budget for the complete bundle. Build/test tools belong to the private workspace, not your installation.
 <!-- size:end -->
