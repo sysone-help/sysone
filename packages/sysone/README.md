@@ -4,7 +4,7 @@
 
 Ask questions in plain language. Get answers your code can use.
 
-[Try Jev in the playground](https://sysone.help/#playground) · [Documentation](https://sysone.help/#docs) · [GitHub](https://github.com/sysone-help/sysone)
+[Interactive playground](https://sysone.help/#playground) · [Documentation](https://sysone.help/#docs) · [GitHub](https://github.com/sysone-help/sysone)
 
 ```ts
 import { createSysone, predicate } from 'sysone';
@@ -22,16 +22,16 @@ if (result.decision === 'yes') {
 // result.probability: P(yes), from 0 to 1
 ```
 
-Sysone provides predicates, classifiers, rubrics and collection operations for evaluation models. The first integration is [Jev](https://docs.typesafe.ai), through TypeSafe or Vercel AI Gateway. Definitions are immutable data. Execution is explicit and asynchronous. Sysone never runs the action being evaluated.
+Sysone provides predicates, classifiers, rubrics and collection operations for evaluation models. Use [Jev](https://docs.typesafe.ai) through TypeSafe or Vercel AI Gateway, or a compatible self-hosted server through the experimental System One adapter. Definitions are immutable data. Execution is explicit and asynchronous. Sysone never runs the action being evaluated.
 
 Independent, MIT-licensed, and not affiliated with TypeSafe or Vercel.
 
 ## Install
 
-The initial npm publication is being prepared. Until the registry listing is available, install the [GitHub release package](https://github.com/sysone-help/sysone/releases/tag/v0.1.0):
+The initial npm publication is being prepared. Until the registry listing is available, install the [GitHub release package](https://github.com/sysone-help/sysone/releases/tag/v0.1.1):
 
 ```sh
-npm install https://github.com/sysone-help/sysone/releases/download/v0.1.0/sysone-0.1.0.tgz
+npm install https://github.com/sysone-help/sysone/releases/download/v0.1.1/sysone-0.1.1.tgz
 ```
 
 After npm publication, the equivalent registry command is:
@@ -169,6 +169,31 @@ vercel('typesafe-ai/jev', { apiKey: process.env.AI_GATEWAY_API_KEY });
 Both accept an optional `fetch` implementation for testing or transport instrumentation. There is no automatic provider selection, retry, or fallback.
 
 Results include the provider, requested model, resolved model when the provider reports a distinct version, request ID when available, token usage, and rounding information. Absent metadata remains absent. The Vercel adapter does not treat an echoed alias as a resolved model version. Provider-specific billing metadata is not normalized in this release.
+
+### Compatible servers and open models
+
+```ts
+import { createSysone, predicate } from 'sysone';
+import { systemOne } from 'sysone/providers/system-one';
+
+const sys = createSysone({
+  model: systemOne('openjev-latest', {
+    baseURL: 'http://127.0.0.1:8080/v1',
+    provider: 'openjev',
+    // apiKey: process.env.OPENJEV_API_KEY, // If your server requires it.
+  }),
+});
+
+await sys.check('Can you help?', predicate('Needs a reply?'));
+```
+
+Start your server separately. `systemOne` appends `/systemone` to `baseURL`, translates boolean questions to `noul`, and preserves model evidence. It accepts optional `apiKey`, `headers`, `fetch`, and a metadata `provider` name. It never reads a cloud credential from the environment. `rounding` may declare precision documented by a server; it does not round values or change the request. Without it, full precision is expected.
+
+The experimental transport is tested with contract fixtures from [razorback16/OpenJev](https://github.com/razorback16/openjev), an independent server over DiffusionGemma. **We have not run its GPU backend or established quality equivalence with Jev.** OpenJev supports up to 128 choice labels (versus the library's 255 ceiling). Its confidence is one minus normalized entropy, and its probability estimates depend on top-k log probabilities. Thresholds are not portable across models. The server code is Apache-2.0; model terms apply separately.
+
+Other open evaluation models include [Bespoke Nimble 9B](https://huggingface.co/bespokelabs/Bespoke-Nimble-9B) and [Kotoba Open-Jev DeBERTa](https://huggingface.co/com-kotobalabs/open-jev-deberta-v3-large). Both publish evaluation weights, but need a serving layer and a custom adapter; neither is an implemented Sysone integration. No official open Jev weights were found in our September 19, 2026 review. [Research and source links](https://github.com/sysone-help/sysone/blob/main/research/open-evaluation-models.md).
+
+### Custom adapters
 
 Cloudflare and OpenRouter also offer Jev access; Sysone adapters for those routes are not yet included. Other evaluation models can implement the exported `EvaluationModel` interface:
 

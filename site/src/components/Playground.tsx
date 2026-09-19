@@ -4,6 +4,7 @@ import type { EvaluationResult } from 'sysone';
 import { examples, parseCriteria, type Mode } from '../examples';
 import { Code } from './Code';
 import { Result } from './Result';
+
 const modes: Mode[] = ['predicate', 'classifier', 'rubric'];
 type Run = EvaluationResult & { elapsedMs: number };
 
@@ -11,14 +12,17 @@ export function Playground() {
   const [mode, setMode] = useState<Mode>('predicate');
   const [input, setInput] = useState<string>(examples.predicate.input);
   const [instructions, setInstructions] = useState<string>(examples.predicate.instructions);
-  const [criteria, setCriteria] = useState<string>('');
+  const [criteria, setCriteria] = useState('');
   const [threshold, setThreshold] = useState(0.8);
   const [result, setResult] = useState<Run | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [view, setView] = useState<'result' | 'code'>('code');
   const abort = useRef<AbortController | null>(null);
   useEffect(() => () => abort.current?.abort(), []);
   const example = examples[mode];
+  const canRun = Boolean(input.trim() && instructions.trim());
+
   function clearResult() {
     abort.current?.abort();
     abort.current = null;
@@ -34,12 +38,13 @@ export function Playground() {
     setCriteria(examples[next].criteria);
   }
   async function run() {
-    abort.current?.abort();
+    if (!canRun || loading) return;
     const controller = new AbortController();
     abort.current = controller;
     setLoading(true);
     setError('');
     setResult(null);
+    setView('result');
     try {
       const body = {
         mode,
@@ -53,18 +58,15 @@ export function Playground() {
         body: JSON.stringify(body),
         signal: controller.signal,
       });
-      if (response.status === 429)
-        throw new Error('A few too many requests. Wait a minute and try again.');
+      if (response.status === 429) throw new Error('Rate limited. Wait a minute and retry.');
       const data = await response.json().catch(() => {
-        throw new Error('The playground could not reach its server. Please try again shortly.');
+        throw new Error('Could not read the server response. Try again shortly.');
       });
-      if (!response.ok) throw new Error(data.error ?? 'The evaluation could not complete.');
+      if (!response.ok) throw new Error(data.error ?? 'Evaluation failed.');
       if (!controller.signal.aborted) setResult(data);
     } catch (cause) {
       if (!controller.signal.aborted)
-        setError(
-          cause instanceof Error ? cause.message : 'Something went wrong. Please try again.',
-        );
+        setError(cause instanceof Error ? cause.message : 'Evaluation failed.');
     } finally {
       if (abort.current === controller) {
         setLoading(false);
@@ -72,182 +74,136 @@ export function Playground() {
       }
     }
   }
+
+  let criteriaCode = '';
+  if (mode !== 'predicate') {
+    try {
+      criteriaCode = JSON.stringify(parseCriteria(mode, criteria), null, 2);
+    } catch {
+      criteriaCode = '{ /* fix the categories on the left */ }';
+    }
+  }
   const snippet = `import { createSysone, ${mode} } from "sysone";
 import { vercel } from "sysone/providers/vercel";
 
+// Set AI_GATEWAY_API_KEY in your server environment.
 const sys = createSysone({ model: vercel() });
+const input = ${JSON.stringify(input)};
 
 ${
   mode === 'predicate'
-    ? `const needsReply = predicate(${JSON.stringify(instructions)});
+    ? `const condition = predicate(${JSON.stringify(instructions)});
 
-const result = await sys.check(message, needsReply, {
+const result = await sys.check(input, condition, {
   minProbability: ${threshold.toFixed(2)},
 });
-// result.decision: "yes" | "no" | "uncertain"`
+// decision: "yes" | "no" | "uncertain"
+console.log(result);`
     : mode === 'classifier'
-      ? `const team = classifier(${(() => {
-          try {
-            return JSON.stringify(parseCriteria(mode, criteria), null, 2);
-          } catch {
-            return '{ /* label: description */ }';
-          }
-        })()}, ${JSON.stringify(instructions)});
+      ? `const category = classifier(${criteriaCode}, ${JSON.stringify(instructions)});
 
-const { answers } = await sys.evaluate(message, { team });
-// answers.team.choice is a union of your labels`
-      : `const urgency = rubric(${JSON.stringify(instructions)}, ${JSON.stringify(
-          criteria.split('\n').filter((x) => x.trim()),
-          null,
-          2,
-        )});
+const result = await sys.evaluate(input, { category });
+console.log(result.answers.category);`
+      : `const score = rubric(${JSON.stringify(instructions)}, ${criteriaCode});
 
-const { answers } = await sys.evaluate(message, { urgency });
-// answers.urgency.score is an expected level index`
+const result = await sys.evaluate(input, { score });
+console.log(result.answers.score);`
 }`;
   const answer = result?.answers.result;
+
   return (
     <section
       id="playground"
       className="playground section-anchor"
-      aria-labelledby="playground-title"
+      aria-label="Evaluation playground"
+      onKeyDown={(event) => {
+        if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+          event.preventDefault();
+          void run();
+        }
+      }}
     >
-      <div className="section-top">
-        <div>
-          <span className="eyebrow">01 / THE PLAYGROUND</span>
-          <h2 id="playground-title">Start with a question.</h2>
+      <div className="workspace-toolbar">
+        <div className="experiment-tabs" aria-label="Question type">
+          {modes.map((m) => (
+            <button key={m} aria-pressed={mode === m} onClick={() => select(m)}>
+              <code>{m}()</code>
+            </button>
+          ))}
         </div>
-        <p>
-          Try a real evaluation. Change the text.
-          <br />
-          See what changes — and what doesn’t.
-        </p>
+        <a className="model-label" href="#models">
+          <span className="status-dot" />
+          Jev <span>/ TypeSafe</span>
+          <span aria-hidden="true">⌄</span>
+        </a>
       </div>
-      <div className="experiment-tabs" aria-label="Example type">
-        {modes.map((m, i) => (
-          <button key={m} aria-pressed={mode === m} onClick={() => select(m)}>
-            <span className="tab-number">0{i + 1}</span>
-            <span>
-              <strong>{examples[m].title}</strong>
-              <small>{examples[m].label}</small>
-            </span>
-            <code>{m}()</code>
-          </button>
-        ))}
-      </div>
-      <div className="experiment">
+      <div className="workspace">
         <div className="editor">
-          <div className="editor-title">
-            <span className="eyebrow">YOUR INPUT</span>
+          <div className="panel-heading">
+            <h2>Input</h2>
             <button className="text-button" onClick={() => select(mode)}>
-              Reset example ↺
+              Reset example
             </button>
           </div>
-          <label htmlFor="state">Message</label>
+          <label htmlFor="state">
+            state <span>string</span>
+          </label>
           <textarea
             id="state"
             className="message-input"
             value={input}
             maxLength={6000}
-            onChange={(e) => {
-              clearResult();
-              setInput(e.target.value);
-            }}
             spellCheck={false}
+            onChange={(event) => {
+              clearResult();
+              setInput(event.target.value);
+            }}
           />
-          <div className="character-count">{input.length.toLocaleString()} / 6,000</div>
-          <label htmlFor="instructions">Question</label>
+          <div className="character-count">{input.length.toLocaleString('en-US')} / 6,000</div>
+          <label htmlFor="instructions">
+            instructions <span>string</span>
+          </label>
           <textarea
             id="instructions"
             className="question-input"
             rows={2}
             maxLength={500}
             value={instructions}
-            onChange={(e) => {
+            spellCheck={false}
+            onChange={(event) => {
               clearResult();
-              setInstructions(e.target.value);
+              setInstructions(event.target.value);
             }}
           />
           {mode !== 'predicate' && (
             <>
               <label htmlFor="criteria">
-                {mode === 'classifier'
-                  ? 'Categories · label: description, one per line'
-                  : 'Levels · lowest to highest, one per line'}
+                criteria{' '}
+                <span>
+                  {mode === 'classifier'
+                    ? 'label: description · one per line'
+                    : 'lowest → highest · one per line'}
+                </span>
               </label>
               <textarea
                 id="criteria"
                 className="criteria-input"
                 rows={4}
                 maxLength={3000}
+                spellCheck={false}
                 value={criteria}
-                onChange={(e) => {
+                onChange={(event) => {
                   clearResult();
-                  setCriteria(e.target.value);
+                  setCriteria(event.target.value);
                 }}
               />
             </>
           )}
-          <div className="run-row">
-            <button
-              className="primary-button"
-              onClick={run}
-              disabled={loading || !input.trim() || !instructions.trim()}
-            >
-              {loading ? (
-                <>
-                  <span className="spinner" /> Evaluating…
-                </>
-              ) : (
-                <>
-                  Run with Jev <span aria-hidden="true">↗</span>
-                </>
-              )}
-            </button>
-            <span>Live model · no sign-up</span>
-          </div>
-          <p className="privacy-note">
-            Your text is sent to Vercel AI Gateway and TypeSafe to evaluate. Avoid personal or
-            confidential information. <a href="#privacy">How data is handled</a>
-          </p>
-        </div>
-        <div className="output">
-          <div className="editor-title">
-            <span className="eyebrow">THE DECISION</span>
-            <span className="live-label">
-              <i /> {result ? 'Live result' : 'Jev · TypeSafe'}
-            </span>
-          </div>
-          <div className="answer-space" aria-live="polite" aria-busy={loading}>
-            {error ? (
-              <div className="error" role="alert">
-                <strong>Couldn’t finish that one.</strong>
-                <p>{error}</p>
-                <button className="text-button" onClick={run}>
-                  Try again →
-                </button>
-              </div>
-            ) : answer ? (
-              <Result answer={answer} threshold={threshold} />
-            ) : (
-              <div className="empty-result">
-                <span className="empty-symbol" aria-hidden="true">
-                  {loading ? '…' : '?'}
-                </span>
-                <h3>{loading ? 'A little thinking space.' : 'Let’s see what Jev thinks.'}</h3>
-                <p>
-                  {loading
-                    ? 'Waiting for the model’s evaluation.'
-                    : 'Run the example to see the actual answer, its probability, and the code behind it.'}
-                </p>
-              </div>
-            )}
-          </div>
           {mode === 'predicate' && (
             <div className="threshold">
               <div>
-                <label htmlFor="threshold">Your decision threshold</label>
-                <output htmlFor="threshold">{Math.round(threshold * 100)}%</output>
+                <label htmlFor="threshold">minProbability</label>
+                <output htmlFor="threshold">{threshold.toFixed(2)}</output>
               </div>
               <input
                 id="threshold"
@@ -255,42 +211,100 @@ const { answers } = await sys.evaluate(message, { urgency });
                 min="51"
                 max="99"
                 value={Math.round(threshold * 100)}
-                onChange={(e) => setThreshold(Number(e.target.value) / 100)}
+                onChange={(event) => setThreshold(Number(event.target.value) / 100)}
               />
               <p>
-                Yes ≥ {Math.round(threshold * 100)}% · No ≤ {Math.round((1 - threshold) * 100)}% ·
-                Otherwise, uncertain.
-                <br />
-                Adjusting this uses the same answer. No new model call.
+                yes ≥ {threshold.toFixed(2)} · no ≤ {(1 - threshold).toFixed(2)} · otherwise
+                uncertain
               </p>
             </div>
           )}
-          {result && (
-            <div className="run-metadata">
-              <span>{(result.elapsedMs / 1000).toFixed(2)}s</span>
-              <span>{result.metadata.usage?.inputTokens ?? '—'} input tokens</span>
-              <details>
-                <summary>Raw result</summary>
-                <pre>{JSON.stringify(result, null, 2)}</pre>
-              </details>
+          <div className="run-row">
+            <button className="run-button" onClick={run} disabled={loading || !canRun}>
+              {loading ? 'Running…' : 'Run'}
+              <kbd>⌘ / Ctrl ↵</kbd>
+            </button>
+            {loading && (
+              <button className="text-button" onClick={clearResult}>
+                Cancel
+              </button>
+            )}
+            <span>
+              {result
+                ? `${result.elapsedMs} ms · ${result.metadata.usage?.inputTokens ?? '—'} input tokens`
+                : '1 request · shared access'}
+            </span>
+          </div>
+        </div>
+        <div className="output">
+          <div className="output-tabs" aria-label="Output view">
+            <button aria-pressed={view === 'code'} onClick={() => setView('code')}>
+              TypeScript
+            </button>
+            <button aria-pressed={view === 'result'} onClick={() => setView('result')}>
+              Result {result && <span className="result-indicator" />}
+            </button>
+            <span>
+              {view === 'code'
+                ? 'example.ts'
+                : loading
+                  ? 'pending'
+                  : result
+                    ? '200 OK'
+                    : error
+                      ? 'error'
+                      : 'idle'}
+            </span>
+          </div>
+          {view === 'code' ? (
+            <Code label="Copy and run on your server">{snippet}</Code>
+          ) : (
+            <div className="result-panel">
+              <div className="answer-space" aria-live="polite" aria-busy={loading}>
+                {error ? (
+                  <div className="error" role="alert">
+                    <strong>Evaluation failed</strong>
+                    <p>{error}</p>
+                    <button className="text-button" onClick={run}>
+                      Retry
+                    </button>
+                  </div>
+                ) : answer ? (
+                  <Result answer={answer} threshold={threshold} />
+                ) : (
+                  <div className="empty-result">
+                    <code>{loading ? 'await model.evaluate(…)' : '// No result yet'}</code>
+                    <p>
+                      {loading
+                        ? 'Waiting for the model response.'
+                        : 'Run the input to inspect its decision and probabilities.'}
+                    </p>
+                  </div>
+                )}
+              </div>
+              {result && (
+                <details className="raw-result">
+                  <summary>JSON response</summary>
+                  <Code label="Response body">{JSON.stringify(result, null, 2)}</Code>
+                </details>
+              )}
             </div>
           )}
         </div>
       </div>
-      <div className="under-experiment">
-        <div>
-          <span className="eyebrow">WHAT JUST HAPPENED?</span>
-          <h3>
-            Instructions in.
-            <br />
-            Typed evidence out.
-          </h3>
-          <p>{example.explanation}</p>
-          <a className="inline-link" href="#learn">
-            Understand the three primitives <span>→</span>
-          </a>
-        </div>
-        <Code>{snippet}</Code>
+      <div className="workspace-notes">
+        <p>
+          <code>{mode}()</code> {example.explanation}
+        </p>
+        <details>
+          <summary>Execution &amp; data</summary>
+          <p>
+            Text is evaluated by Jev through Vercel AI Gateway.{' '}
+            <a href="#privacy">Data policy and limits.</a> Changing the threshold reuses the
+            response; it does not make another request. Code runs on your server, with your own
+            provider key.
+          </p>
+        </details>
       </div>
     </section>
   );

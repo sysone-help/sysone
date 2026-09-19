@@ -23,7 +23,34 @@ export function Code({ children, label = 'TypeScript' }: { children: string; lab
         </button>
       </div>
       <pre>
-        <code>{children}</code>
+        <code>
+          {label === 'Terminal'
+            ? children
+            : children
+                .split(
+                  /("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\/\/[^\n]*|\b(?:import|from|const|let|await|if|else|return|async|function|true|false|undefined|type|interface|new)\b|\b\d+(?:\.\d+)?\b)/g,
+                )
+                .map((part, index) => {
+                  const kind = part.startsWith('//')
+                    ? 'comment'
+                    : /^['"]/.test(part)
+                      ? 'string'
+                      : /^\d/.test(part)
+                        ? 'number'
+                        : /^(import|from|const|let|await|if|else|return|async|function|true|false|undefined|type|interface|new)$/.test(
+                              part,
+                            )
+                          ? 'keyword'
+                          : null;
+                  return kind ? (
+                    <span key={index} className={`token-${kind}`}>
+                      {part}
+                    </span>
+                  ) : (
+                    part
+                  );
+                })}
+        </code>
       </pre>
     </div>
   );

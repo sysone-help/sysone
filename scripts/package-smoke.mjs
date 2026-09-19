@@ -38,6 +38,20 @@ try {
     }),
   });
   assert.equal((await sys.check('Hello', predicate('Greeting?'))).decision, 'yes');
+  await writeFile(
+    join(directory, 'generic-consumer.mjs'),
+    `
+import assert from 'node:assert/strict';
+import { createSysone, predicate } from 'sysone';
+import { systemOne } from 'sysone/providers/system-one';
+const sys = createSysone({ model: systemOne('openjev-latest', {
+  baseURL: 'http://localhost:8080/v1',
+  fetch: async () => Response.json({ answers: { result: { type: 'noul', noul: 0.9 } } }),
+}) });
+assert.equal((await sys.check('Hello', predicate('Greeting?'))).decision, 'yes');
+`,
+  );
+  execFileSync(process.execPath, [join(directory, 'generic-consumer.mjs')], { stdio: 'pipe' });
   await assert.rejects(access(join(directory, 'node_modules/ai')));
   await assert.rejects(access(join(directory, 'node_modules/@ai-sdk/gateway')));
   process.stdout.write('Packed consumer smoke passed; optional AI SDK peers were not installed.\n');

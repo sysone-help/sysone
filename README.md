@@ -17,14 +17,14 @@ const result = await sys.check('Can you send the proposal?', needsReply);
 
 `predicate`, `classifier` and `rubric` define reusable questions. `check`, `evaluate`, `filter`, `partition` and `rank` execute them. Definitions are pure data; requests are explicit, cancellable, and never retried automatically.
 
-The first model integration is [Jev](https://docs.typesafe.ai), through TypeSafe and Vercel AI Gateway. The library is designed around evaluation models, independently of the provider. This is an independent project, not an official TypeSafe or Vercel SDK.
+Use [Jev](https://docs.typesafe.ai) through TypeSafe or Vercel AI Gateway, or connect the experimental `systemOne()` adapter to a compatible self-hosted server such as [OpenJev](https://github.com/razorback16/openjev). The library is designed around evaluation models, independently of the provider. This is an independent project, not an official TypeSafe or Vercel SDK.
 
 ## Install
 
 The first npm publication is awaiting maintainer authentication. The same package is available as a GitHub release asset:
 
 ```sh
-npm install https://github.com/sysone-help/sysone/releases/download/v0.1.0/sysone-0.1.0.tgz
+npm install https://github.com/sysone-help/sysone/releases/download/v0.1.1/sysone-0.1.1.tgz
 ```
 
 Once published to the registry:
@@ -34,6 +34,8 @@ npm install sysone
 ```
 
 Node.js 22+ and ESM. Set `TYPESAFE_API_KEY` on your server. The Vercel adapter additionally needs the pinned optional peers `ai@7.0.105` and `@ai-sdk/gateway@4.0.85` and `AI_GATEWAY_API_KEY`. See the [complete library reference](packages/sysone/README.md).
+
+See [open evaluation models and compatibility](research/open-evaluation-models.md) for OpenJev, Bespoke Nimble and Kotoba. The HTTP adapter is contract-tested; open model GPU inference has not been tested by this project.
 
 ## Repository
 
@@ -56,6 +58,6 @@ The hosted endpoint is limited to 6,000 input characters, one question per reque
 
 ## Development status
 
-First public release: `0.1.0`. Cloudflare and OpenRouter adapters are possible future integrations; they are not advertised as implemented. No benchmark or universal calibration claim is made. Test your application rules against representative data.
+Current release: `0.1.1`. Cloudflare and OpenRouter adapters are possible future integrations; they are not advertised as implemented. No benchmark or universal calibration claim is made. Test your application rules against representative data.
 
 MIT © Sysone contributors.

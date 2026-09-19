@@ -1,6 +1,6 @@
 {
   "name": "sysone",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Typed decisions for TypeScript. Predicates, classifiers and collections powered by evaluation models.",
   "type": "module",
   "sideEffects": false,
@@ -24,7 +24,11 @@
       "types": "./dist/providers/vercel.d.ts",
       "import": "./dist/providers/vercel.js"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./providers/system-one": {
+      "types": "./dist/providers/system-one.d.ts",
+      "import": "./dist/providers/system-one.js"
+    }
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
