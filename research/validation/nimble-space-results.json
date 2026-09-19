@@ -1,0 +1,277 @@
+{
+  "testedAt": "2026-09-19T12:33:51.268Z",
+  "backend": "nimble-space",
+  "model": "nimble-latest",
+  "results": [
+    {
+      "id": "refund-en",
+      "ok": true,
+      "elapsedMs": 3916,
+      "input": "I was charged twice for order 847. Please refund the duplicate payment.",
+      "expected": {
+        "refund": true,
+        "team": "billing",
+        "level": 1
+      },
+      "checks": {
+        "refund": true,
+        "team": true,
+        "level": true
+      },
+      "result": {
+        "answers": {
+          "refund": {
+            "type": "boolean",
+            "probability": 0.9989677689632452
+          },
+          "team": {
+            "type": "choice",
+            "choice": "billing",
+            "probabilities": {
+              "billing": 0.9856486805706729,
+              "technical": 0.014059523331756568,
+              "sales": 0.00029179609757044053
+            }
+          },
+          "urgency": {
+            "type": "score",
+            "score": 0.9638410444314466,
+            "probabilities": {
+              "0": 0.03728486080616497,
+              "1": 0.9615892339562235,
+              "2": 0.001125905237611539
+            }
+          }
+        },
+        "metadata": {
+          "provider": "huggingface-space",
+          "requestedModel": "nimble-latest",
+          "resolvedModel": "bespokelabs/Bespoke-Nimble-9B",
+          "providerMetadata": {
+            "gradio": {
+              "gpuTime": "1.3s"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "no-refund-en",
+      "ok": true,
+      "elapsedMs": 682,
+      "input": "Our production API is down for every customer. Restore service immediately. We are not requesting a refund.",
+      "expected": {
+        "refund": false,
+        "team": "technical",
+        "level": 2
+      },
+      "checks": {
+        "refund": true,
+        "team": true,
+        "level": true
+      },
+      "result": {
+        "answers": {
+          "refund": {
+            "type": "boolean",
+            "probability": 0.0021827164453451808
+          },
+          "team": {
+            "type": "choice",
+            "choice": "technical",
+            "probabilities": {
+              "billing": 0.0004144923871093695,
+              "technical": 0.9622740919793997,
+              "sales": 0.03731141563349082
+            }
+          },
+          "urgency": {
+            "type": "score",
+            "score": 1.9992945083980842,
+            "probabilities": {
+              "0": 0.00010884378967579867,
+              "1": 0.000487804022564202,
+              "2": 0.99940335218776
+            }
+          }
+        },
+        "metadata": {
+          "provider": "huggingface-space",
+          "requestedModel": "nimble-latest",
+          "resolvedModel": "bespokelabs/Bespoke-Nimble-9B",
+          "providerMetadata": {
+            "gradio": {
+              "gpuTime": "0.3s"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "sales-en",
+      "ok": false,
+      "elapsedMs": 411,
+      "error": "Gradio inference did not complete: event: error\ndata: {\"error\": \"You have exceeded your ZeroGPU runs limit. Authenticate with a Hugging Face token for more quota - https://huggingface.co/settings/tokens\", \"duration\": 10, \"visible\": true, \"title\": \"ZeroGPU quota exceeded\"}\n\n"
+    },
+    {
+      "id": "refund-pt",
+      "ok": false,
+      "elapsedMs": 399,
+      "error": "Gradio inference did not complete: event: error\ndata: {\"error\": \"You have exceeded your ZeroGPU runs limit. Authenticate with a Hugging Face token for more quota - https://huggingface.co/settings/tokens\", \"duration\": 10, \"visible\": true, \"title\": \"ZeroGPU quota exceeded\"}\n\n"
+    },
+    {
+      "id": "no-refund-pt",
+      "ok": false,
+      "elapsedMs": 396,
+      "error": "Gradio inference did not complete: event: error\ndata: {\"error\": \"You have exceeded your ZeroGPU runs limit. Authenticate with a Hugging Face token for more quota - https://huggingface.co/settings/tokens\", \"duration\": 10, \"visible\": true, \"title\": \"ZeroGPU quota exceeded\"}\n\n"
+    },
+    {
+      "id": "sales-pt",
+      "ok": false,
+      "elapsedMs": 415,
+      "error": "Gradio inference did not complete: event: error\ndata: {\"error\": \"You have exceeded your ZeroGPU runs limit. Authenticate with a Hugging Face token for more quota - https://huggingface.co/settings/tokens\", \"duration\": 10, \"visible\": true, \"title\": \"ZeroGPU quota exceeded\"}\n\n"
+    },
+    {
+      "id": "shuffled-labels",
+      "ok": false,
+      "elapsedMs": 406,
+      "error": "Gradio inference did not complete: event: error\ndata: {\"error\": \"You have exceeded your ZeroGPU runs limit. Authenticate with a Hugging Face token for more quota - https://huggingface.co/settings/tokens\", \"duration\": 10, \"visible\": true, \"title\": \"ZeroGPU quota exceeded\"}\n\n"
+    },
+    {
+      "id": "check-explicit-criteria",
+      "ok": false,
+      "elapsedMs": 411,
+      "error": "Gradio inference did not complete: event: error\ndata: {\"error\": \"You have exceeded your ZeroGPU runs limit. Authenticate with a Hugging Face token for more quota - https://huggingface.co/settings/tokens\", \"duration\": 10, \"visible\": true, \"title\": \"ZeroGPU quota exceeded\"}\n\n"
+    },
+    {
+      "id": "partition",
+      "ok": false,
+      "elapsedMs": 403,
+      "error": "Gradio inference did not complete: event: error\ndata: {\"error\": \"You have exceeded your ZeroGPU runs limit. Authenticate with a Hugging Face token for more quota - https://huggingface.co/settings/tokens\", \"duration\": 10, \"visible\": true, \"title\": \"ZeroGPU quota exceeded\"}\n\n"
+    },
+    {
+      "id": "filter",
+      "ok": false,
+      "elapsedMs": 409,
+      "error": "Gradio inference did not complete: event: error\ndata: {\"error\": \"You have exceeded your ZeroGPU runs limit. Authenticate with a Hugging Face token for more quota - https://huggingface.co/settings/tokens\", \"duration\": 10, \"visible\": true, \"title\": \"ZeroGPU quota exceeded\"}\n\n"
+    },
+    {
+      "id": "rank",
+      "ok": false,
+      "elapsedMs": 412,
+      "error": "Gradio inference did not complete: event: error\ndata: {\"error\": \"You have exceeded your ZeroGPU runs limit. Authenticate with a Hugging Face token for more quota - https://huggingface.co/settings/tokens\", \"duration\": 10, \"visible\": true, \"title\": \"ZeroGPU quota exceeded\"}\n\n"
+    }
+  ],
+  "exchanges": [
+    {
+      "request": {
+        "context": "I was charged twice for order 847. Please refund the duplicate payment.",
+        "schema_json": "{\"refund\":{\"type\":\"boolean\",\"description\":\"Does the customer explicitly request a refund?\"},\"team\":{\"type\":\"enum\",\"description\":\"Choose the category that best describes the input.\",\"choices\":[\"billing\",\"technical\",\"sales\"],\"choice_descriptions\":{\"billing\":\"Charges, invoices and refunds\",\"technical\":\"Software bugs and outages\",\"sales\":\"Buying a new subscription\"}},\"urgency\":{\"type\":\"enum\",\"description\":\"Urgency of the request\",\"choices\":[\"0\",\"1\",\"2\"],\"choice_descriptions\":{\"0\":\"Optional improvement, no impact\",\"1\":\"Individual issue, normal queue\",\"2\":\"Production outage for all users\"}}}",
+        "score_fields": ["urgency"]
+      },
+      "status": 200,
+      "events": "event: complete\ndata: [\"### Decisions\\n\\n- `refund` \\u2192 **true**  \\n  <sub>Does the customer explicitly request a refund?</sub>\\n- `team` \\u2192 **billing**  \\n  <sub>Choose the category that best describes the input.</sub>\\n- `urgency` \\u2192 **1** (expected score 0.96)  \\n  <sub>Urgency of the request</sub>\\n\\n<sub>Scored 3 field(s) independently in 1.3s. Each field is scored on its own, so no field can see another field's answer.</sub>\", \"#### `refund`\\n<sub>Does the customer explicitly request a refund?</sub>\\n\\n| choice | distribution | probability |\\n| --- | --- | --- |\\n| `false` | \\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7 | 0.1% |\\n| `true` | \\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588 | 99.9% |\\n\\n\\n#### `team`\\n<sub>Choose the category that best describes the input.</sub>\\n\\n| choice | distribution | probability |\\n| --- | --- | --- |\\n| `billing` | \\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588 | 98.6% |\\n| `technical` | \\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7 | 1.4% |\\n| `sales` | \\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7 | 0.0% |\\n\\n- **A** `billing` \\u2014 Charges, invoices and refunds\\n- **B** `technical` \\u2014 Software bugs and outages\\n- **C** `sales` \\u2014 Buying a new subscription\\n\\n#### `urgency`\\n<sub>Urgency of the request</sub>\\n\\n| choice | distribution | probability |\\n| --- | --- | --- |\\n| `0` | \\u2588\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7 | 3.7% |\\n| `1` | \\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u00b7 | 96.2% |\\n| `2` | \\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7 | 0.1% |\\n\\n- **A** `0` \\u2014 Optional improvement, no impact\\n- **B** `1` \\u2014 Individual issue, normal queue\\n- **C** `2` \\u2014 Production outage for all users\\n- Expected score: **0.964**\", \"{\\n  \\\"refund\\\": {\\n    \\\"prediction\\\": true,\\n    \\\"probabilities\\\": {\\n      \\\"false\\\": 0.0010322310367548194,\\n      \\\"true\\\": 0.9989677689632452\\n    },\\n    \\\"logits\\\": {\\n      \\\"false\\\": 19.375,\\n      \\\"true\\\": 26.25\\n    },\\n    \\\"probability_true\\\": 0.9989677689632452\\n  },\\n  \\\"team\\\": {\\n    \\\"prediction\\\": \\\"billing\\\",\\n    \\\"probabilities\\\": {\\n      \\\"billing\\\": 0.9856486805706729,\\n      \\\"technical\\\": 0.014059523331756568,\\n      \\\"sales\\\": 0.00029179609757044053\\n    },\\n    \\\"logits\\\": {\\n      \\\"billing\\\": 25.25,\\n      \\\"technical\\\": 21.0,\\n      \\\"sales\\\": 17.125\\n    }\\n  },\\n  \\\"urgency\\\": {\\n    \\\"prediction\\\": 1,\\n    \\\"probabilities\\\": {\\n      \\\"0\\\": 0.03728486080616497,\\n      \\\"1\\\": 0.9615892339562235,\\n      \\\"2\\\": 0.001125905237611539\\n    },\\n    \\\"logits\\\": {\\n      \\\"0\\\": 20.375,\\n      \\\"1\\\": 23.625,\\n      \\\"2\\\": 16.875\\n    },\\n    \\\"expected_score\\\": 0.9638410444314466\\n  }\\n}\", \"1.3s\"]\n\n",
+      "elapsedMs": 3913
+    },
+    {
+      "request": {
+        "context": "Our production API is down for every customer. Restore service immediately. We are not requesting a refund.",
+        "schema_json": "{\"refund\":{\"type\":\"boolean\",\"description\":\"Does the customer explicitly request a refund?\"},\"team\":{\"type\":\"enum\",\"description\":\"Choose the category that best describes the input.\",\"choices\":[\"billing\",\"technical\",\"sales\"],\"choice_descriptions\":{\"billing\":\"Charges, invoices and refunds\",\"technical\":\"Software bugs and outages\",\"sales\":\"Buying a new subscription\"}},\"urgency\":{\"type\":\"enum\",\"description\":\"Urgency of the request\",\"choices\":[\"0\",\"1\",\"2\"],\"choice_descriptions\":{\"0\":\"Optional improvement, no impact\",\"1\":\"Individual issue, normal queue\",\"2\":\"Production outage for all users\"}}}",
+        "score_fields": ["urgency"]
+      },
+      "status": 200,
+      "events": "event: complete\ndata: [\"### Decisions\\n\\n- `refund` \\u2192 **false**  \\n  <sub>Does the customer explicitly request a refund?</sub>\\n- `team` \\u2192 **technical**  \\n  <sub>Choose the category that best describes the input.</sub>\\n- `urgency` \\u2192 **2** (expected score 2.00)  \\n  <sub>Urgency of the request</sub>\\n\\n<sub>Scored 3 field(s) independently in 0.3s. Each field is scored on its own, so no field can see another field's answer.</sub>\", \"#### `refund`\\n<sub>Does the customer explicitly request a refund?</sub>\\n\\n| choice | distribution | probability |\\n| --- | --- | --- |\\n| `false` | \\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588 | 99.8% |\\n| `true` | \\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7 | 0.2% |\\n\\n\\n#### `team`\\n<sub>Choose the category that best describes the input.</sub>\\n\\n| choice | distribution | probability |\\n| --- | --- | --- |\\n| `billing` | \\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7 | 0.0% |\\n| `technical` | \\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u00b7 | 96.2% |\\n| `sales` | \\u2588\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7 | 3.7% |\\n\\n- **A** `billing` \\u2014 Charges, invoices and refunds\\n- **B** `technical` \\u2014 Software bugs and outages\\n- **C** `sales` \\u2014 Buying a new subscription\\n\\n#### `urgency`\\n<sub>Urgency of the request</sub>\\n\\n| choice | distribution | probability |\\n| --- | --- | --- |\\n| `0` | \\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7 | 0.0% |\\n| `1` | \\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7\\u00b7 | 0.0% |\\n| `2` | \\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588 | 99.9% |\\n\\n- **A** `0` \\u2014 Optional improvement, no impact\\n- **B** `1` \\u2014 Individual issue, normal queue\\n- **C** `2` \\u2014 Production outage for all users\\n- Expected score: **1.999**\", \"{\\n  \\\"refund\\\": {\\n    \\\"prediction\\\": false,\\n    \\\"probabilities\\\": {\\n      \\\"false\\\": 0.9978172835546547,\\n      \\\"true\\\": 0.0021827164453451808\\n    },\\n    \\\"logits\\\": {\\n      \\\"false\\\": 26.25,\\n      \\\"true\\\": 20.125\\n    },\\n    \\\"probability_true\\\": 0.0021827164453451808\\n  },\\n  \\\"team\\\": {\\n    \\\"prediction\\\": \\\"technical\\\",\\n    \\\"probabilities\\\": {\\n      \\\"billing\\\": 0.0004144923871093695,\\n      \\\"technical\\\": 0.9622740919793997,\\n      \\\"sales\\\": 0.03731141563349082\\n    },\\n    \\\"logits\\\": {\\n      \\\"billing\\\": 16.875,\\n      \\\"technical\\\": 24.625,\\n      \\\"sales\\\": 21.375\\n    }\\n  },\\n  \\\"urgency\\\": {\\n    \\\"prediction\\\": 2,\\n    \\\"probabilities\\\": {\\n      \\\"0\\\": 0.00010884378967579867,\\n      \\\"1\\\": 0.000487804022564202,\\n      \\\"2\\\": 0.99940335218776\\n    },\\n    \\\"logits\\\": {\\n      \\\"0\\\": 17.0,\\n      \\\"1\\\": 18.5,\\n      \\\"2\\\": 26.125\\n    },\\n    \\\"expected_score\\\": 1.9992945083980842\\n  }\\n}\", \"0.3s\"]\n\n",
+      "elapsedMs": 681
+    },
+    {
+      "request": {
+        "context": "Can you send a quote for a new subscription? This is optional planning for next year; nothing is broken.",
+        "schema_json": "{\"refund\":{\"type\":\"boolean\",\"description\":\"Does the customer explicitly request a refund?\"},\"team\":{\"type\":\"enum\",\"description\":\"Choose the category that best describes the input.\",\"choices\":[\"billing\",\"technical\",\"sales\"],\"choice_descriptions\":{\"billing\":\"Charges, invoices and refunds\",\"technical\":\"Software bugs and outages\",\"sales\":\"Buying a new subscription\"}},\"urgency\":{\"type\":\"enum\",\"description\":\"Urgency of the request\",\"choices\":[\"0\",\"1\",\"2\"],\"choice_descriptions\":{\"0\":\"Optional improvement, no impact\",\"1\":\"Individual issue, normal queue\",\"2\":\"Production outage for all users\"}}}",
+        "score_fields": ["urgency"]
+      },
+      "status": 200,
+      "events": "event: error\ndata: {\"error\": \"You have exceeded your ZeroGPU runs limit. Authenticate with a Hugging Face token for more quota - https://huggingface.co/settings/tokens\", \"duration\": 10, \"visible\": true, \"title\": \"ZeroGPU quota exceeded\"}\n\n",
+      "elapsedMs": 411
+    },
+    {
+      "request": {
+        "context": "Fui cobrado duas vezes pelo pedido 847. Por favor, devolvam o pagamento duplicado.",
+        "schema_json": "{\"refund\":{\"type\":\"boolean\",\"description\":\"Does the customer explicitly request a refund?\"},\"team\":{\"type\":\"enum\",\"description\":\"Choose the category that best describes the input.\",\"choices\":[\"billing\",\"technical\",\"sales\"],\"choice_descriptions\":{\"billing\":\"Charges, invoices and refunds\",\"technical\":\"Software bugs and outages\",\"sales\":\"Buying a new subscription\"}},\"urgency\":{\"type\":\"enum\",\"description\":\"Urgency of the request\",\"choices\":[\"0\",\"1\",\"2\"],\"choice_descriptions\":{\"0\":\"Optional improvement, no impact\",\"1\":\"Individual issue, normal queue\",\"2\":\"Production outage for all users\"}}}",
+        "score_fields": ["urgency"]
+      },
+      "status": 200,
+      "events": "event: error\ndata: {\"error\": \"You have exceeded your ZeroGPU runs limit. Authenticate with a Hugging Face token for more quota - https://huggingface.co/settings/tokens\", \"duration\": 10, \"visible\": true, \"title\": \"ZeroGPU quota exceeded\"}\n\n",
+      "elapsedMs": 399
+    },
+    {
+      "request": {
+        "context": "A API de produção caiu para todos os clientes. Restaurem o serviço imediatamente. Não estamos pedindo reembolso.",
+        "schema_json": "{\"refund\":{\"type\":\"boolean\",\"description\":\"Does the customer explicitly request a refund?\"},\"team\":{\"type\":\"enum\",\"description\":\"Choose the category that best describes the input.\",\"choices\":[\"billing\",\"technical\",\"sales\"],\"choice_descriptions\":{\"billing\":\"Charges, invoices and refunds\",\"technical\":\"Software bugs and outages\",\"sales\":\"Buying a new subscription\"}},\"urgency\":{\"type\":\"enum\",\"description\":\"Urgency of the request\",\"choices\":[\"0\",\"1\",\"2\"],\"choice_descriptions\":{\"0\":\"Optional improvement, no impact\",\"1\":\"Individual issue, normal queue\",\"2\":\"Production outage for all users\"}}}",
+        "score_fields": ["urgency"]
+      },
+      "status": 200,
+      "events": "event: error\ndata: {\"error\": \"You have exceeded your ZeroGPU runs limit. Authenticate with a Hugging Face token for more quota - https://huggingface.co/settings/tokens\", \"duration\": 10, \"visible\": true, \"title\": \"ZeroGPU quota exceeded\"}\n\n",
+      "elapsedMs": 396
+    },
+    {
+      "request": {
+        "context": "Podem enviar uma proposta para uma nova assinatura? É um planejamento opcional para o próximo ano; nada está quebrado.",
+        "schema_json": "{\"refund\":{\"type\":\"boolean\",\"description\":\"Does the customer explicitly request a refund?\"},\"team\":{\"type\":\"enum\",\"description\":\"Choose the category that best describes the input.\",\"choices\":[\"billing\",\"technical\",\"sales\"],\"choice_descriptions\":{\"billing\":\"Charges, invoices and refunds\",\"technical\":\"Software bugs and outages\",\"sales\":\"Buying a new subscription\"}},\"urgency\":{\"type\":\"enum\",\"description\":\"Urgency of the request\",\"choices\":[\"0\",\"1\",\"2\"],\"choice_descriptions\":{\"0\":\"Optional improvement, no impact\",\"1\":\"Individual issue, normal queue\",\"2\":\"Production outage for all users\"}}}",
+        "score_fields": ["urgency"]
+      },
+      "status": 200,
+      "events": "event: error\ndata: {\"error\": \"You have exceeded your ZeroGPU runs limit. Authenticate with a Hugging Face token for more quota - https://huggingface.co/settings/tokens\", \"duration\": 10, \"visible\": true, \"title\": \"ZeroGPU quota exceeded\"}\n\n",
+      "elapsedMs": 414
+    },
+    {
+      "request": {
+        "context": "I was charged twice for order 847. Please refund the duplicate payment.",
+        "schema_json": "{\"team\":{\"type\":\"enum\",\"description\":\"Choose the category that best describes the input.\",\"choices\":[\"sales\",\"technical\",\"billing\"],\"choice_descriptions\":{\"sales\":\"Buying a new subscription\",\"technical\":\"Software bugs and outages\",\"billing\":\"Charges, invoices and refunds\"}}}",
+        "score_fields": []
+      },
+      "status": 200,
+      "events": "event: error\ndata: {\"error\": \"You have exceeded your ZeroGPU runs limit. Authenticate with a Hugging Face token for more quota - https://huggingface.co/settings/tokens\", \"duration\": 10, \"visible\": true, \"title\": \"ZeroGPU quota exceeded\"}\n\n",
+      "elapsedMs": 405
+    },
+    {
+      "request": {
+        "context": "I was charged twice for order 847. Please refund the duplicate payment.",
+        "schema_json": "{\"result\":{\"type\":\"boolean\",\"description\":\"Does the customer explicitly request a refund?\",\"choice_descriptions\":{\"true\":\"An explicit request to return money\",\"false\":\"No explicit request to return money\"}}}",
+        "score_fields": []
+      },
+      "status": 200,
+      "events": "event: error\ndata: {\"error\": \"You have exceeded your ZeroGPU runs limit. Authenticate with a Hugging Face token for more quota - https://huggingface.co/settings/tokens\", \"duration\": 10, \"visible\": true, \"title\": \"ZeroGPU quota exceeded\"}\n\n",
+      "elapsedMs": 410
+    },
+    {
+      "request": {
+        "context": "I was charged twice for order 847. Please refund the duplicate payment.",
+        "schema_json": "{\"result\":{\"type\":\"boolean\",\"description\":\"Does the customer explicitly request a refund?\"}}",
+        "score_fields": []
+      },
+      "status": 200,
+      "events": "event: error\ndata: {\"error\": \"You have exceeded your ZeroGPU runs limit. Authenticate with a Hugging Face token for more quota - https://huggingface.co/settings/tokens\", \"duration\": 10, \"visible\": true, \"title\": \"ZeroGPU quota exceeded\"}\n\n",
+      "elapsedMs": 402
+    },
+    {
+      "request": {
+        "context": "I was charged twice for order 847. Please refund the duplicate payment.",
+        "schema_json": "{\"result\":{\"type\":\"boolean\",\"description\":\"Does the customer explicitly request a refund?\"}}",
+        "score_fields": []
+      },
+      "status": 200,
+      "events": "event: error\ndata: {\"error\": \"You have exceeded your ZeroGPU runs limit. Authenticate with a Hugging Face token for more quota - https://huggingface.co/settings/tokens\", \"duration\": 10, \"visible\": true, \"title\": \"ZeroGPU quota exceeded\"}\n\n",
+      "elapsedMs": 408
+    },
+    {
+      "request": {
+        "context": "I was charged twice for order 847. Please refund the duplicate payment.",
+        "schema_json": "{\"result\":{\"type\":\"enum\",\"description\":\"Urgency of the request\",\"choices\":[\"0\",\"1\",\"2\"],\"choice_descriptions\":{\"0\":\"Optional improvement, no impact\",\"1\":\"Individual issue, normal queue\",\"2\":\"Production outage for all users\"}}}",
+        "score_fields": ["result"]
+      },
+      "status": 200,
+      "events": "event: error\ndata: {\"error\": \"You have exceeded your ZeroGPU runs limit. Authenticate with a Hugging Face token for more quota - https://huggingface.co/settings/tokens\", \"duration\": 10, \"visible\": true, \"title\": \"ZeroGPU quota exceeded\"}\n\n",
+      "elapsedMs": 412
+    }
+  ]
+}

@@ -65,7 +65,7 @@ Node.js 22+ and ESM. Set `AI_GATEWAY_API_KEY` on your server. The examples defau
 
 Vercel lists Jev as free during a promotion ending September 25, 2026. [Check current pricing](https://vercel.com/ai-gateway/models/jev). The playground shows each request's reported Gateway cost in USD, browser response time, server evaluation time and input tokens. Missing cost is shown as unavailable, never assumed to be zero.
 
-See [open evaluation models and compatibility](research/open-evaluation-models.md) for OpenJev, Bespoke Nimble and Kotoba. The HTTP adapter is contract-tested; open model GPU inference has not been tested by this project.
+See [open evaluation models and compatibility](research/open-evaluation-models.md) for OpenJev, Bespoke Nimble and Kotoba. Real inference is confirmed for Kotoba through a local Python bridge and for Nimble through a Hugging Face demo bridge. OpenJev/DiffusionGemma inference remains unverified. See the [results, limits and runnable checks](https://github.com/sysone-help/sysone/tree/main/research/validation).
 
 ## Size and dependencies
 

@@ -1,5 +1,9 @@
 # Modelos abertos de decisão para Sysone
 
+**Atualização após execução real (19/09/2026):** Kotoba foi executado localmente em CPU com as seis operações da Sysone. Nimble respondeu por uma ponte para o demo Gradio; o endpoint System One público retornou 503. OpenJev/DiffusionGemma continua sem inferência confirmada: hardware local insuficiente e login Codiv retornando 500. [Resultados brutos, limitações e comandos para reproduzir](validation/README.md).
+
+## Pesquisa inicial, antes dos testes
+
 Pesquisa em 19/09/2026. Fontes primárias: publicações dos autores, model cards, pesos publicados e código de inferência. Não houve download de pesos, execução de modelos ou inferência paga. A pesquisa inspecionou contratos e código; depois dela, o adapter HTTP genérico foi implementado e validado com fixtures na versão 0.1.1. Não houve execução dos modelos abertos.
 
 ## Conclusão

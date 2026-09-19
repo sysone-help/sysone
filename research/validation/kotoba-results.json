@@ -1,0 +1,882 @@
+{
+  "testedAt": "2026-09-19T12:36:58.668Z",
+  "backend": "kotoba",
+  "model": "com-kotobalabs/open-jev-deberta-v3-large",
+  "results": [
+    {
+      "id": "refund-en",
+      "ok": true,
+      "elapsedMs": 509,
+      "input": "I was charged twice for order 847. Please refund the duplicate payment.",
+      "expected": {
+        "refund": true,
+        "team": "billing",
+        "level": 1
+      },
+      "checks": {
+        "refund": true,
+        "team": true,
+        "level": true
+      },
+      "result": {
+        "answers": {
+          "refund": {
+            "type": "boolean",
+            "probability": 0.8780617713928223
+          },
+          "team": {
+            "type": "choice",
+            "choice": "billing",
+            "probabilities": {
+              "billing": 0.805072546005249,
+              "technical": 0.1483376920223236,
+              "sales": 0.04658975824713707
+            },
+            "confidence": 0.805072546005249
+          },
+          "urgency": {
+            "type": "score",
+            "score": 0.9097964763641357,
+            "probabilities": {
+              "0": 0.35619470477104187,
+              "1": 0.37781399488449097,
+              "2": 0.2659912407398224
+            },
+            "confidence": 0.37781399488449097
+          }
+        },
+        "metadata": {
+          "provider": "kotoba",
+          "requestedModel": "com-kotobalabs/open-jev-deberta-v3-large",
+          "resolvedModel": "com-kotobalabs/open-jev-deberta-v3-large"
+        }
+      }
+    },
+    {
+      "id": "no-refund-en",
+      "ok": true,
+      "elapsedMs": 345,
+      "input": "Our production API is down for every customer. Restore service immediately. We are not requesting a refund.",
+      "expected": {
+        "refund": false,
+        "team": "technical",
+        "level": 2
+      },
+      "checks": {
+        "refund": true,
+        "team": true,
+        "level": true
+      },
+      "result": {
+        "answers": {
+          "refund": {
+            "type": "boolean",
+            "probability": 0.040689751505851746
+          },
+          "team": {
+            "type": "choice",
+            "choice": "technical",
+            "probabilities": {
+              "billing": 0.11642010509967804,
+              "technical": 0.7611095905303955,
+              "sales": 0.12247035652399063
+            },
+            "confidence": 0.7611095905303955
+          },
+          "urgency": {
+            "type": "score",
+            "score": 1.981910061556846,
+            "probabilities": {
+              "0": 0.0061886608600616455,
+              "1": 0.005712699610739946,
+              "2": 0.988098680973053
+            },
+            "confidence": 0.988098680973053
+          }
+        },
+        "metadata": {
+          "provider": "kotoba",
+          "requestedModel": "com-kotobalabs/open-jev-deberta-v3-large",
+          "resolvedModel": "com-kotobalabs/open-jev-deberta-v3-large"
+        }
+      }
+    },
+    {
+      "id": "sales-en",
+      "ok": true,
+      "elapsedMs": 363,
+      "input": "Can you send a quote for a new subscription? This is optional planning for next year; nothing is broken.",
+      "expected": {
+        "refund": false,
+        "team": "sales",
+        "level": 0
+      },
+      "checks": {
+        "refund": true,
+        "team": true,
+        "level": false
+      },
+      "result": {
+        "answers": {
+          "refund": {
+            "type": "boolean",
+            "probability": 0.21108078956604004
+          },
+          "team": {
+            "type": "choice",
+            "choice": "sales",
+            "probabilities": {
+              "billing": 0.019418388605117798,
+              "technical": 0.018024416640400887,
+              "sales": 0.9625571966171265
+            },
+            "confidence": 0.9625571966171265
+          },
+          "urgency": {
+            "type": "score",
+            "score": 0.7600794583559036,
+            "probabilities": {
+              "0": 0.5147269368171692,
+              "1": 0.21046675741672516,
+              "2": 0.27480635046958923
+            },
+            "confidence": 0.5147269368171692
+          }
+        },
+        "metadata": {
+          "provider": "kotoba",
+          "requestedModel": "com-kotobalabs/open-jev-deberta-v3-large",
+          "resolvedModel": "com-kotobalabs/open-jev-deberta-v3-large"
+        }
+      }
+    },
+    {
+      "id": "refund-pt",
+      "ok": true,
+      "elapsedMs": 379,
+      "input": "Fui cobrado duas vezes pelo pedido 847. Por favor, devolvam o pagamento duplicado.",
+      "expected": {
+        "refund": true,
+        "team": "billing",
+        "level": 1
+      },
+      "checks": {
+        "refund": true,
+        "team": true,
+        "level": true
+      },
+      "result": {
+        "answers": {
+          "refund": {
+            "type": "boolean",
+            "probability": 0.9013769626617432
+          },
+          "team": {
+            "type": "choice",
+            "choice": "billing",
+            "probabilities": {
+              "billing": 0.755372166633606,
+              "technical": 0.18653349578380585,
+              "sales": 0.058094337582588196
+            },
+            "confidence": 0.755372166633606
+          },
+          "urgency": {
+            "type": "score",
+            "score": 0.9695560336112976,
+            "probabilities": {
+              "0": 0.3318973779678345,
+              "1": 0.3666492700576782,
+              "2": 0.3014533817768097
+            },
+            "confidence": 0.3666492700576782
+          }
+        },
+        "metadata": {
+          "provider": "kotoba",
+          "requestedModel": "com-kotobalabs/open-jev-deberta-v3-large",
+          "resolvedModel": "com-kotobalabs/open-jev-deberta-v3-large"
+        }
+      }
+    },
+    {
+      "id": "no-refund-pt",
+      "ok": true,
+      "elapsedMs": 395,
+      "input": "A API de produção caiu para todos os clientes. Restaurem o serviço imediatamente. Não estamos pedindo reembolso.",
+      "expected": {
+        "refund": false,
+        "team": "technical",
+        "level": 2
+      },
+      "checks": {
+        "refund": true,
+        "team": true,
+        "level": true
+      },
+      "result": {
+        "answers": {
+          "refund": {
+            "type": "boolean",
+            "probability": 0.0265736635774374
+          },
+          "team": {
+            "type": "choice",
+            "choice": "technical",
+            "probabilities": {
+              "billing": 0.09656861424446106,
+              "technical": 0.820344090461731,
+              "sales": 0.0830872505903244
+            },
+            "confidence": 0.820344090461731
+          },
+          "urgency": {
+            "type": "score",
+            "score": 1.9725542329251766,
+            "probabilities": {
+              "0": 0.009431958198547363,
+              "1": 0.008581902831792831,
+              "2": 0.9819861650466919
+            },
+            "confidence": 0.9819861650466919
+          }
+        },
+        "metadata": {
+          "provider": "kotoba",
+          "requestedModel": "com-kotobalabs/open-jev-deberta-v3-large",
+          "resolvedModel": "com-kotobalabs/open-jev-deberta-v3-large"
+        }
+      }
+    },
+    {
+      "id": "sales-pt",
+      "ok": true,
+      "elapsedMs": 397,
+      "input": "Podem enviar uma proposta para uma nova assinatura? É um planejamento opcional para o próximo ano; nada está quebrado.",
+      "expected": {
+        "refund": false,
+        "team": "sales",
+        "level": 0
+      },
+      "checks": {
+        "refund": true,
+        "team": true,
+        "level": false
+      },
+      "result": {
+        "answers": {
+          "refund": {
+            "type": "boolean",
+            "probability": 0.22859662771224976
+          },
+          "team": {
+            "type": "choice",
+            "choice": "sales",
+            "probabilities": {
+              "billing": 0.03999997302889824,
+              "technical": 0.04656964913010597,
+              "sales": 0.9134303331375122
+            },
+            "confidence": 0.9134303331375122
+          },
+          "urgency": {
+            "type": "score",
+            "score": 0.9179612398147583,
+            "probabilities": {
+              "0": 0.43657186627388,
+              "1": 0.20889514684677124,
+              "2": 0.35453304648399353
+            },
+            "confidence": 0.43657186627388
+          }
+        },
+        "metadata": {
+          "provider": "kotoba",
+          "requestedModel": "com-kotobalabs/open-jev-deberta-v3-large",
+          "resolvedModel": "com-kotobalabs/open-jev-deberta-v3-large"
+        }
+      }
+    },
+    {
+      "id": "shuffled-labels",
+      "ok": true,
+      "elapsedMs": 283,
+      "result": {
+        "answers": {
+          "team": {
+            "type": "choice",
+            "choice": "billing",
+            "probabilities": {
+              "sales": 0.10074859857559204,
+              "technical": 0.26827529072761536,
+              "billing": 0.630976140499115
+            },
+            "confidence": 0.630976140499115
+          }
+        },
+        "metadata": {
+          "provider": "kotoba",
+          "requestedModel": "com-kotobalabs/open-jev-deberta-v3-large",
+          "resolvedModel": "com-kotobalabs/open-jev-deberta-v3-large"
+        }
+      }
+    },
+    {
+      "id": "check-explicit-criteria",
+      "ok": true,
+      "elapsedMs": 261,
+      "result": {
+        "type": "boolean",
+        "probability": 0.3741495907306671,
+        "decision": "uncertain",
+        "metadata": {
+          "provider": "kotoba",
+          "requestedModel": "com-kotobalabs/open-jev-deberta-v3-large",
+          "resolvedModel": "com-kotobalabs/open-jev-deberta-v3-large"
+        }
+      }
+    },
+    {
+      "id": "partition",
+      "ok": true,
+      "elapsedMs": 752,
+      "result": {
+        "yes": [
+          {
+            "id": "refund-en",
+            "text": "I was charged twice for order 847. Please refund the duplicate payment.",
+            "refund": true,
+            "team": "billing",
+            "level": 1
+          }
+        ],
+        "no": [
+          {
+            "id": "no-refund-en",
+            "text": "Our production API is down for every customer. Restore service immediately. We are not requesting a refund.",
+            "refund": false,
+            "team": "technical",
+            "level": 2
+          }
+        ],
+        "uncertain": [
+          {
+            "id": "sales-en",
+            "text": "Can you send a quote for a new subscription? This is optional planning for next year; nothing is broken.",
+            "refund": false,
+            "team": "sales",
+            "level": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "filter",
+      "ok": true,
+      "elapsedMs": 761,
+      "result": [
+        {
+          "id": "refund-en",
+          "text": "I was charged twice for order 847. Please refund the duplicate payment.",
+          "refund": true,
+          "team": "billing",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "rank",
+      "ok": true,
+      "elapsedMs": 810,
+      "result": [
+        {
+          "item": {
+            "id": "no-refund-en",
+            "text": "Our production API is down for every customer. Restore service immediately. We are not requesting a refund.",
+            "refund": false,
+            "team": "technical",
+            "level": 2
+          },
+          "score": 1.9433206990361214,
+          "answer": {
+            "type": "score",
+            "score": 1.9433206990361214,
+            "probabilities": {
+              "0": 0.019120516255497932,
+              "1": 0.01843840628862381,
+              "2": 0.9624411463737488
+            },
+            "confidence": 0.9624411463737488
+          },
+          "metadata": {
+            "provider": "kotoba",
+            "requestedModel": "com-kotobalabs/open-jev-deberta-v3-large",
+            "resolvedModel": "com-kotobalabs/open-jev-deberta-v3-large"
+          }
+        },
+        {
+          "item": {
+            "id": "refund-en",
+            "text": "I was charged twice for order 847. Please refund the duplicate payment.",
+            "refund": true,
+            "team": "billing",
+            "level": 1
+          },
+          "score": 0.9485824108123779,
+          "answer": {
+            "type": "score",
+            "score": 0.9485824108123779,
+            "probabilities": {
+              "0": 0.296757310628891,
+              "1": 0.45790305733680725,
+              "2": 0.24533967673778534
+            },
+            "confidence": 0.45790305733680725
+          },
+          "metadata": {
+            "provider": "kotoba",
+            "requestedModel": "com-kotobalabs/open-jev-deberta-v3-large",
+            "resolvedModel": "com-kotobalabs/open-jev-deberta-v3-large"
+          }
+        },
+        {
+          "item": {
+            "id": "sales-en",
+            "text": "Can you send a quote for a new subscription? This is optional planning for next year; nothing is broken.",
+            "refund": false,
+            "team": "sales",
+            "level": 0
+          },
+          "score": 0.7622378766536713,
+          "answer": {
+            "type": "score",
+            "score": 0.7622378766536713,
+            "probabilities": {
+              "0": 0.4720071852207184,
+              "1": 0.2937476933002472,
+              "2": 0.23424509167671204
+            },
+            "confidence": 0.4720071852207184
+          },
+          "metadata": {
+            "provider": "kotoba",
+            "requestedModel": "com-kotobalabs/open-jev-deberta-v3-large",
+            "resolvedModel": "com-kotobalabs/open-jev-deberta-v3-large"
+          }
+        }
+      ]
+    },
+    {
+      "id": "oversized-state",
+      "ok": true,
+      "elapsedMs": 2,
+      "rejected": true,
+      "code": "PROVIDER_ERROR",
+      "message": "Evaluation provider returned HTTP 400."
+    }
+  ],
+  "exchanges": [
+    {
+      "request": {
+        "model": "com-kotobalabs/open-jev-deberta-v3-large",
+        "state": "I was charged twice for order 847. Please refund the duplicate payment.",
+        "questions": {
+          "refund": {
+            "type": "noul",
+            "instructions": "Does the customer explicitly request a refund?"
+          },
+          "team": {
+            "type": "choice",
+            "instructions": "Choose the category that best describes the input.",
+            "criteria": {
+              "billing": "Charges, invoices and refunds",
+              "technical": "Software bugs and outages",
+              "sales": "Buying a new subscription"
+            }
+          },
+          "urgency": {
+            "type": "score",
+            "instructions": "Urgency of the request",
+            "criteria": [
+              "Optional improvement, no impact",
+              "Individual issue, normal queue",
+              "Production outage for all users"
+            ]
+          }
+        }
+      },
+      "status": 200,
+      "response": "{\"model\": \"com-kotobalabs/open-jev-deberta-v3-large\", \"answers\": {\"refund\": {\"type\": \"noul\", \"noul\": 0.8780617713928223}, \"team\": {\"type\": \"choice\", \"choice\": \"billing\", \"probabilities\": {\"billing\": 0.805072546005249, \"technical\": 0.1483376920223236, \"sales\": 0.04658975824713707}, \"confidence\": 0.805072546005249}, \"urgency\": {\"type\": \"score\", \"score\": 0.9097964763641357, \"probabilities\": {\"0\": 0.35619470477104187, \"1\": 0.37781399488449097, \"2\": 0.2659912407398224}, \"confidence\": 0.37781399488449097}}}",
+      "elapsedMs": 419
+    },
+    {
+      "request": {
+        "model": "com-kotobalabs/open-jev-deberta-v3-large",
+        "state": "Our production API is down for every customer. Restore service immediately. We are not requesting a refund.",
+        "questions": {
+          "refund": {
+            "type": "noul",
+            "instructions": "Does the customer explicitly request a refund?"
+          },
+          "team": {
+            "type": "choice",
+            "instructions": "Choose the category that best describes the input.",
+            "criteria": {
+              "billing": "Charges, invoices and refunds",
+              "technical": "Software bugs and outages",
+              "sales": "Buying a new subscription"
+            }
+          },
+          "urgency": {
+            "type": "score",
+            "instructions": "Urgency of the request",
+            "criteria": [
+              "Optional improvement, no impact",
+              "Individual issue, normal queue",
+              "Production outage for all users"
+            ]
+          }
+        }
+      },
+      "status": 200,
+      "response": "{\"model\": \"com-kotobalabs/open-jev-deberta-v3-large\", \"answers\": {\"refund\": {\"type\": \"noul\", \"noul\": 0.040689751505851746}, \"team\": {\"type\": \"choice\", \"choice\": \"technical\", \"probabilities\": {\"billing\": 0.11642010509967804, \"technical\": 0.7611095905303955, \"sales\": 0.12247035652399063}, \"confidence\": 0.7611095905303955}, \"urgency\": {\"type\": \"score\", \"score\": 1.981910061556846, \"probabilities\": {\"0\": 0.0061886608600616455, \"1\": 0.005712699610739946, \"2\": 0.988098680973053}, \"confidence\": 0.988098680973053}}}",
+      "elapsedMs": 345
+    },
+    {
+      "request": {
+        "model": "com-kotobalabs/open-jev-deberta-v3-large",
+        "state": "Can you send a quote for a new subscription? This is optional planning for next year; nothing is broken.",
+        "questions": {
+          "refund": {
+            "type": "noul",
+            "instructions": "Does the customer explicitly request a refund?"
+          },
+          "team": {
+            "type": "choice",
+            "instructions": "Choose the category that best describes the input.",
+            "criteria": {
+              "billing": "Charges, invoices and refunds",
+              "technical": "Software bugs and outages",
+              "sales": "Buying a new subscription"
+            }
+          },
+          "urgency": {
+            "type": "score",
+            "instructions": "Urgency of the request",
+            "criteria": [
+              "Optional improvement, no impact",
+              "Individual issue, normal queue",
+              "Production outage for all users"
+            ]
+          }
+        }
+      },
+      "status": 200,
+      "response": "{\"model\": \"com-kotobalabs/open-jev-deberta-v3-large\", \"answers\": {\"refund\": {\"type\": \"noul\", \"noul\": 0.21108078956604004}, \"team\": {\"type\": \"choice\", \"choice\": \"sales\", \"probabilities\": {\"billing\": 0.019418388605117798, \"technical\": 0.018024416640400887, \"sales\": 0.9625571966171265}, \"confidence\": 0.9625571966171265}, \"urgency\": {\"type\": \"score\", \"score\": 0.7600794583559036, \"probabilities\": {\"0\": 0.5147269368171692, \"1\": 0.21046675741672516, \"2\": 0.27480635046958923}, \"confidence\": 0.5147269368171692}}}",
+      "elapsedMs": 362
+    },
+    {
+      "request": {
+        "model": "com-kotobalabs/open-jev-deberta-v3-large",
+        "state": "Fui cobrado duas vezes pelo pedido 847. Por favor, devolvam o pagamento duplicado.",
+        "questions": {
+          "refund": {
+            "type": "noul",
+            "instructions": "Does the customer explicitly request a refund?"
+          },
+          "team": {
+            "type": "choice",
+            "instructions": "Choose the category that best describes the input.",
+            "criteria": {
+              "billing": "Charges, invoices and refunds",
+              "technical": "Software bugs and outages",
+              "sales": "Buying a new subscription"
+            }
+          },
+          "urgency": {
+            "type": "score",
+            "instructions": "Urgency of the request",
+            "criteria": [
+              "Optional improvement, no impact",
+              "Individual issue, normal queue",
+              "Production outage for all users"
+            ]
+          }
+        }
+      },
+      "status": 200,
+      "response": "{\"model\": \"com-kotobalabs/open-jev-deberta-v3-large\", \"answers\": {\"refund\": {\"type\": \"noul\", \"noul\": 0.9013769626617432}, \"team\": {\"type\": \"choice\", \"choice\": \"billing\", \"probabilities\": {\"billing\": 0.755372166633606, \"technical\": 0.18653349578380585, \"sales\": 0.058094337582588196}, \"confidence\": 0.755372166633606}, \"urgency\": {\"type\": \"score\", \"score\": 0.9695560336112976, \"probabilities\": {\"0\": 0.3318973779678345, \"1\": 0.3666492700576782, \"2\": 0.3014533817768097}, \"confidence\": 0.3666492700576782}}}",
+      "elapsedMs": 379
+    },
+    {
+      "request": {
+        "model": "com-kotobalabs/open-jev-deberta-v3-large",
+        "state": "A API de produção caiu para todos os clientes. Restaurem o serviço imediatamente. Não estamos pedindo reembolso.",
+        "questions": {
+          "refund": {
+            "type": "noul",
+            "instructions": "Does the customer explicitly request a refund?"
+          },
+          "team": {
+            "type": "choice",
+            "instructions": "Choose the category that best describes the input.",
+            "criteria": {
+              "billing": "Charges, invoices and refunds",
+              "technical": "Software bugs and outages",
+              "sales": "Buying a new subscription"
+            }
+          },
+          "urgency": {
+            "type": "score",
+            "instructions": "Urgency of the request",
+            "criteria": [
+              "Optional improvement, no impact",
+              "Individual issue, normal queue",
+              "Production outage for all users"
+            ]
+          }
+        }
+      },
+      "status": 200,
+      "response": "{\"model\": \"com-kotobalabs/open-jev-deberta-v3-large\", \"answers\": {\"refund\": {\"type\": \"noul\", \"noul\": 0.0265736635774374}, \"team\": {\"type\": \"choice\", \"choice\": \"technical\", \"probabilities\": {\"billing\": 0.09656861424446106, \"technical\": 0.820344090461731, \"sales\": 0.0830872505903244}, \"confidence\": 0.820344090461731}, \"urgency\": {\"type\": \"score\", \"score\": 1.9725542329251766, \"probabilities\": {\"0\": 0.009431958198547363, \"1\": 0.008581902831792831, \"2\": 0.9819861650466919}, \"confidence\": 0.9819861650466919}}}",
+      "elapsedMs": 395
+    },
+    {
+      "request": {
+        "model": "com-kotobalabs/open-jev-deberta-v3-large",
+        "state": "Podem enviar uma proposta para uma nova assinatura? É um planejamento opcional para o próximo ano; nada está quebrado.",
+        "questions": {
+          "refund": {
+            "type": "noul",
+            "instructions": "Does the customer explicitly request a refund?"
+          },
+          "team": {
+            "type": "choice",
+            "instructions": "Choose the category that best describes the input.",
+            "criteria": {
+              "billing": "Charges, invoices and refunds",
+              "technical": "Software bugs and outages",
+              "sales": "Buying a new subscription"
+            }
+          },
+          "urgency": {
+            "type": "score",
+            "instructions": "Urgency of the request",
+            "criteria": [
+              "Optional improvement, no impact",
+              "Individual issue, normal queue",
+              "Production outage for all users"
+            ]
+          }
+        }
+      },
+      "status": 200,
+      "response": "{\"model\": \"com-kotobalabs/open-jev-deberta-v3-large\", \"answers\": {\"refund\": {\"type\": \"noul\", \"noul\": 0.22859662771224976}, \"team\": {\"type\": \"choice\", \"choice\": \"sales\", \"probabilities\": {\"billing\": 0.03999997302889824, \"technical\": 0.04656964913010597, \"sales\": 0.9134303331375122}, \"confidence\": 0.9134303331375122}, \"urgency\": {\"type\": \"score\", \"score\": 0.9179612398147583, \"probabilities\": {\"0\": 0.43657186627388, \"1\": 0.20889514684677124, \"2\": 0.35453304648399353}, \"confidence\": 0.43657186627388}}}",
+      "elapsedMs": 397
+    },
+    {
+      "request": {
+        "model": "com-kotobalabs/open-jev-deberta-v3-large",
+        "state": "I was charged twice for order 847. Please refund the duplicate payment.",
+        "questions": {
+          "team": {
+            "type": "choice",
+            "instructions": "Choose the category that best describes the input.",
+            "criteria": {
+              "sales": "Buying a new subscription",
+              "technical": "Software bugs and outages",
+              "billing": "Charges, invoices and refunds"
+            }
+          }
+        }
+      },
+      "status": 200,
+      "response": "{\"model\": \"com-kotobalabs/open-jev-deberta-v3-large\", \"answers\": {\"team\": {\"type\": \"choice\", \"choice\": \"billing\", \"probabilities\": {\"sales\": 0.10074859857559204, \"technical\": 0.26827529072761536, \"billing\": 0.630976140499115}, \"confidence\": 0.630976140499115}}}",
+      "elapsedMs": 283
+    },
+    {
+      "request": {
+        "model": "com-kotobalabs/open-jev-deberta-v3-large",
+        "state": "I was charged twice for order 847. Please refund the duplicate payment.",
+        "questions": {
+          "result": {
+            "type": "noul",
+            "instructions": "Does the customer explicitly request a refund?",
+            "criteria": {
+              "true": "An explicit request to return money",
+              "false": "No explicit request to return money"
+            }
+          }
+        }
+      },
+      "status": 200,
+      "response": "{\"model\": \"com-kotobalabs/open-jev-deberta-v3-large\", \"answers\": {\"result\": {\"type\": \"noul\", \"noul\": 0.3741495907306671}}}",
+      "elapsedMs": 260
+    },
+    {
+      "request": {
+        "model": "com-kotobalabs/open-jev-deberta-v3-large",
+        "state": "I was charged twice for order 847. Please refund the duplicate payment.",
+        "questions": {
+          "result": {
+            "type": "noul",
+            "instructions": "Does the customer explicitly request a refund?"
+          }
+        }
+      },
+      "status": 200,
+      "response": "{\"model\": \"com-kotobalabs/open-jev-deberta-v3-large\", \"answers\": {\"result\": {\"type\": \"noul\", \"noul\": 0.8421566486358643}}}",
+      "elapsedMs": 236
+    },
+    {
+      "request": {
+        "model": "com-kotobalabs/open-jev-deberta-v3-large",
+        "state": "Our production API is down for every customer. Restore service immediately. We are not requesting a refund.",
+        "questions": {
+          "result": {
+            "type": "noul",
+            "instructions": "Does the customer explicitly request a refund?"
+          }
+        }
+      },
+      "status": 200,
+      "response": "{\"model\": \"com-kotobalabs/open-jev-deberta-v3-large\", \"answers\": {\"result\": {\"type\": \"noul\", \"noul\": 0.0633111521601677}}}",
+      "elapsedMs": 256
+    },
+    {
+      "request": {
+        "model": "com-kotobalabs/open-jev-deberta-v3-large",
+        "state": "Can you send a quote for a new subscription? This is optional planning for next year; nothing is broken.",
+        "questions": {
+          "result": {
+            "type": "noul",
+            "instructions": "Does the customer explicitly request a refund?"
+          }
+        }
+      },
+      "status": 200,
+      "response": "{\"model\": \"com-kotobalabs/open-jev-deberta-v3-large\", \"answers\": {\"result\": {\"type\": \"noul\", \"noul\": 0.22470641136169434}}}",
+      "elapsedMs": 259
+    },
+    {
+      "request": {
+        "model": "com-kotobalabs/open-jev-deberta-v3-large",
+        "state": "I was charged twice for order 847. Please refund the duplicate payment.",
+        "questions": {
+          "result": {
+            "type": "noul",
+            "instructions": "Does the customer explicitly request a refund?"
+          }
+        }
+      },
+      "status": 200,
+      "response": "{\"model\": \"com-kotobalabs/open-jev-deberta-v3-large\", \"answers\": {\"result\": {\"type\": \"noul\", \"noul\": 0.8421566486358643}}}",
+      "elapsedMs": 246
+    },
+    {
+      "request": {
+        "model": "com-kotobalabs/open-jev-deberta-v3-large",
+        "state": "Our production API is down for every customer. Restore service immediately. We are not requesting a refund.",
+        "questions": {
+          "result": {
+            "type": "noul",
+            "instructions": "Does the customer explicitly request a refund?"
+          }
+        }
+      },
+      "status": 200,
+      "response": "{\"model\": \"com-kotobalabs/open-jev-deberta-v3-large\", \"answers\": {\"result\": {\"type\": \"noul\", \"noul\": 0.0633111521601677}}}",
+      "elapsedMs": 254
+    },
+    {
+      "request": {
+        "model": "com-kotobalabs/open-jev-deberta-v3-large",
+        "state": "Can you send a quote for a new subscription? This is optional planning for next year; nothing is broken.",
+        "questions": {
+          "result": {
+            "type": "noul",
+            "instructions": "Does the customer explicitly request a refund?"
+          }
+        }
+      },
+      "status": 200,
+      "response": "{\"model\": \"com-kotobalabs/open-jev-deberta-v3-large\", \"answers\": {\"result\": {\"type\": \"noul\", \"noul\": 0.22470641136169434}}}",
+      "elapsedMs": 261
+    },
+    {
+      "request": {
+        "model": "com-kotobalabs/open-jev-deberta-v3-large",
+        "state": "I was charged twice for order 847. Please refund the duplicate payment.",
+        "questions": {
+          "result": {
+            "type": "score",
+            "instructions": "Urgency of the request",
+            "criteria": [
+              "Optional improvement, no impact",
+              "Individual issue, normal queue",
+              "Production outage for all users"
+            ]
+          }
+        }
+      },
+      "status": 200,
+      "response": "{\"model\": \"com-kotobalabs/open-jev-deberta-v3-large\", \"answers\": {\"result\": {\"type\": \"score\", \"score\": 0.9485824108123779, \"probabilities\": {\"0\": 0.296757310628891, \"1\": 0.45790305733680725, \"2\": 0.24533967673778534}, \"confidence\": 0.45790305733680725}}}",
+      "elapsedMs": 261
+    },
+    {
+      "request": {
+        "model": "com-kotobalabs/open-jev-deberta-v3-large",
+        "state": "Our production API is down for every customer. Restore service immediately. We are not requesting a refund.",
+        "questions": {
+          "result": {
+            "type": "score",
+            "instructions": "Urgency of the request",
+            "criteria": [
+              "Optional improvement, no impact",
+              "Individual issue, normal queue",
+              "Production outage for all users"
+            ]
+          }
+        }
+      },
+      "status": 200,
+      "response": "{\"model\": \"com-kotobalabs/open-jev-deberta-v3-large\", \"answers\": {\"result\": {\"type\": \"score\", \"score\": 1.9433206990361214, \"probabilities\": {\"0\": 0.019120516255497932, \"1\": 0.01843840628862381, \"2\": 0.9624411463737488}, \"confidence\": 0.9624411463737488}}}",
+      "elapsedMs": 269
+    },
+    {
+      "request": {
+        "model": "com-kotobalabs/open-jev-deberta-v3-large",
+        "state": "Can you send a quote for a new subscription? This is optional planning for next year; nothing is broken.",
+        "questions": {
+          "result": {
+            "type": "score",
+            "instructions": "Urgency of the request",
+            "criteria": [
+              "Optional improvement, no impact",
+              "Individual issue, normal queue",
+              "Production outage for all users"
+            ]
+          }
+        }
+      },
+      "status": 200,
+      "response": "{\"model\": \"com-kotobalabs/open-jev-deberta-v3-large\", \"answers\": {\"result\": {\"type\": \"score\", \"score\": 0.7622378766536713, \"probabilities\": {\"0\": 0.4720071852207184, \"1\": 0.2937476933002472, \"2\": 0.23424509167671204}, \"confidence\": 0.4720071852207184}}}",
+      "elapsedMs": 279
+    },
+    {
+      "request": {
+        "model": "com-kotobalabs/open-jev-deberta-v3-large",
+        "state": "word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word ",
+        "questions": {
+          "result": {
+            "type": "noul",
+            "instructions": "Does the customer explicitly request a refund?"
+          }
+        }
+      },
+      "status": 400,
+      "response": "{\"error\": \"State exceeds 256 tokens; refusing silent truncation\"}",
+      "elapsedMs": 2
+    }
+  ]
+}

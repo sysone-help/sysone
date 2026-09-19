@@ -327,8 +327,8 @@ await sys.check("Can you help?", predicate("Needs a reply?"));`}</Code>
                       separately.
                     </td>
                     <td>
-                      <code>customProvider()</code>, experimental. Compatible HTTP contract; GPU
-                      backend not tested here.
+                      <code>customProvider()</code>, experimental. HTTP contract reviewed. Inference
+                      unverified: hosted login returned HTTP 500; local backend requires 24 GB VRAM.
                     </td>
                   </tr>
                   <tr>
@@ -339,7 +339,8 @@ await sys.check("Can you help?", predicate("Needs a reply?"));`}</Code>
                     </td>
                     <td>Open evaluation weights: Apache-2.0 adapter over Qwen3.5-9B.</td>
                     <td>
-                      Custom adapter needed. Boolean, enum and ordinal scoring from token logits.
+                      Two real Gradio evaluations passed before the free quota ran out. Boolean,
+                      choice and score tested; native endpoint returned HTTP 503.
                     </td>
                   </tr>
                   <tr>
@@ -348,10 +349,12 @@ await sys.check("Can you help?", predicate("Needs a reply?"));`}</Code>
                         Kotoba Open-Jev
                       </a>
                     </td>
-                    <td>Open Apache-2.0 evaluation weights. Compact encoder; 512-token context.</td>
                     <td>
-                      Custom adapter needed. Narrower training domains and different confidence
-                      semantics.
+                      Open Apache-2.0 evaluation weights. CPU tested; 256 state tokens, 512 total.
+                    </td>
+                    <td>
+                      Tested locally through customProvider() and a Python bridge. Six
+                      English/Portuguese examples; weak rubric scores and explicit boolean criteria.
                     </td>
                   </tr>
                 </tbody>
@@ -361,6 +364,11 @@ await sys.check("Can you help?", predicate("Needs a reply?"));`}</Code>
               Reviewed September 19, 2026. An open implementation is not Jev's weights. Matching
               request shapes does not mean matching quality or calibration. OpenJev derives
               confidence from normalized entropy; validate thresholds again when switching models.
+            </p>
+            <p>
+              <a href={`${repo}/blob/main/research/validation/README.md`}>
+                Real inference results and runnable checks ↗
+              </a>
             </p>
             <p>
               <a href={`${repo}/blob/main/research/open-evaluation-models.md`}>
