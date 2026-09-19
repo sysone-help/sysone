@@ -659,6 +659,7 @@ textarea:focus {
 .eyebrow {
   display: none;
 }
+.section-top h1,
 .section-top h2 {
   font-size: 17px;
   font-weight: 600;
@@ -978,6 +979,7 @@ footer a {
   .run-button {
     gap: 15px;
   }
+  .section-top h1,
   .section-top h2 {
     font-size: 16px;
   }
@@ -1082,4 +1084,257 @@ footer a {
   margin: -7px 0 20px;
   color: var(--muted);
   font-size: 11px;
+}
+
+/* The home starts with one editable example; reference material lives in /docs. */
+.home-page,
+.home-header,
+.home-footer {
+  max-width: 760px;
+}
+.home-page .project-description {
+  padding: 46px 0 28px;
+}
+.home-page h1 {
+  font-size: clamp(26px, 4vw, 34px);
+  font-weight: 600;
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+}
+.home-page .project-description p {
+  font-size: 15px;
+  line-height: 1.7;
+}
+.simple-playground {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.simple-playground .editor {
+  padding: 24px;
+}
+.simple-playground .editor label {
+  font-weight: 500;
+  line-height: 1.5;
+  font-family: inherit;
+  font-size: 13px;
+}
+.example-picker {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.simple-playground .example-picker label {
+  margin: 0;
+  flex-shrink: 0;
+  color: var(--muted);
+  font-weight: 400;
+}
+.simple-playground .example-picker select {
+  width: auto;
+  min-width: 0;
+  max-width: 100%;
+  flex: 1;
+  margin: 0;
+  padding: 8px;
+  font-size: 13px;
+  border: 0;
+  background: var(--panel);
+}
+.simple-playground textarea {
+  font-size: 14px;
+  line-height: 1.65;
+  padding: 12px;
+  border-radius: 6px;
+}
+.simple-playground .message-input {
+  height: 94px;
+}
+.simple-playground .question-input {
+  height: 70px;
+}
+.playground-options {
+  margin-top: 18px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.playground-options summary,
+.use-code summary {
+  cursor: pointer;
+  width: fit-content;
+}
+.playground-options .threshold label {
+  margin: 0;
+}
+.playground-options .threshold p {
+  font-size: 11px;
+}
+.option-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  align-items: center;
+  margin-top: 16px;
+}
+.option-actions .text-button {
+  padding: 0;
+  font-size: 12px;
+}
+.simple-playground .run-row {
+  margin-top: 22px;
+  gap: 16px;
+}
+.simple-playground .run-button {
+  font-size: 14px;
+  min-height: 42px;
+  padding: 10px 20px;
+  border-radius: 6px;
+}
+.simple-playground .run-row > span {
+  font-family: inherit;
+  font-size: 12px;
+}
+.model-note {
+  margin: 14px 0 0;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.live-result > .error,
+.waiting-result {
+  padding: 0 24px 20px;
+  margin: 0;
+  font-size: 13px;
+}
+.simple-playground .result-panel {
+  padding: 22px 24px;
+  border-top: 1px solid var(--line);
+  background: var(--panel);
+}
+.simple-playground .decision {
+  font-size: 19px;
+  font-weight: 500;
+  border: 0;
+  padding: 0;
+  background: none;
+}
+.simple-playground .result-explainer {
+  font-size: 12px;
+  margin: 16px 0;
+}
+.simple-playground .run-metrics {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 22px 0 0;
+  padding: 16px 0 0;
+  border-bottom: 0;
+  border-top: 1px solid var(--line);
+}
+.simple-playground .raw-result {
+  margin-top: 14px;
+  padding: 0;
+  border: 0;
+}
+.simple-playground .raw-result summary {
+  margin-bottom: 0;
+}
+.simple-playground .raw-result[open] summary {
+  margin-bottom: 12px;
+}
+.use-code {
+  border-top: 1px solid var(--line);
+  padding: 18px 24px;
+  background: var(--panel);
+}
+.use-code summary {
+  font-size: 13px;
+  font-weight: 500;
+}
+.use-code summary > span {
+  margin-left: 8px;
+  color: var(--muted);
+}
+.code-instructions {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+.code-instructions .code {
+  margin: 16px 0;
+}
+.code-instructions pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.home-page > .library-footprint {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 18px 0 24px;
+  margin: 0;
+  font: 11px/1.7 var(--mono);
+  color: var(--muted);
+}
+.home-page > .library-footprint a {
+  text-decoration: none;
+}
+.home-page .privacy {
+  font-size: 11px;
+}
+.docs-page .documentation {
+  margin-top: 36px;
+}
+@media (max-width: 600px) {
+  .home-page .project-description {
+    padding: 30px 0 24px;
+  }
+  .home-page .project-description p {
+    font-size: 14px;
+  }
+  .simple-playground .editor {
+    padding: 18px;
+  }
+  .example-picker {
+    display: block;
+    margin-bottom: 18px;
+  }
+  .simple-playground .example-picker select {
+    width: 100%;
+    margin-top: 6px;
+  }
+  .simple-playground .message-input {
+    height: 122px;
+  }
+  .simple-playground textarea {
+    font-size: 16px;
+  }
+  .simple-playground .question-input {
+    height: 82px;
+  }
+  .simple-playground .run-row {
+    gap: 10px;
+  }
+  .simple-playground .run-row > span {
+    font-size: 11px;
+  }
+  .simple-playground .result-panel,
+  .use-code {
+    padding: 18px;
+  }
+  .site-header {
+    min-height: 62px;
+    height: auto;
+    flex-wrap: nowrap;
+    gap: 12px;
+    padding-block: 12px;
+  }
+  .site-header nav {
+    width: auto;
+    gap: 16px;
+    font-size: 12px;
+  }
+  .site-header .brand-mark {
+    display: inline-flex;
+  }
 }

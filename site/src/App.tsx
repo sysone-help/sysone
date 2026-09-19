@@ -7,27 +7,53 @@ import { releaseUrl } from './release';
 import size from '../../packages/sysone/size.json';
 const repo = 'https://github.com/sysone-help/sysone';
 
-export function App() {
+export function App({ page = 'home' }: { page?: 'home' | 'docs' }) {
   const [theme, setTheme] = useState<'system' | 'light' | 'dark'>('system');
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
+  useEffect(() => {
+    if (page !== 'home') return;
+    const moveLegacyLink = () => {
+      const id = window.location.hash.slice(1);
+      if (
+        [
+          'docs',
+          'installation',
+          'size',
+          'choose',
+          'definitions',
+          'collections',
+          'providers',
+          'models',
+          'behavior',
+          'recipes',
+        ].includes(id)
+      ) {
+        window.location.replace(`/docs#${id}`);
+      }
+    };
+    moveLegacyLink();
+    window.addEventListener('hashchange', moveLegacyLink);
+    return () => window.removeEventListener('hashchange', moveLegacyLink);
+  }, [page]);
   return (
     <>
       <a className="skip-link" href="#main">
         Skip to content
       </a>
-      <header className="site-header">
-        <a className="brand" href="#" aria-label="Sysone home">
+      <header className={`site-header${page === 'home' ? ' home-header' : ''}`}>
+        <a className="brand" href="/" aria-label="Sysone home">
           <span className="brand-mark" aria-hidden="true">
             s₁
           </span>
-          sysone<span className="version">{size.version}</span>
+          sysone
         </a>
         <nav aria-label="Main navigation">
-          <a href="#playground">Playground</a>
-          <a href="#docs">API</a>
-          <a href="#recipes">Recipes</a>
+          {page === 'docs' && <a href="/">Playground</a>}
+          <a href="/docs" aria-current={page === 'docs' ? 'page' : undefined}>
+            Docs
+          </a>
           <a href={repo}>GitHub ↗</a>
           <button
             className="theme-button"
@@ -40,21 +66,31 @@ export function App() {
           </button>
         </nav>
       </header>
-      <main id="main">
-        <div className="project-description">
-          <h1>Evaluation models, in TypeScript.</h1>
-          <p>
-            Turn text into decisions, typed labels and ranked lists. Try Jev here, then copy the
-            TypeScript into your app.
-          </p>
-          <p className="library-footprint">
-            <strong>Zero dependencies.</strong> {(size.bundles.all.gzipBytes / 1000).toFixed(1)} kB
-            min+gzip, including all providers. <a href="#size">See the numbers ↗</a>
-          </p>
-        </div>
-        <Playground />
-        <Recipes />
-        <Reference />
+      <main id="main" className={page === 'home' ? 'home-page' : 'docs-page'}>
+        {page === 'home' ? (
+          <>
+            <div className="project-description">
+              <h1>Turn text into decisions.</h1>
+              <p>
+                A tiny TypeScript library for AI checks, categories and scores.
+                <br />
+                Try an example. Change the text. See what happens.
+              </p>
+            </div>
+            <Playground />
+            <p className="library-footprint">
+              <a href="/docs#size">
+                Zero dependencies · {(size.bundles.all.gzipBytes / 1000).toFixed(1)} kB gzip
+              </a>
+              <span>MIT · Open source</span>
+            </p>
+          </>
+        ) : (
+          <>
+            <Reference />
+            <Recipes />
+          </>
+        )}
         <details id="privacy" className="privacy section-anchor">
           <summary>Playground data &amp; limits</summary>
           <p>
@@ -70,7 +106,7 @@ export function App() {
           </p>
         </details>
       </main>
-      <footer>
+      <footer className={page === 'home' ? 'home-footer' : undefined}>
         <span>sysone / MIT</span>
         <div>
           <a href={releaseUrl}>Releases</a>

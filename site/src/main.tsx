@@ -7,7 +7,7 @@ import './style.css';
 const root = document.getElementById('root')!;
 const app = (
   <React.StrictMode>
-    <App />
+    <App page={/^\/docs(?:\.html|\/)?$/.test(window.location.pathname) ? 'docs' : 'home'} />
   </React.StrictMode>
 );
 if (root.hasChildNodes()) hydrateRoot(root, app);

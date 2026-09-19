@@ -2,11 +2,11 @@ import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import type { EvaluationResult } from 'sysone';
 import { examples, scenarios, scenarioFromSearch, parseCriteria, type Mode } from '../examples';
+import { installCommand } from '../release';
 import { Code } from './Code';
 import { Result } from './Result';
 import { RunMetrics } from './RunMetrics';
 
-const modes: Mode[] = ['predicate', 'classifier', 'rubric'];
 type Run = EvaluationResult & { elapsedMs: number; responseMs: number };
 
 export function Playground() {
@@ -19,13 +19,11 @@ export function Playground() {
   const [result, setResult] = useState<Run | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [view, setView] = useState<'result' | 'code'>('code');
   const abort = useRef<AbortController | null>(null);
   useEffect(() => () => abort.current?.abort(), []);
   useEffect(() => {
     loadScenario(scenarioFromSearch(window.location.search).id);
   }, []);
-  const example = examples[mode];
   let validationError = '';
   if (!input.trim()) validationError = 'Enter some text to evaluate.';
   else if (!instructions.trim()) validationError = 'Enter a question about the text.';
@@ -54,9 +52,6 @@ export function Playground() {
     setInstructions(next.instructions);
     setCriteria(next.criteria);
   }
-  function select(next: Mode) {
-    loadScenario(next);
-  }
   async function run() {
     if (!canRun || loading) return;
     const controller = new AbortController();
@@ -64,7 +59,6 @@ export function Playground() {
     setLoading(true);
     setError('');
     setResult(null);
-    setView('result');
     try {
       const body = {
         mode,
@@ -102,7 +96,7 @@ export function Playground() {
     try {
       criteriaCode = JSON.stringify(parseCriteria(mode, criteria), null, 2);
     } catch {
-      criteriaCode = '{ /* fix the categories on the left */ }';
+      criteriaCode = '{ /* fix the categories in Options */ }';
     }
   }
   const snippet = `import { createSysone${mode === 'predicate' ? '' : `, ${mode}`} } from "sysone";
@@ -120,12 +114,8 @@ ${
     ? `const result = await sys.check(input, ${JSON.stringify(instructions)}, {
   minProbability: ${threshold.toFixed(2)},
 });
-console.log(result.probability); // P(yes), preserved as evidence
-switch (result.decision) {
-  case "yes": console.log("Yes branch"); break;
-  case "no": console.log("No branch"); break;
-  case "uncertain": console.log("Keep for review"); break;
-}`
+console.log(result.decision); // "yes", "no" or "uncertain"
+console.log(result.probability);`
     : mode === 'classifier'
       ? `const category = classifier(${criteriaCode}, ${JSON.stringify(instructions)});
 
@@ -141,8 +131,8 @@ console.log(result.answers.score);`
   return (
     <section
       id="playground"
-      className="playground section-anchor"
-      aria-label="Evaluation playground"
+      className="simple-playground section-anchor"
+      aria-label="Try Sysone"
       onKeyDown={(event) => {
         if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
           event.preventDefault();
@@ -150,33 +140,9 @@ console.log(result.answers.score);`
         }
       }}
     >
-      <div className="workspace-toolbar">
-        <div className="experiment-tabs" aria-label="Question type">
-          {modes.map((m) => (
-            <button key={m} aria-pressed={mode === m} onClick={() => select(m)}>
-              <code>{m === 'predicate' ? 'check()' : `${m}()`}</code>
-            </button>
-          ))}
-        </div>
-        <a
-          className="model-label"
-          href="#providers"
-          aria-label="Model: Jev. Provider: Vercel AI Gateway."
-        >
-          <span className="status-dot" />
-          Jev · Vercel
-          <span aria-hidden="true">⌄</span>
-        </a>
-      </div>
-      <div className="workspace">
-        <div className="editor">
-          <div className="panel-heading">
-            <h2>Input</h2>
-            <button className="text-button" onClick={() => loadScenario(scenario)}>
-              Reset example
-            </button>
-          </div>
-          <label htmlFor="scenario">Try a use case</label>
+      <div className="editor">
+        <div className="example-picker">
+          <label htmlFor="scenario">Try an example</label>
           <select
             id="scenario"
             value={scenario}
@@ -188,48 +154,44 @@ console.log(result.answers.score);`
               </option>
             ))}
           </select>
-          <p className="preset-link">
-            <a
-              href={`?example=${scenario}#playground`}
-              title="Links to the original preset, without your edits"
-            >
-              Link to this preset ↗
-            </a>
-          </p>
-          <label htmlFor="state">
-            state <span>string</span>
-          </label>
-          <textarea
-            id="state"
-            className="message-input"
-            value={input}
-            maxLength={6000}
-            spellCheck={false}
-            onChange={(event) => {
-              clearResult();
-              setInput(event.target.value);
-            }}
-          />
-          <div className="character-count">{input.length.toLocaleString('en-US')} / 6,000</div>
-          <label htmlFor="instructions">
-            instructions <span>string</span>
-          </label>
-          <textarea
-            id="instructions"
-            className="question-input"
-            rows={2}
-            maxLength={500}
-            value={instructions}
-            spellCheck={false}
-            onChange={(event) => {
-              clearResult();
-              setInstructions(event.target.value);
-            }}
-          />
+        </div>
+        <label htmlFor="state">Text</label>
+        <textarea
+          id="state"
+          className="message-input"
+          value={input}
+          maxLength={6000}
+          spellCheck={false}
+          onChange={(event) => {
+            clearResult();
+            setInput(event.target.value);
+          }}
+        />
+        <label htmlFor="instructions">Question</label>
+        <textarea
+          id="instructions"
+          className="question-input"
+          rows={2}
+          maxLength={500}
+          value={instructions}
+          spellCheck={false}
+          onChange={(event) => {
+            clearResult();
+            setInstructions(event.target.value);
+          }}
+        />
+        <details className="playground-options" key={mode}>
+          <summary>
+            {mode === 'predicate'
+              ? 'Options'
+              : mode === 'classifier'
+                ? 'Edit categories & options'
+                : 'Edit scoring levels & options'}
+          </summary>
           {mode !== 'predicate' && (
             <>
               <label htmlFor="criteria">
-                criteria{' '}
+                {mode === 'classifier' ? 'Categories' : 'Scoring levels'}
                 <span>
                   {mode === 'classifier'
                     ? 'label: description · one per line'
@@ -238,13 +200,13 @@ console.log(result.answers.score);`
               </label>
               <textarea
                 id="criteria"
-                aria-invalid={Boolean(validationError)}
-                aria-describedby={validationError ? 'validation-error' : undefined}
                 className="criteria-input"
                 rows={4}
                 maxLength={3000}
-                spellCheck={false}
                 value={criteria}
+                spellCheck={false}
+                aria-invalid={Boolean(validationError)}
+                aria-describedby={validationError ? 'validation-error' : undefined}
                 onChange={(event) => {
                   clearResult();
                   setCriteria(event.target.value);
@@ -255,7 +217,7 @@ console.log(result.answers.score);`
           {mode === 'predicate' && (
             <div className="threshold">
               <div>
-                <label htmlFor="threshold">minProbability</label>
+                <label htmlFor="threshold">Decision threshold</label>
                 <output htmlFor="threshold">{threshold.toFixed(2)}</output>
               </div>
               <input
@@ -267,116 +229,88 @@ console.log(result.answers.score);`
                 onChange={(event) => setThreshold(Number(event.target.value) / 100)}
               />
               <p>
-                yes ≥ {threshold.toFixed(2)} · no ≤ {(1 - threshold).toFixed(2)} · otherwise
-                uncertain. Changing this reuses the result — no extra request.
+                Yes ≥ {threshold.toFixed(2)} · no ≤ {(1 - threshold).toFixed(2)} · otherwise not
+                sure. Adjusting this uses the same response.
               </p>
             </div>
           )}
-          {validationError && (
-            <p id="validation-error" className="validation-error" role="status">
-              {validationError}
-            </p>
-          )}
-          <div className="run-row">
-            <button className="run-button" onClick={run} disabled={loading || !canRun}>
-              {loading ? 'Running…' : 'Run'}
-              <kbd>⌘ / Ctrl ↵</kbd>
+          <div className="option-actions">
+            <button className="text-button" onClick={() => loadScenario(scenario)}>
+              Reset example
             </button>
-            {loading && (
-              <button className="text-button" onClick={clearResult}>
-                Cancel
-              </button>
-            )}
-            <span>1 request · shared access</span>
+            <a
+              href={`?example=${scenario}#playground`}
+              title="Shares the original example, without your edits"
+            >
+              Link to this example ↗
+            </a>
           </div>
-        </div>
-        <div className="output">
-          <div className="output-tabs" aria-label="Output view">
-            <button aria-pressed={view === 'code'} onClick={() => setView('code')}>
-              TypeScript
-            </button>
-            <button aria-pressed={view === 'result'} onClick={() => setView('result')}>
-              Result {result && <span className="result-indicator" />}
-            </button>
-            <span>
-              {view === 'code'
-                ? 'example.ts'
-                : loading
-                  ? 'pending'
-                  : result
-                    ? '200 OK'
-                    : error
-                      ? 'error'
-                      : 'idle'}
-            </span>
-          </div>
-          {view === 'code' ? (
-            validationError ? (
-              <p className="empty-result">
-                Fix the input to generate runnable code: {validationError}
-              </p>
-            ) : (
-              <>
-                <Code label="Copy and run on your server">{snippet}</Code>
-                <p className="code-next">
-                  <a href="#installation">Install & run this example ↗</a> · Your own provider key
-                  is required.
-                </p>
-              </>
-            )
-          ) : (
-            <div className="result-panel">
-              {result && <RunMetrics {...result} />}
-              <div className="answer-space" aria-live="polite" aria-busy={loading}>
-                {error ? (
-                  <div className="error" role="alert">
-                    <strong>Evaluation failed</strong>
-                    <p>{error}</p>
-                    <button className="text-button" onClick={run}>
-                      Retry
-                    </button>
-                  </div>
-                ) : answer ? (
-                  <Result
-                    answer={answer}
-                    threshold={threshold}
-                    levels={mode === 'rubric' ? (parseCriteria(mode, criteria) as string[]) : []}
-                  />
-                ) : (
-                  <div className="empty-result">
-                    <code>{loading ? 'await model.evaluate(…)' : '// No result yet'}</code>
-                    <p>
-                      {loading
-                        ? 'Waiting for the model response.'
-                        : 'Run the input to inspect its decision and probabilities.'}
-                    </p>
-                  </div>
-                )}
-              </div>
-              {result && (
-                <details className="raw-result">
-                  <summary>JSON response</summary>
-                  <Code label="Response body">{JSON.stringify(result, null, 2)}</Code>
-                </details>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-      <div className="workspace-notes">
-        <p>
-          <code>{mode}()</code> {example.explanation}
-        </p>
-        <details>
-          <summary>Execution &amp; data</summary>
-          <p>
-            Text is evaluated by Jev through Vercel AI Gateway.{' '}
-            <a href="#privacy">Data policy and limits.</a> Changing the threshold reuses the
-            response; it does not make another request. Code runs on your server, with your own
-            provider key.
-          </p>
         </details>
+        {validationError && (
+          <p id="validation-error" className="validation-error" role="status">
+            {validationError}
+          </p>
+        )}
+        <div className="run-row">
+          <button className="run-button" onClick={run} disabled={loading || !canRun}>
+            {loading ? 'Checking…' : 'Run example'}
+          </button>
+          {loading ? (
+            <button className="text-button" onClick={clearResult}>
+              Cancel
+            </button>
+          ) : (
+            <span>No account or API key needed.</span>
+          )}
+        </div>
+        <p className="model-note">
+          Runs on <a href="/docs#providers">Jev via Vercel</a>. Your text is sent to the model.
+        </p>
       </div>
+      <div className="live-result" aria-live="polite" aria-busy={loading}>
+        {loading && <p className="waiting-result">Waiting for the model…</p>}
+        {error && (
+          <div className="error" role="alert">
+            <p>{error}</p>
+            <button className="text-button" onClick={run}>
+              Retry
+            </button>
+          </div>
+        )}
+        {answer && result && (
+          <div className="result-panel">
+            <Result
+              answer={answer}
+              threshold={threshold}
+              levels={mode === 'rubric' ? (parseCriteria(mode, criteria) as string[]) : []}
+            />
+            <RunMetrics {...result} />
+            <details className="raw-result">
+              <summary>Full response</summary>
+              <Code label="Response body">{JSON.stringify(result, null, 2)}</Code>
+            </details>
+          </div>
+        )}
+      </div>
+      <details className="use-code">
+        <summary>
+          Use this in TypeScript <span aria-hidden="true">↗</span>
+        </summary>
+        <div className="code-instructions">
+          <p>
+            Install the library, then set <code>AI_GATEWAY_API_KEY</code> on your server.
+          </p>
+          <Code label="Terminal">{installCommand}</Code>
+          {validationError ? (
+            <p className="validation-error">
+              Fix the input to generate runnable code: {validationError}
+            </p>
+          ) : (
+            <Code label="example.ts">{snippet}</Code>
+          )}
+          <a href="/docs#installation">Installation & API docs ↗</a>
+        </div>
+      </details>
     </section>
   );
 }

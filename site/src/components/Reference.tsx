@@ -12,7 +12,7 @@ export function Reference() {
       <div className="section-top">
         <div>
           <span className="eyebrow">REFERENCE</span>
-          <h2>API reference</h2>
+          <h1>API reference</h1>
         </div>
         <a href={`${repo}/blob/main/packages/sysone/README.md`} className="inline-link">
           Full API reference <Arrow />

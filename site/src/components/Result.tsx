@@ -37,13 +37,9 @@ export function Result({
         </div>
         <p className="result-explainer">
           {decision === 'uncertain'
-            ? 'The evidence is between your thresholds. Your code can keep this for review.'
-            : `Your current threshold classifies this as “${decision}”. The probability is evidence from the model, not a guarantee.`}
+            ? 'Not enough evidence to choose yes or no. Keep this for review.'
+            : `The model indicates “${decision}” at your chosen threshold.`}
         </p>
-        <div className="branch-preview">
-          <span>Your code takes this branch</span>
-          <code>case '{decision}':</code>
-        </div>
       </>
     );
   }

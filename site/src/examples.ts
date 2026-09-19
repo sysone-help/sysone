@@ -4,8 +4,8 @@ export const examples = {
     title: 'Does it need a reply?',
     label: 'Yes, no, or not sure',
     method: 'check',
-    input: 'Hi! Could you send me the updated proposal before our meeting tomorrow? Thanks, Alex.',
-    instructions: 'Does this message need a reply from its recipient?',
+    input: 'Could you send me the updated proposal before our meeting tomorrow?',
+    instructions: 'Does this message need a reply?',
     criteria: '',
     explanation:
       'A predicate asks one yes/no question. Jev returns a probability; you choose how much evidence is enough to act.',
