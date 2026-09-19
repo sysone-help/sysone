@@ -17,7 +17,7 @@ const result = await sys.check('Can you send the proposal?', 'Does this message 
 
 ## Why add a library?
 
-Native fetch is already dependency-free. Sysone adds decisions with an uncertain state, validated responses and collection operations without a provider SDK. The [native vs Sysone comparison](https://sysone.help/#comparison) uses [executable examples](examples/compare) with matching request/decision tests. The [official TypeSafe SDK](https://docs.typesafe.ai/sdk/javascript) also supports typed questions; use it when its broader native API suits your application.
+Sysone gives you decisions with an explicit uncertain state, typed labels, validated responses and collection operations. Zero runtime dependencies.
 
 `predicate`, `classifier` and `rubric` define reusable questions. `check`, `evaluate`, `filter`, `partition` and `rank` execute them. Definitions are pure data; requests are explicit, cancellable, and never retried automatically.
 

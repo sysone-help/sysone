@@ -19,7 +19,7 @@ const recipes = {
 export function Recipes() {
   const [selected, setSelected] = useState<keyof typeof recipes>('route');
   return (
-    <section id="recipes" className="comparison section-anchor">
+    <section id="recipes" className="recipes section-anchor">
       <div className="section-top">
         <div>
           <span className="eyebrow">PASTE INTO YOUR APP</span>

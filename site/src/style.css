@@ -1029,33 +1029,14 @@ footer a {
   color: var(--muted);
 }
 
-.comparison {
+.recipes {
   padding: 48px 0;
   border-bottom: 1px solid var(--line);
 }
-.comparison > p,
-.comparison details {
+.recipes > p {
   color: var(--muted);
   line-height: 1.7;
 }
-.comparison-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-.comparison-grid > div {
-  min-width: 0;
-}
-.comparison-grid pre {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-@media (max-width: 760px) {
-  .comparison-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 .editor select {
   width: 100%;
   padding: 9px 10px;

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Playground } from './components/Playground';
-import { Comparison } from './components/Comparison';
 import { Recipes } from './components/Recipes';
 import { Reference } from './components/Reference';
 import { releaseUrl } from './release';
@@ -27,7 +26,6 @@ export function App() {
         </a>
         <nav aria-label="Main navigation">
           <a href="#playground">Playground</a>
-          <a href="#comparison">Why Sysone?</a>
           <a href="#docs">API</a>
           <a href="#recipes">Recipes</a>
           <a href={repo}>GitHub ↗</a>
@@ -55,7 +53,6 @@ export function App() {
           </p>
         </div>
         <Playground />
-        <Comparison />
         <Recipes />
         <Reference />
         <details id="privacy" className="privacy section-anchor">
