@@ -95,8 +95,8 @@ if (!process.argv.includes('--write')) {
     const content = await readFile(new URL('../' + file, import.meta.url), 'utf8');
     const block = content.match(/<!-- size:start -->[\s\S]*?<!-- size:end -->/)?.[0];
     assert.equal(
-      block?.replace(/\s/g, ''),
-      sizeBlock.replace(/\s/g, ''),
+      block?.replace(/\s/g, '').replace(/-{3,}/g, '---'),
+      sizeBlock.replace(/\s/g, '').replace(/-{3,}/g, '---'),
       `${file} size claims are stale; run npm run size:write.`,
     );
   }
