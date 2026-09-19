@@ -27,3 +27,9 @@ Validation: site build and prerender, with both implementations included in stat
 Moved the README's measurement table below the runnable example. Added direct links to try, install and compare. The site quickstart defaults to the same provider as the playground, names a runnable `demo.mjs` file, prints the result and includes its run command. Removed duplicate, not-yet-available npm installation commands from the package guide. Documented plain questions alongside reusable definitions.
 
 Validation: site TypeScript compilation; examples use ESM JavaScript syntax that can run directly without installing a TS runner. Provider credentials remain server-side and separate from model IDs.
+
+## 5. Start from a developer task
+
+Added six selectable, editable scenarios: message triage, team routing, urgency, RAG relevance, agent capability routing and source-grounded answer evaluation. Reset restores the selected scenario. Switching scenarios cancels stale requests. Generated predicate code now uses the shorter question-string API.
+
+Validation: site typecheck and build. Examples are prompts to experiment with, not claims of task-level accuracy. The shared endpoint still fixes provider/model and bounds input.

@@ -1020,3 +1020,14 @@ footer a {
     grid-template-columns: 1fr;
   }
 }
+
+.editor select {
+  width: 100%;
+  padding: 9px 10px;
+  margin-bottom: 16px;
+  font: inherit;
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+}

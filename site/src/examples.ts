@@ -51,3 +51,48 @@ export function parseCriteria(mode: Mode, value: string): Record<string, string>
     throw new Error('Each label must be unique.');
   return Object.fromEntries(entries);
 }
+
+export interface Scenario {
+  id: string;
+  title: string;
+  mode: Mode;
+  input: string;
+  instructions: string;
+  criteria: string;
+}
+export const scenarios: readonly Scenario[] = [
+  ...(['predicate', 'classifier', 'rubric'] as const).map((mode) => ({
+    ...examples[mode],
+    id: mode,
+    mode,
+  })),
+  {
+    id: 'rag',
+    title: 'Keep useful RAG context',
+    mode: 'predicate',
+    input:
+      'Question: How do I cancel my subscription?\nPassage: Open Settings → Billing → Cancel plan. Access continues until the current billing period ends.',
+    instructions: 'Does the passage contain information that helps answer the question?',
+    criteria: '',
+  },
+  {
+    id: 'agent',
+    title: 'Route an agent request',
+    mode: 'classifier',
+    input:
+      'Calculate the percentage change between revenue of 12000 last month and 15300 this month.',
+    instructions: 'Choose the smallest capability needed to complete the request.',
+    criteria:
+      'calculator: Arithmetic with numbers already supplied\nsearch: Requires information not present in the request\nreply: Can be answered directly without tools\nother: Does not fit the listed capabilities',
+  },
+  {
+    id: 'answer',
+    title: 'Evaluate an answer against its source',
+    mode: 'rubric',
+    input:
+      'Source: Returns are accepted within 30 days with a receipt. Opened software is excluded.\nAnswer: You can return any item within 30 days, even opened software.',
+    instructions: 'How well is the answer supported by the supplied source?',
+    criteria:
+      'Contradicted: includes a claim that conflicts with the source\nIncomplete: no contradiction, but key claims lack support\nSupported: all material claims are supported by the source',
+  },
+];

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import type { EvaluationResult } from 'sysone';
-import { examples, parseCriteria, type Mode } from '../examples';
+import { examples, scenarios, parseCriteria, type Mode } from '../examples';
 import { Code } from './Code';
 import { Result } from './Result';
 
@@ -9,6 +9,7 @@ const modes: Mode[] = ['predicate', 'classifier', 'rubric'];
 type Run = EvaluationResult & { elapsedMs: number };
 
 export function Playground() {
+  const [scenario, setScenario] = useState('predicate');
   const [mode, setMode] = useState<Mode>('predicate');
   const [input, setInput] = useState<string>(examples.predicate.input);
   const [instructions, setInstructions] = useState<string>(examples.predicate.instructions);
@@ -30,12 +31,17 @@ export function Playground() {
     setResult(null);
     setError('');
   }
-  function select(next: Mode) {
+  function loadScenario(id: string) {
+    const next = scenarios.find((item) => item.id === id)!;
     clearResult();
-    setMode(next);
-    setInput(examples[next].input);
-    setInstructions(examples[next].instructions);
-    setCriteria(examples[next].criteria);
+    setScenario(id);
+    setMode(next.mode);
+    setInput(next.input);
+    setInstructions(next.instructions);
+    setCriteria(next.criteria);
+  }
+  function select(next: Mode) {
+    loadScenario(next);
   }
   async function run() {
     if (!canRun || loading) return;
@@ -83,7 +89,7 @@ export function Playground() {
       criteriaCode = '{ /* fix the categories on the left */ }';
     }
   }
-  const snippet = `import { createSysone, ${mode} } from "sysone";
+  const snippet = `import { createSysone${mode === 'predicate' ? '' : `, ${mode}`} } from "sysone";
 import { vercel } from "sysone/providers/vercel";
 
 // Set AI_GATEWAY_API_KEY in your server environment.
@@ -95,9 +101,7 @@ const input = ${JSON.stringify(input)};
 
 ${
   mode === 'predicate'
-    ? `const condition = predicate(${JSON.stringify(instructions)});
-
-const result = await sys.check(input, condition, {
+    ? `const result = await sys.check(input, ${JSON.stringify(instructions)}, {
   minProbability: ${threshold.toFixed(2)},
 });
 // decision: "yes" | "no" | "uncertain"
@@ -130,7 +134,7 @@ console.log(result.answers.score);`
         <div className="experiment-tabs" aria-label="Question type">
           {modes.map((m) => (
             <button key={m} aria-pressed={mode === m} onClick={() => select(m)}>
-              <code>{m}()</code>
+              <code>{m === 'predicate' ? 'check()' : `${m}()`}</code>
             </button>
           ))}
         </div>
@@ -148,10 +152,22 @@ console.log(result.answers.score);`
         <div className="editor">
           <div className="panel-heading">
             <h2>Input</h2>
-            <button className="text-button" onClick={() => select(mode)}>
+            <button className="text-button" onClick={() => loadScenario(scenario)}>
               Reset example
             </button>
           </div>
+          <label htmlFor="scenario">Try a use case</label>
+          <select
+            id="scenario"
+            value={scenario}
+            onChange={(event) => loadScenario(event.target.value)}
+          >
+            {scenarios.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.title}
+              </option>
+            ))}
+          </select>
           <label htmlFor="state">
             state <span>string</span>
           </label>
