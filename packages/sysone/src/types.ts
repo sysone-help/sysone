@@ -45,12 +45,16 @@ export type AnswersFor<Q extends Questions> = { readonly [Key in keyof Q]: Answe
 export interface EvaluationMetadata {
   readonly provider: string;
   readonly requestedModel: string;
+  /** Unmodified, namespaced metadata returned by the provider. */
+  readonly providerMetadata?: Readonly<Record<string, unknown>>;
   readonly resolvedModel?: string;
   readonly requestId?: string;
   readonly usage?: { readonly inputTokens?: number; readonly outputTokens?: number };
   readonly rounding?: { readonly probabilityDecimals?: number; readonly scoreDecimals?: number };
 }
 export interface EvaluationRequest {
+  /** Opaque model identifier in this provider's catalog. */
+  readonly model: string;
   readonly state: Input;
   readonly questions: Questions;
 }
@@ -61,9 +65,9 @@ export interface EvaluationResult<Q extends Questions = Questions> {
 export interface CallOptions {
   readonly signal?: AbortSignal;
 }
-export interface EvaluationModel {
-  readonly provider: string;
-  readonly modelId: string;
+export interface EvaluationProvider {
+  /** Identifies the transport or endpoint, independently of the selected model. */
+  readonly id: string;
   evaluate(request: EvaluationRequest, options?: CallOptions): Promise<EvaluationResult>;
 }
 export interface CheckOptions extends CallOptions {

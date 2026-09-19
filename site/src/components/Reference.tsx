@@ -57,7 +57,10 @@ export function Reference() {
             <Code>{`import { createSysone, predicate } from "sysone";
 import { ${provider} } from "sysone/providers/${provider}";
 
-const sys = createSysone({ model: ${provider}() });
+const sys = createSysone({
+  provider: ${provider}(),
+  model: "${provider === 'vercel' ? 'typesafe-ai/jev' : 'jev-latest'}",
+});
 const needsReply = predicate("Does this message need a reply?");
 
 const result = await sys.check("Can you send the proposal?", needsReply);
@@ -121,37 +124,54 @@ const ranked = await sys.rank(messages, urgency, {
             </p>
           </article>
           <article id="providers" className="section-anchor">
-            <h3>Model adapters</h3>
+            <h3>Providers and models</h3>
             <p>
-              Use TypeSafe or Vercel for Jev, or point the experimental System One adapter at a
-              compatible server. Questions stay the same.
+              A provider configures credentials, transport and endpoint. A model selects what runs
+              through it. The same provider can serve multiple evaluation models; choose a model
+              explicitly.
             </p>
-            <Code>{`// The manufacturer's native endpoint
-typesafe("jev-1.13.0")
+            <Code>{`import { createSysone } from "sysone";
+import { vercel } from "sysone/providers/vercel";
+import { typesafe } from "sysone/providers/typesafe";
 
-// Through Vercel AI Gateway
-vercel("typesafe-ai/jev")
+const gateway = vercel(); // Connection and credentials.
 
-// Explicit credentials are also supported
-typesafe("jev-latest", { apiKey: process.env.TYPESAFE_API_KEY })`}</Code>
+const sys = createSysone({
+  provider: gateway,
+  model: "typesafe-ai/jev", // Selection within the provider's catalog.
+});
+
+// The same Jev family, through its native provider:
+const direct = createSysone({
+  provider: typesafe(),
+  model: "jev-latest",
+});`}</Code>
+            <p>
+              Reuse <code>gateway</code> with another model ID to create another client. IDs belong
+              to the provider's evaluation catalog; Sysone does not assume that providers share
+              aliases or that every model supports evaluation. There is no default model or silent
+              fallback.
+            </p>
             <p>
               Cloudflare and OpenRouter also offer access to Jev; their Sysone adapters are not
               included in this release. A custom integration implements the exported{' '}
-              <code>EvaluationModel</code> interface.
+              <code>EvaluationProvider</code> interface.
             </p>
             <p className="doc-note">
               The Vercel adapter uses an experimental AI SDK evaluation API. Its optional
               dependencies are pinned to tested versions. Confidence and probabilities may differ
-              across models; thresholds need evaluation on your own examples.
+              across models; thresholds need evaluation on your own examples. Gateway extensions
+              remain namespaced in metadata.providerMetadata, without assuming TypeSafe semantics.
             </p>
             <Code>{`import { createSysone, predicate } from "sysone";
 import { systemOne } from "sysone/providers/system-one";
 
 const sys = createSysone({
-  model: systemOne("openjev-latest", {
+  provider: systemOne({
     baseURL: "http://127.0.0.1:8080/v1",
-    provider: "openjev",
+    id: "local",
   }),
+  model: "openjev-latest",
 });
 
 await sys.check("Can you help?", predicate("Needs a reply?"));`}</Code>

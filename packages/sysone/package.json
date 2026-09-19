@@ -1,6 +1,6 @@
 {
   "name": "sysone",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Typed decisions for TypeScript. Predicates, classifiers and collections powered by evaluation models.",
   "type": "module",
   "sideEffects": false,

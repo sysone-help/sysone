@@ -1,6 +1,6 @@
 import { SysoneError } from '../errors.js';
 import { record, validateAnswer } from '../validation.js';
-import type { Answer, EvaluationMetadata, EvaluationModel } from '../types.js';
+import type { Answer, EvaluationMetadata, EvaluationProvider } from '../types.js';
 
 export interface SystemOneOptions {
   /** API base including its version, e.g. http://localhost:8080/v1. */
@@ -8,13 +8,14 @@ export interface SystemOneOptions {
   readonly apiKey?: string;
   readonly headers?: HeadersInit;
   readonly fetch?: typeof globalThis.fetch;
-  readonly provider?: string;
+  /** Identifies this endpoint in metadata, not a model or model author. */
+  readonly id?: string;
   /** Only declare rounding documented by the server. Values are never rounded locally. */
   readonly rounding?: EvaluationMetadata['rounding'];
 }
 
 /** Experimental transport for servers implementing the System One HTTP protocol. */
-export function systemOne(modelId: string, options: SystemOneOptions): EvaluationModel {
+export function systemOne(options: SystemOneOptions): EvaluationProvider {
   let endpoint: URL;
   try {
     endpoint = new URL(options.baseURL);
@@ -33,10 +34,9 @@ export function systemOne(modelId: string, options: SystemOneOptions): Evaluatio
       'CONFIGURATION',
     );
   }
-  const provider = options.provider ?? 'system-one';
+  const id = options.id ?? 'system-one';
   return {
-    provider,
-    modelId,
+    id,
     async evaluate(request, call = {}) {
       const headers = new Headers(options.headers);
       headers.set('Content-Type', 'application/json');
@@ -52,7 +52,7 @@ export function systemOne(modelId: string, options: SystemOneOptions): Evaluatio
         response = await (options.fetch ?? globalThis.fetch)(endpoint.href, {
           method: 'POST',
           headers,
-          body: JSON.stringify({ model: modelId, state: request.state, questions }),
+          body: JSON.stringify({ model: request.model, state: request.state, questions }),
           signal: call.signal,
         });
       } catch {
@@ -111,8 +111,8 @@ export function systemOne(modelId: string, options: SystemOneOptions): Evaluatio
       return {
         answers,
         metadata: {
-          provider,
-          requestedModel: modelId,
+          provider: id,
+          requestedModel: request.model,
           ...(typeof body.model === 'string' ? { resolvedModel: body.model } : {}),
           ...(requestId ? { requestId } : {}),
           ...(options.rounding ? { rounding: options.rounding } : {}),

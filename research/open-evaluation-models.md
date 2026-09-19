@@ -76,3 +76,7 @@ Para apresentação pública imediata, a frase precisa é: **“Sysone foi desen
 ## Sysone implementation status
 
 Sysone 0.1.1 includes the experimental `sysone/providers/system-one` transport with configurable API base, optional authentication, cancellation and evidence validation. Contract fixtures cover OpenJev boolean, choice and score responses. The GPU inference backend has not been run by this project. The hosted playground still uses Jev through Vercel.
+
+## Atualização da API em 0.2.0
+
+A conexão agora é `systemOne({ baseURL, id: 'local' })`; a seleção é independente em `createSysone({ provider, model: 'openjev-latest' })`. Os providers são reutilizáveis por múltiplos modelos. Metadados adicionais do Gateway mantêm seus namespaces, sem assumir semântica TypeSafe para outros modelos. A pesquisa e os limites dos modelos acima permanecem os mesmos.

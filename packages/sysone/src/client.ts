@@ -5,7 +5,7 @@ import type {
   CheckOptions,
   CheckResult,
   CollectionOptions,
-  EvaluationModel,
+  EvaluationProvider,
   EvaluationResult,
   Input,
   Partition,
@@ -54,12 +54,23 @@ async function mapConcurrent<T, R>(
 
 /** Create a client. Definitions are pure; execution happens only when awaited. */
 export function createSysone({
+  provider,
   model,
   timeoutMs = 30_000,
 }: {
-  model: EvaluationModel;
+  provider: EvaluationProvider;
+  model: string;
   timeoutMs?: number;
 }) {
+  if (typeof model !== 'string' || !model.trim())
+    throw new SysoneError('Choose an explicit model ID from your provider.', 'CONFIGURATION');
+  if (
+    !provider ||
+    typeof provider.id !== 'string' ||
+    !provider.id.trim() ||
+    typeof provider.evaluate !== 'function'
+  )
+    throw new SysoneError('Pass an evaluation provider to createSysone().', 'CONFIGURATION');
   if (!Number.isInteger(timeoutMs) || timeoutMs <= 0 || timeoutMs > 2_147_483_647)
     throw new SysoneError('timeoutMs must be a positive 32-bit integer.', 'INVALID_INPUT');
 
@@ -74,7 +85,7 @@ export function createSysone({
     const signal = options.signal
       ? AbortSignal.any([options.signal, AbortSignal.timeout(timeoutMs)])
       : AbortSignal.timeout(timeoutMs);
-    const result = await model.evaluate({ state, questions }, { signal });
+    const result = await provider.evaluate({ model, state, questions }, { signal });
     signal.throwIfAborted();
     validateResult(result, questions);
     // Runtime validation above establishes the question-to-answer correspondence.

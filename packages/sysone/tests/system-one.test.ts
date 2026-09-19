@@ -4,9 +4,9 @@ import { classifier, createSysone, predicate, rubric } from '../src/index.js';
 import { systemOne } from '../src/providers/system-one.js';
 
 test('System One preserves OpenJev evidence and translates all three question types', async () => {
-  const model = systemOne('openjev-latest', {
+  const provider = systemOne({
     baseURL: 'http://127.0.0.1:8080/v1/',
-    provider: 'openjev',
+    id: 'openjev-local',
     fetch: async (url, options) => {
       assert.equal(url, 'http://127.0.0.1:8080/v1/systemone');
       assert.equal(new Headers(options?.headers).has('authorization'), false);
@@ -42,7 +42,7 @@ test('System One preserves OpenJev evidence and translates all three question ty
       );
     },
   });
-  const result = await createSysone({ model }).evaluate(
+  const result = await createSysone({ provider, model: 'openjev-latest' }).evaluate(
     { text: 'Help' },
     {
       reply: predicate('Needs reply?'),
@@ -54,7 +54,7 @@ test('System One preserves OpenJev evidence and translates all three question ty
   assert.equal(result.answers.team.confidence, 0.18872187554086717);
   assert.equal(result.answers.urgency.confidence, undefined);
   assert.deepEqual(result.metadata, {
-    provider: 'openjev',
+    provider: 'openjev-local',
     requestedModel: 'openjev-latest',
     resolvedModel: 'openjev-0.1',
     requestId: 'req_test',
@@ -64,7 +64,7 @@ test('System One preserves OpenJev evidence and translates all three question ty
 
 test('System One supports explicit auth, custom headers and the caller abort signal', async () => {
   const controller = new AbortController();
-  const model = systemOne('local-model', {
+  const provider = systemOne({
     baseURL: 'https://example.test/v1',
     apiKey: 'fixture-only',
     headers: { 'x-origin-secret': 'fixture-origin' },
@@ -77,8 +77,8 @@ test('System One supports explicit auth, custom headers and the caller abort sig
     },
   });
   await assert.rejects(
-    model.evaluate(
-      { state: 'text', questions: { result: predicate('Test?') } },
+    provider.evaluate(
+      { model: 'local-model', state: 'text', questions: { result: predicate('Test?') } },
       { signal: controller.signal },
     ),
     { name: 'AbortError' },
@@ -87,7 +87,8 @@ test('System One supports explicit auth, custom headers and the caller abort sig
 
 test('System One does not assume TypeSafe rounding or repair malformed evidence', async () => {
   const sys = createSysone({
-    model: systemOne('local-model', {
+    model: 'local-model',
+    provider: systemOne({
       baseURL: 'http://localhost:8080/v1',
       fetch: async () =>
         Response.json({
@@ -108,7 +109,8 @@ test('System One rejects missing answers and redacts server errors', async () =>
     new Response('secret-provider-body', { status: 500 }),
   ]) {
     const sys = createSysone({
-      model: systemOne('local-model', {
+      model: 'local-model',
+      provider: systemOne({
         baseURL: 'http://localhost/v1',
         fetch: async () => response,
       }),
@@ -128,8 +130,27 @@ test('System One rejects malformed or credential-bearing base URLs without echoi
     'not-a-url',
   ]) {
     assert.throws(
-      () => systemOne('local-model', { baseURL }),
+      () => systemOne({ baseURL }),
       (error) => error instanceof Error && !error.message.includes('secret'),
     );
   }
+});
+
+test('one compatible endpoint forwards each model ID independently', async () => {
+  const seen: string[] = [];
+  const provider = systemOne({
+    baseURL: 'http://localhost:8080/v1',
+    id: 'local',
+    fetch: async (_url, options) => {
+      const request = JSON.parse(String(options?.body));
+      seen.push(request.model);
+      return Response.json({ answers: { result: { type: 'noul', noul: 0.8 } } });
+    },
+  });
+  for (const model of ['fixture-a', 'fixture-b']) {
+    const result = await createSysone({ provider, model }).check('text', predicate('Reply?'));
+    assert.equal(result.metadata.provider, 'local');
+    assert.equal(result.metadata.requestedModel, model);
+  }
+  assert.deepEqual(seen, ['fixture-a', 'fixture-b']);
 });

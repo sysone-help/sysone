@@ -26,7 +26,8 @@ test('TypeSafe translates boolean and preserves native confidence/version', asyn
     });
   };
   const sys = createSysone({
-    model: typesafe('jev-1.13.0', { apiKey: 'test-only', fetch: mockFetch }),
+    model: 'jev-1.13.0',
+    provider: typesafe({ apiKey: 'test-only', fetch: mockFetch }),
   });
   const result = await sys.evaluate('Help', {
     reply: predicate('Needs a reply?'),
@@ -41,7 +42,8 @@ test('TypeSafe translates boolean and preserves native confidence/version', asyn
 });
 test('TypeSafe tolerates declared rounding and does not renormalize it', async () => {
   const sys = createSysone({
-    model: typesafe('jev-latest', {
+    model: 'jev-latest',
+    provider: typesafe({
       apiKey: 'test-only',
       fetch: async () =>
         Response.json({
@@ -59,7 +61,8 @@ test('TypeSafe tolerates declared rounding and does not renormalize it', async (
 });
 test('TypeSafe errors never expose provider bodies or credentials', async () => {
   const sys = createSysone({
-    model: typesafe('jev-latest', {
+    model: 'jev-latest',
+    provider: typesafe({
       apiKey: 'do-not-leak',
       fetch: async () => new Response('do-not-leak', { status: 401 }),
     }),
@@ -72,9 +75,9 @@ test('TypeSafe errors never expose provider bodies or credentials', async () => 
       !JSON.stringify(error).includes('do-not-leak'),
   );
 });
-test('Vercel adapter uses evaluation protocol and preserves confidence', async () => {
+test('Vercel preserves namespaced evidence without interpreting it as a universal confidence', async () => {
   let calls = 0;
-  const model = vercel('typesafe-ai/jev', {
+  const provider = vercel({
     apiKey: 'test-only',
     fetch: async (url, options) => {
       calls++;
@@ -89,22 +92,83 @@ test('Vercel adapter uses evaluation protocol and preserves confidence', async (
       });
     },
   });
-  const result = await createSysone({ model }).evaluate('text', {
+  const result = await createSysone({ provider, model: 'typesafe-ai/jev' }).evaluate('text', {
     kind: classifier({ a: 'one', b: 'two' }),
   });
-  assert.equal(result.answers.kind.confidence, 0.7);
+  assert.equal(result.answers.kind.confidence, undefined);
+  assert.deepEqual(result.metadata.providerMetadata, { typesafe: { confidence: { kind: 0.7 } } });
   assert.equal(result.metadata.resolvedModel, undefined);
   assert.equal(calls, 1);
 });
 test('Vercel does not silently retry paid requests', async () => {
   let calls = 0;
-  const model = vercel('typesafe-ai/jev', {
+  const provider = vercel({
     apiKey: 'test-only',
     fetch: async () => {
       calls++;
       return new Response('failure', { status: 500 });
     },
   });
-  await assert.rejects(createSysone({ model }).check('text', predicate('test')));
+  await assert.rejects(
+    createSysone({ provider, model: 'typesafe-ai/jev' }).check('text', predicate('test')),
+  );
   assert.equal(calls, 1);
+});
+
+test('one Vercel provider serves concurrent models without leaking selection or metadata', async () => {
+  // These model IDs are fixtures, not claims about the live Gateway catalog.
+  const models = ['test-lab/first', 'other-lab/second'];
+  const seen: string[] = [];
+  const provider = vercel({
+    apiKey: 'shared-credential',
+    fetch: async (_url, options) => {
+      const headers = new Headers(options?.headers);
+      const model = headers.get('ai-model-id')!;
+      seen.push(model);
+      assert.equal(headers.get('authorization'), 'Bearer shared-credential');
+      if (model === models[0]) await new Promise((resolve) => setTimeout(resolve, 10));
+      return Response.json({
+        answers: { result: { type: 'boolean', probability: model === models[0] ? 0.9 : 0.1 } },
+        warnings: [],
+        providerMetadata: { [model]: { metric: model === models[0] ? 'entropy' : 'margin' } },
+      });
+    },
+  });
+  const results = await Promise.all(
+    models.map((model) =>
+      createSysone({ provider, model }).check('Same text', predicate('Same question?')),
+    ),
+  );
+  assert.deepEqual(seen.sort(), [...models].sort());
+  assert.deepEqual(
+    results.map((result) => result.decision),
+    ['yes', 'no'],
+  );
+  for (const [index, result] of results.entries()) {
+    assert.equal(result.metadata.provider, 'vercel');
+    assert.equal(result.metadata.requestedModel, models[index]);
+    assert.equal(result.metadata.resolvedModel, undefined);
+    assert.deepEqual(Object.keys(result.metadata.providerMetadata!), [models[index]]);
+  }
+});
+
+test('TypeSafe receives each explicitly selected model through one provider', async () => {
+  const seen: string[] = [];
+  const provider = typesafe({
+    apiKey: 'test-only',
+    fetch: async (_url, options) => {
+      const request = JSON.parse(String(options?.body));
+      seen.push(request.model);
+      return Response.json({
+        model: request.model,
+        answers: { result: { type: 'noul', noul: 0.9 } },
+      });
+    },
+  });
+  for (const model of ['jev-latest', 'jev-1.13.0']) {
+    const result = await createSysone({ provider, model }).check('text', predicate('Reply?'));
+    assert.equal(result.metadata.requestedModel, model);
+    assert.equal(result.metadata.provider, 'typesafe');
+  }
+  assert.deepEqual(seen, ['jev-latest', 'jev-1.13.0']);
 });

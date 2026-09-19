@@ -78,7 +78,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
         throw new Error('Use 2–5 levels of up to 300 characters each.');
       question = rubric(input.instructions, input.criteria);
     } else throw new Error('Choose a predicate, classifier or rubric.');
-    const sys = createSysone({ model: vercel(), timeoutMs: 20_000 });
+    const sys = createSysone({ provider: vercel(), model: 'typesafe-ai/jev', timeoutMs: 20_000 });
     const start = performance.now();
     const result = await sys.evaluate(input.state, { result: question });
     return res.status(200).json({ ...result, elapsedMs: Math.round(performance.now() - start) });

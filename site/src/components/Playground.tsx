@@ -87,7 +87,10 @@ export function Playground() {
 import { vercel } from "sysone/providers/vercel";
 
 // Set AI_GATEWAY_API_KEY in your server environment.
-const sys = createSysone({ model: vercel() });
+const sys = createSysone({
+  provider: vercel(),
+  model: "typesafe-ai/jev",
+});
 const input = ${JSON.stringify(input)};
 
 ${
@@ -131,9 +134,13 @@ console.log(result.answers.score);`
             </button>
           ))}
         </div>
-        <a className="model-label" href="#models">
+        <a
+          className="model-label"
+          href="#providers"
+          aria-label="Model: Jev. Provider: Vercel AI Gateway."
+        >
           <span className="status-dot" />
-          Jev <span>/ TypeSafe</span>
+          Jev · Vercel
           <span aria-hidden="true">⌄</span>
         </a>
       </div>

@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.0
+
+Breaking API correction: provider connection and model selection are separate.
+
+- Configure clients with `createSysone({ provider: vercel(), model: 'typesafe-ai/jev' })`. Models are explicit IDs in the provider's catalog, with no implicit Jev default.
+- `vercel(options)`, `typesafe(options)` and `systemOne(options)` return reusable `EvaluationProvider` instances. Every request carries its own model ID; concurrent clients can share a provider.
+- Custom providers expose `id` and handle `{ model, state, questions }`. The old model-bound `EvaluationModel` contract is replaced. The generic transport option `provider` becomes `id`.
+- Preserve namespaced Gateway metadata under `metadata.providerMetadata`. Remove the TypeSafe-only confidence projection into Gateway answers; native System One confidence is unchanged.
+- Update the playground, examples, migration guide and package checks. Test concurrent multi-model routing and explicit configuration without live catalog assumptions.
+
 ## 0.1.1
 
 - Add experimental `systemOne(modelId, { baseURL })` for compatible HTTP servers, with optional authentication, cancellation and unchanged provider evidence.

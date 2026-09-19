@@ -2,7 +2,7 @@ import { createGateway } from '@ai-sdk/gateway';
 import { experimental_evaluate } from 'ai';
 import { SysoneError } from '../errors.js';
 import { record } from '../validation.js';
-import type { Answer, EvaluationModel } from '../types.js';
+import type { EvaluationProvider } from '../types.js';
 
 export interface VercelOptions {
   readonly apiKey?: string;
@@ -10,10 +10,9 @@ export interface VercelOptions {
 }
 
 /** Access an evaluation model through Vercel AI Gateway. Requires optional AI SDK peers. */
-export function vercel(modelId = 'typesafe-ai/jev', options: VercelOptions = {}): EvaluationModel {
+export function vercel(options: VercelOptions = {}): EvaluationProvider {
   return {
-    provider: 'vercel',
-    modelId,
+    id: 'vercel',
     async evaluate(request, call = {}) {
       const apiKey =
         options.apiKey ??
@@ -26,38 +25,25 @@ export function vercel(modelId = 'typesafe-ai/jev', options: VercelOptions = {})
       const gateway = createGateway({ apiKey, fetch: options.fetch });
       try {
         const result = await experimental_evaluate({
-          model: gateway.evaluationModel(modelId),
+          model: gateway.evaluationModel(request.model),
           state: request.state,
           questions: request.questions,
           abortSignal: call.signal,
           maxRetries: 0,
         });
-        const native = result.providerMetadata?.typesafe;
-        const confidence =
-          record(native) && record(native.confidence) ? native.confidence : undefined;
-        const answers = Object.fromEntries(
-          Object.entries(result.answers).map(([id, answer]) => [
-            id,
-            {
-              ...answer,
-              ...(answer.type !== 'boolean' && typeof confidence?.[id] === 'number'
-                ? { confidence: confidence[id] }
-                : {}),
-            },
-          ]),
-        ) as Record<string, Answer>;
         return {
-          answers,
+          answers: result.answers,
           metadata: {
             provider: 'vercel',
-            requestedModel: modelId,
+            requestedModel: request.model,
             // Gateway may echo the requested alias. Do not claim that it is a resolved version.
-            ...(result.response.modelId && result.response.modelId !== modelId
+            ...(result.response.modelId && result.response.modelId !== request.model
               ? { resolvedModel: result.response.modelId }
               : {}),
             ...(result.response.id ? { requestId: result.response.id } : {}),
             usage: result.usage,
             rounding: result.rounding,
+            ...(result.providerMetadata ? { providerMetadata: result.providerMetadata } : {}),
           },
         };
       } catch (error) {

@@ -1,8 +1,14 @@
 import { classifier, createSysone, predicate, rubric } from '../src/index.js';
-import type { EvaluationModel, Input } from '../src/index.js';
+import type { EvaluationProvider, Input } from '../src/index.js';
 
-export async function assertInference(model: EvaluationModel) {
-  const sys = createSysone({ model });
+export async function assertInference(provider: EvaluationProvider) {
+  const sys = createSysone({ provider, model: 'test' });
+  // @ts-expect-error The provider does not imply a default model.
+  createSysone({ provider });
+  // @ts-expect-error A model identifier does not imply a provider.
+  createSysone({ model: 'test' });
+  // @ts-expect-error Providers and model identifiers are different types.
+  createSysone({ provider, model: provider });
   const result = await sys.evaluate('Hello', {
     reply: predicate('Reply?'),
     team: classifier({ sales: 'Sales', support: 'Support' }),

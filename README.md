@@ -8,7 +8,7 @@
 import { createSysone, predicate } from 'sysone';
 import { typesafe } from 'sysone/providers/typesafe';
 
-const sys = createSysone({ model: typesafe() });
+const sys = createSysone({ provider: typesafe(), model: 'jev-latest' });
 const needsReply = predicate('Does this message need a reply?');
 
 const result = await sys.check('Can you send the proposal?', needsReply);
@@ -19,12 +19,22 @@ const result = await sys.check('Can you send the proposal?', needsReply);
 
 Use [Jev](https://docs.typesafe.ai) through TypeSafe or Vercel AI Gateway, or connect the experimental `systemOne()` adapter to a compatible self-hosted server such as [OpenJev](https://github.com/razorback16/openjev). The library is designed around evaluation models, independently of the provider. This is an independent project, not an official TypeSafe or Vercel SDK.
 
+The provider owns the connection; the model is an explicit ID in that provider's catalog. Reuse one provider with several models:
+
+```ts
+import { vercel } from 'sysone/providers/vercel';
+
+const gateway = vercel();
+const sys = createSysone({ provider: gateway, model: 'typesafe-ai/jev' });
+// Another client can reuse gateway with another available evaluation model ID.
+```
+
 ## Install
 
 The first npm publication is awaiting maintainer authentication. The same package is available as a GitHub release asset:
 
 ```sh
-npm install https://github.com/sysone-help/sysone/releases/download/v0.1.1/sysone-0.1.1.tgz
+npm install https://github.com/sysone-help/sysone/releases/download/v0.2.0/sysone-0.2.0.tgz
 ```
 
 Once published to the registry:
@@ -58,6 +68,6 @@ The hosted endpoint is limited to 6,000 input characters, one question per reque
 
 ## Development status
 
-Current release: `0.1.1`. Cloudflare and OpenRouter adapters are possible future integrations; they are not advertised as implemented. No benchmark or universal calibration claim is made. Test your application rules against representative data.
+Current release: `0.2.0`. Cloudflare and OpenRouter adapters are possible future integrations; they are not advertised as implemented. No benchmark or universal calibration claim is made. Test your application rules against representative data.
 
 MIT © Sysone contributors.

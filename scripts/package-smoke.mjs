@@ -31,7 +31,8 @@ try {
   const { createSysone, predicate } = await import(pathToFileURL(join(root, 'index.js')));
   const { typesafe } = await import(pathToFileURL(join(root, 'providers/typesafe.js')));
   const sys = createSysone({
-    model: typesafe('jev-latest', {
+    model: 'jev-latest',
+    provider: typesafe({
       apiKey: 'local-fixture-only',
       fetch: async () =>
         Response.json({ model: 'jev-1.13.0', answers: { result: { type: 'noul', noul: 0.95 } } }),
@@ -44,7 +45,7 @@ try {
 import assert from 'node:assert/strict';
 import { createSysone, predicate } from 'sysone';
 import { systemOne } from 'sysone/providers/system-one';
-const sys = createSysone({ model: systemOne('openjev-latest', {
+const sys = createSysone({ model: 'openjev-latest', provider: systemOne({
   baseURL: 'http://localhost:8080/v1',
   fetch: async () => Response.json({ answers: { result: { type: 'noul', noul: 0.9 } } }),
 }) });

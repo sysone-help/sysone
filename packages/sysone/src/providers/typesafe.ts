@@ -1,5 +1,5 @@
 import { SysoneError } from '../errors.js';
-import type { EvaluationModel } from '../types.js';
+import type { EvaluationProvider } from '../types.js';
 import { systemOne } from './system-one.js';
 
 export interface TypeSafeOptions {
@@ -8,10 +8,9 @@ export interface TypeSafeOptions {
 }
 
 /** Access Jev through TypeSafe's native System One endpoint. */
-export function typesafe(modelId = 'jev-latest', options: TypeSafeOptions = {}): EvaluationModel {
+export function typesafe(options: TypeSafeOptions = {}): EvaluationProvider {
   return {
-    provider: 'typesafe',
-    modelId,
+    id: 'typesafe',
     async evaluate(request, call) {
       const apiKey =
         options.apiKey ??
@@ -21,9 +20,9 @@ export function typesafe(modelId = 'jev-latest', options: TypeSafeOptions = {}):
           'Set TYPESAFE_API_KEY or pass apiKey to typesafe().',
           'CONFIGURATION',
         );
-      return systemOne(modelId, {
+      return systemOne({
         baseURL: 'https://api.typesafe.ai/v1',
-        provider: 'typesafe',
+        id: 'typesafe',
         apiKey,
         fetch: options.fetch,
         rounding: { probabilityDecimals: 2, scoreDecimals: 2 },

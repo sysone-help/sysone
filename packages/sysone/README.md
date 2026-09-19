@@ -10,7 +10,7 @@ Ask questions in plain language. Get answers your code can use.
 import { createSysone, predicate } from 'sysone';
 import { typesafe } from 'sysone/providers/typesafe';
 
-const sys = createSysone({ model: typesafe() });
+const sys = createSysone({ provider: typesafe(), model: 'jev-latest' });
 const needsReply = predicate('Does this message need a reply?');
 
 const result = await sys.check('Could you send the updated proposal?', needsReply);
@@ -28,10 +28,10 @@ Independent, MIT-licensed, and not affiliated with TypeSafe or Vercel.
 
 ## Install
 
-The initial npm publication is being prepared. Until the registry listing is available, install the [GitHub release package](https://github.com/sysone-help/sysone/releases/tag/v0.1.1):
+The initial npm publication is being prepared. Until the registry listing is available, install the [GitHub release package](https://github.com/sysone-help/sysone/releases/tag/v0.2.0):
 
 ```sh
-npm install https://github.com/sysone-help/sysone/releases/download/v0.1.1/sysone-0.1.1.tgz
+npm install https://github.com/sysone-help/sysone/releases/download/v0.2.0/sysone-0.2.0.tgz
 ```
 
 After npm publication, the equivalent registry command is:
@@ -52,7 +52,7 @@ npm install sysone ai@7.0.105 @ai-sdk/gateway@4.0.85
 import { createSysone } from 'sysone';
 import { vercel } from 'sysone/providers/vercel';
 
-const sys = createSysone({ model: vercel() });
+const sys = createSysone({ provider: vercel(), model: 'typesafe-ai/jev' });
 // Reads AI_GATEWAY_API_KEY from the server environment.
 ```
 
@@ -152,23 +152,37 @@ const ranked = await sys.rank(messages, urgency, {
 - Input and questions are validated before any collection requests start. An empty input returns an empty result.
 - A failed request rejects the collection. Already running requests may finish and incur usage; partial results are not returned.
 
-## Providers
+## Providers and models
+
+A **provider** configures how to connect: credentials, transport and endpoint. A **model** selects what runs through that provider. Neither implies the other. There is no default model.
+
+```ts
+import { createSysone } from 'sysone';
+import { vercel } from 'sysone/providers/vercel';
+
+const gateway = vercel({ apiKey: process.env.AI_GATEWAY_API_KEY });
+const sys = createSysone({
+  provider: gateway,
+  model: 'typesafe-ai/jev',
+});
+```
+
+Reuse `gateway` in other clients with different model IDs from its evaluation catalog. Each request carries its own model ID; the provider is not bound to Jev or a single lab. Model IDs belong to a provider's catalog: Sysone does not translate aliases across providers or advertise unavailable models. An unsupported ID fails at the provider, without silent fallback.
+
+For TypeSafe's native endpoint, select the model separately too:
 
 ```ts
 import { typesafe } from 'sysone/providers/typesafe';
-import { vercel } from 'sysone/providers/vercel';
 
-typesafe(); // jev-latest; TYPESAFE_API_KEY
-typesafe('jev-1.13.0'); // Fixed native version
-vercel(); // typesafe-ai/jev; AI_GATEWAY_API_KEY
-
-typesafe('jev-latest', { apiKey: process.env.TYPESAFE_API_KEY });
-vercel('typesafe-ai/jev', { apiKey: process.env.AI_GATEWAY_API_KEY });
+const sys = createSysone({
+  provider: typesafe(), // Reads TYPESAFE_API_KEY.
+  model: 'jev-1.13.0',
+});
 ```
 
-Both accept an optional `fetch` implementation for testing or transport instrumentation. There is no automatic provider selection, retry, or fallback.
+Both factories accept optional `apiKey` and `fetch`. `vercel()` reads `AI_GATEWAY_API_KEY` when credentials are not supplied explicitly. No request is made until an operation executes. There is no automatic provider selection, retry or fallback.
 
-Results include the provider, requested model, resolved model when the provider reports a distinct version, request ID when available, token usage, and rounding information. Absent metadata remains absent. The Vercel adapter does not treat an echoed alias as a resolved model version. Provider-specific billing metadata is not normalized in this release.
+Results distinguish `metadata.provider`, `requestedModel`, and `resolvedModel` when reported. An echoed Gateway alias is not treated as a resolved version. Namespaced Gateway extensions are preserved in `metadata.providerMetadata`, without interpreting every model as TypeSafe. For example, TypeSafe's Gateway confidence remains in the `typesafe` namespace; it is no longer copied into `answer.confidence`. Native System One confidence remains attached to native answers when present. Confidence is always provider/model-specific, never a universal calibration measure.
 
 ### Compatible servers and open models
 
@@ -176,47 +190,61 @@ Results include the provider, requested model, resolved model when the provider 
 import { createSysone, predicate } from 'sysone';
 import { systemOne } from 'sysone/providers/system-one';
 
-const sys = createSysone({
-  model: systemOne('openjev-latest', {
-    baseURL: 'http://127.0.0.1:8080/v1',
-    provider: 'openjev',
-    // apiKey: process.env.OPENJEV_API_KEY, // If your server requires it.
-  }),
+const local = systemOne({
+  baseURL: 'http://127.0.0.1:8080/v1',
+  id: 'local', // Optional transport identity in result metadata.
+  // apiKey: process.env.OPENJEV_API_KEY, // If your server requires it.
 });
 
+const sys = createSysone({ provider: local, model: 'openjev-latest' });
 await sys.check('Can you help?', predicate('Needs a reply?'));
 ```
 
-Start your server separately. `systemOne` appends `/systemone` to `baseURL`, translates boolean questions to `noul`, and preserves model evidence. It accepts optional `apiKey`, `headers`, `fetch`, and a metadata `provider` name. It never reads a cloud credential from the environment. `rounding` may declare precision documented by a server; it does not round values or change the request. Without it, full precision is expected.
+Start your server separately. `systemOne` appends `/systemone` to `baseURL`, translates boolean questions to `noul`, and preserves model evidence. It accepts optional `apiKey`, `headers`, `fetch`, and a metadata `id` identifying the endpoint. It never reads a cloud credential from the environment. `rounding` may declare precision documented by a server; it does not round values or change the request. Without it, full precision is expected.
 
 The experimental transport is tested with contract fixtures from [razorback16/OpenJev](https://github.com/razorback16/openjev), an independent server over DiffusionGemma. **We have not run its GPU backend or established quality equivalence with Jev.** OpenJev supports up to 128 choice labels (versus the library's 255 ceiling). Its confidence is one minus normalized entropy, and its probability estimates depend on top-k log probabilities. Thresholds are not portable across models. The server code is Apache-2.0; model terms apply separately.
 
-Other open evaluation models include [Bespoke Nimble 9B](https://huggingface.co/bespokelabs/Bespoke-Nimble-9B) and [Kotoba Open-Jev DeBERTa](https://huggingface.co/com-kotobalabs/open-jev-deberta-v3-large). Both publish evaluation weights, but need a serving layer and a custom adapter; neither is an implemented Sysone integration. No official open Jev weights were found in our September 19, 2026 review. [Research and source links](https://github.com/sysone-help/sysone/blob/main/research/open-evaluation-models.md).
+Other open evaluation models include [Bespoke Nimble 9B](https://huggingface.co/bespokelabs/Bespoke-Nimble-9B) and [Kotoba Open-Jev DeBERTa](https://huggingface.co/com-kotobalabs/open-jev-deberta-v3-large). Both publish evaluation weights, but need a serving layer and a custom provider adapter; neither is an implemented Sysone integration. No official open Jev weights were found in our September 19, 2026 review. [Research and source links](https://github.com/sysone-help/sysone/blob/main/research/open-evaluation-models.md).
 
-### Custom adapters
+### Custom providers
 
-Cloudflare and OpenRouter also offer Jev access; Sysone adapters for those routes are not yet included. Other evaluation models can implement the exported `EvaluationModel` interface:
+Cloudflare and OpenRouter also offer Jev access; Sysone adapters for those routes are not yet included. Custom transports implement `EvaluationProvider`, independently of the model selection:
 
 ```ts
-import type { EvaluationModel } from 'sysone';
+import type { EvaluationProvider } from 'sysone';
 
-const model: EvaluationModel = {
-  provider: 'my-provider',
-  modelId: 'my-evaluation-model',
+const provider: EvaluationProvider = {
+  id: 'my-endpoint',
   async evaluate(request, options) {
-    // Respect options?.signal; translate your provider's response.
-    // Return { answers, metadata }, preserving the requested question IDs.
+    // request contains { model, state, questions }.
+    // Respect options?.signal; preserve model identity and question IDs.
     return myEvaluationBackend(request, options);
   },
 };
+
+const sys = createSysone({ provider, model: 'my-evaluation-model' });
 ```
 
-Custom adapters must support the requested question types and honor cancellation. The client validates answer types, selected labels, score ranges and available probability distributions. It preserves provider rounding instead of silently renormalizing probabilities. Do not use generated language-model guesses as if they were measured evaluation probabilities.
+Custom providers must support the requested question types and honor cancellation. The client validates answer types, selected labels, score ranges and available probability distributions. It preserves provider rounding instead of silently renormalizing probabilities. Do not use generated language-model guesses as if they were measured evaluation probabilities.
+
+## Migrating from 0.1
+
+Version 0.2 separates model selection from provider construction:
+
+```ts
+// 0.1
+createSysone({ model: vercel('typesafe-ai/jev', { apiKey }) });
+
+// 0.2
+createSysone({ provider: vercel({ apiKey }), model: 'typesafe-ai/jev' });
+```
+
+Apply the same change to `typesafe` and `systemOne`. Custom implementations now expose `EvaluationProvider.id` and accept `request.model`, rather than binding an `EvaluationModel.modelId`. `systemOne`'s optional transport label is now `id`, replacing the old `provider` option. Gateway confidence remains namespaced in `metadata.providerMetadata`; migrate consumers of the former TypeSafe-specific `answer.confidence` projection accordingly.
 
 ## Timeouts, cancellation and errors
 
 ```ts
-const sys = createSysone({ model: typesafe(), timeoutMs: 15_000 });
+const sys = createSysone({ provider: typesafe(), model: 'jev-latest', timeoutMs: 15_000 });
 const controller = new AbortController();
 
 await sys.check(message, needsReply, { signal: controller.signal });
