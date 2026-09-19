@@ -6,15 +6,15 @@
 
 **Zero dependencies. 3.9 kB min+gzip, including all providers.**
 
-| Included JavaScript    | Minified | Minified + gzip |
-| ---------------------- | -------: | --------------: |
-| Core                   |  7,534 B |         2,711 B |
-| Core + TypeSafe        | 10,220 B |         3,647 B |
-| Core + Vercel          |  9,000 B |         3,257 B |
-| Core + System One HTTP |  9,851 B |         3,512 B |
-| Core + all providers   | 11,202 B |         3,902 B |
+| Included JavaScript  | Minified | Minified + gzip |
+| -------------------- | -------: | --------------: |
+| Core                 |  7,534 B |         2,711 B |
+| Core + TypeSafe      | 10,216 B |         3,647 B |
+| Core + Vercel        |  9,000 B |         3,257 B |
+| Core + custom HTTP   |  9,852 B |         3,514 B |
+| Core + all providers | 11,203 B |         3,901 B |
 
-Measured on 0.3.0 with all core exports retained, esbuild 0.28.2, ESM/ES2022 and gzip level 9 (zlib 1.3.1.zlib-ng). Gzip sizes can vary slightly between compression versions. Bundle sizes exclude types/docs and are not the package download size. No third-party runtime code is bundled.
+Measured on 0.4.0 with all core exports retained, esbuild 0.28.2, ESM/ES2022 and gzip level 9 (zlib 1.3.1.zlib-ng). Gzip sizes can vary slightly between compression versions. Bundle sizes exclude types/docs and are not the package download size. No third-party runtime code is bundled.
 
 [Reproduce the measurement](https://github.com/sysone-help/sysone/blob/main/scripts/package-size.mjs): `npm run build && npm run size`. CI enforces a 4,000-byte gzip budget for the complete bundle. Build/test tools belong to the private workspace, not your installation.
 <!-- size:end -->
@@ -39,16 +39,16 @@ if (result.decision === 'yes') {
 // result.probability: P(yes), from 0 to 1
 ```
 
-Sysone provides predicates, classifiers, rubrics and collection operations for evaluation models. Use [Jev](https://docs.typesafe.ai) through TypeSafe or Vercel AI Gateway, or a compatible self-hosted server through the experimental System One adapter. Definitions are immutable data. Execution is explicit and asynchronous. Sysone never runs the action being evaluated.
+Sysone provides predicates, classifiers, rubrics and collection operations for evaluation models. Use [Jev](https://docs.typesafe.ai) through TypeSafe or Vercel AI Gateway, or a compatible self-hosted server through the experimental custom HTTP provider. Definitions are immutable data. Execution is explicit and asynchronous. Sysone never runs the action being evaluated.
 
 Independent, MIT-licensed, and not affiliated with TypeSafe or Vercel.
 
 ## Install
 
-The initial npm publication is being prepared. Until the registry listing is available, install the [GitHub release package](https://github.com/sysone-help/sysone/releases/tag/v0.3.0):
+The initial npm publication is being prepared. Until the registry listing is available, install the [GitHub release package](https://github.com/sysone-help/sysone/releases/tag/v0.4.0):
 
 ```sh
-npm install https://github.com/sysone-help/sysone/releases/download/v0.3.0/sysone-0.3.0.tgz
+npm install https://github.com/sysone-help/sysone/releases/download/v0.4.0/sysone-0.4.0.tgz
 ```
 
 After npm publication, the equivalent registry command is:
@@ -205,9 +205,9 @@ Results distinguish `metadata.provider`, `requestedModel`, and `resolvedModel` w
 
 ```ts
 import { createSysone, predicate } from 'sysone';
-import { systemOne } from 'sysone/providers/system-one';
+import { customProvider } from 'sysone/providers/custom';
 
-const local = systemOne({
+const local = customProvider({
   baseURL: 'http://127.0.0.1:8080/v1',
   id: 'local', // Optional transport identity in result metadata.
   // apiKey: process.env.OPENJEV_API_KEY, // If your server requires it.
@@ -217,7 +217,9 @@ const sys = createSysone({ provider: local, model: 'openjev-latest' });
 await sys.check('Can you help?', predicate('Needs a reply?'));
 ```
 
-Start your server separately. `systemOne` appends `/systemone` to `baseURL`, translates boolean questions to `noul`, and preserves model evidence. It accepts optional `apiKey`, `headers`, `fetch`, and a metadata `id` identifying the endpoint. It never reads a cloud credential from the environment. `rounding` may declare precision documented by a server; it does not round values or change the request. Without it, full precision is expected.
+Start your server separately. `customProvider` appends `/systemone` to `baseURL`, translates boolean questions to `noul`, and preserves model evidence. It accepts optional `apiKey`, `headers`, `fetch`, and a metadata `id` identifying the endpoint. It never reads a cloud credential from the environment. `rounding` may declare precision documented by a server; it does not round values or change the request. Without it, full precision is expected.
+
+The custom provider uses the System One HTTP protocol; it does not execute model weights or automatically adapt arbitrary APIs. An open model served through Vercel still uses `vercel()`. For a different wire protocol, implement `EvaluationProvider`.
 
 The experimental transport is tested with contract fixtures from [razorback16/OpenJev](https://github.com/razorback16/openjev), an independent server over DiffusionGemma. **We have not run its GPU backend or established quality equivalence with Jev.** OpenJev supports up to 128 choice labels (versus the library's 255 ceiling). Its confidence is one minus normalized entropy, and its probability estimates depend on top-k log probabilities. Thresholds are not portable across models. The server code is Apache-2.0; model terms apply separately.
 
@@ -244,6 +246,20 @@ const sys = createSysone({ provider, model: 'my-evaluation-model' });
 
 Custom providers must support the requested question types and honor cancellation. The client validates answer types, selected labels, score ranges and available probability distributions. It preserves provider rounding instead of silently renormalizing probabilities. Do not use generated language-model guesses as if they were measured evaluation probabilities.
 
+## Migrating from 0.3
+
+The generic endpoint factory is now named `customProvider`, describing the connection rather than its wire protocol:
+
+```ts
+// 0.3
+import { systemOne } from 'sysone/providers/system-one';
+
+// 0.4
+import { customProvider } from 'sysone/providers/custom';
+```
+
+Replace `systemOne(options)` with `customProvider(options)`. The default metadata provider ID changes from `system-one` to `custom`; an explicit `id` is unchanged. Request/response formats and model selection are unchanged. System One remains the supported HTTP protocol, not a provider identity.
+
 ## Migrating from 0.1
 
 Version 0.2 separates model selection from provider construction:
@@ -256,7 +272,7 @@ createSysone({ model: vercel('typesafe-ai/jev', { apiKey }) });
 createSysone({ provider: vercel({ apiKey }), model: 'typesafe-ai/jev' });
 ```
 
-Apply the same change to `typesafe` and `systemOne`. Custom implementations now expose `EvaluationProvider.id` and accept `request.model`, rather than binding an `EvaluationModel.modelId`. `systemOne`'s optional transport label is now `id`, replacing the old `provider` option. Gateway confidence remains namespaced in `metadata.providerMetadata`; migrate consumers of the former TypeSafe-specific `answer.confidence` projection accordingly.
+Apply the same change to `typesafe` and the then-named `systemOne`. Custom implementations now expose `EvaluationProvider.id` and accept `request.model`, rather than binding an `EvaluationModel.modelId`. The custom transport's optional label is now `id`, replacing the old `provider` option. Gateway confidence remains namespaced in `metadata.providerMetadata`; migrate consumers of the former TypeSafe-specific `answer.confidence` projection accordingly.
 
 ## Timeouts, cancellation and errors
 

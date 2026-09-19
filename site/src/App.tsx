@@ -21,7 +21,7 @@ export function App() {
           <span className="brand-mark" aria-hidden="true">
             s₁
           </span>
-          sysone<span className="version">0.3.0</span>
+          sysone<span className="version">0.4.0</span>
         </a>
         <nav aria-label="Main navigation">
           <a href="#playground">Playground</a>

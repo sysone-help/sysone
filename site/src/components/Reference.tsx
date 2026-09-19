@@ -90,7 +90,7 @@ const result = await sys.check("Can you send the proposal?", needsReply);
                     ['Core', size.bundles.core],
                     ['Core + Vercel', size.bundles.vercel],
                     ['Core + TypeSafe', size.bundles.typesafe],
-                    ['Core + System One HTTP', size.bundles.systemOne],
+                    ['Core + custom HTTP', size.bundles.customProvider],
                     ['Core + all providers', size.bundles.all],
                   ].map(
                     ([label, measurement]) =>
@@ -217,10 +217,10 @@ const direct = createSysone({
               assuming TypeSafe semantics.
             </p>
             <Code>{`import { createSysone, predicate } from "sysone";
-import { systemOne } from "sysone/providers/system-one";
+import { customProvider } from "sysone/providers/custom";
 
 const sys = createSysone({
-  provider: systemOne({
+  provider: customProvider({
     baseURL: "http://127.0.0.1:8080/v1",
     id: "local",
   }),
@@ -229,9 +229,12 @@ const sys = createSysone({
 
 await sys.check("Can you help?", predicate("Needs a reply?"));`}</Code>
             <p className="doc-note">
-              Start your OpenJev server first. The adapter appends <code>/systemone</code> to the
-              API base. Optional <code>apiKey</code> and <code>headers</code> support authenticated
-              servers. This code runs in your app; the shared playground always uses Jev.
+              Use customProvider for your own endpoint, regardless of the model’s license. An open
+              model offered through Vercel still uses vercel(). Start your OpenJev server first.
+              This provider currently supports the System One HTTP protocol and appends{' '}
+              <code>/systemone</code> to the API base. Optional <code>apiKey</code> and{' '}
+              <code>headers</code> support authenticated servers. This code runs in your app; the
+              shared playground always uses Jev.
             </p>
           </article>
           <article id="models" className="section-anchor">
@@ -268,8 +271,8 @@ await sys.check("Can you help?", predicate("Needs a reply?"));`}</Code>
                       separately.
                     </td>
                     <td>
-                      <code>systemOne()</code>, experimental. Compatible HTTP contract; GPU backend
-                      not tested here.
+                      <code>customProvider()</code>, experimental. Compatible HTTP contract; GPU
+                      backend not tested here.
                     </td>
                   </tr>
                   <tr>

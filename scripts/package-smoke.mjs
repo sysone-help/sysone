@@ -41,11 +41,11 @@ import assert from 'node:assert/strict';
 import { createSysone, predicate, SysoneError } from 'sysone';
 import { typesafe } from 'sysone/providers/typesafe';
 import { vercel } from 'sysone/providers/vercel';
-import { systemOne } from 'sysone/providers/system-one';
+import { customProvider } from 'sysone/providers/custom';
 const nativeFetch = async () => Response.json({ answers: { result: { type: 'noul', noul: 0.9 } } });
 const providers = [
   typesafe({ apiKey: 'fixture-only', fetch: nativeFetch }),
-  systemOne({ baseURL: 'http://localhost:8080/v1', fetch: nativeFetch }),
+  customProvider({ baseURL: 'http://localhost:8080/v1', fetch: nativeFetch }),
   vercel({ apiKey: 'fixture-only', fetch: async () => Response.json({ answers: { result: { type: 'boolean', probability: 0.9 } } }) }),
 ];
 for (const provider of providers) {

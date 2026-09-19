@@ -1,5 +1,5 @@
 {
-  "version": "0.3.0",
+  "version": "0.4.0",
   "esbuild": "0.28.2",
   "gzipLevel": 9,
   "zlib": "1.3.1.zlib-ng",
@@ -10,8 +10,8 @@
       "gzipBytes": 2711
     },
     "typesafe": {
-      "minifiedBytes": 10220,
-      "sha256": "4db174ae0f93fd86239ad4a085eb20ed28c8c47850788a6e0b361ec1a93ed002",
+      "minifiedBytes": 10216,
+      "sha256": "50731fcf9c14289e5c53344248880c9c5794fc17b92921f96c1588dad586e633",
       "gzipBytes": 3647
     },
     "vercel": {
@@ -19,15 +19,15 @@
       "sha256": "ff75e9fbc94636b444cc152da06d6d98d95cc016563a4670255aa8e43197b1d9",
       "gzipBytes": 3257
     },
-    "systemOne": {
-      "minifiedBytes": 9851,
-      "sha256": "51d88afe23ff3a32754590dfafd7e57e8b794c06f6c5ebbf77a5632d167b404d",
-      "gzipBytes": 3512
+    "customProvider": {
+      "minifiedBytes": 9852,
+      "sha256": "f054ebcf8cd974d6439ae448a56d8246d762e8cfdac1cd50b9abb5b9c01895b6",
+      "gzipBytes": 3514
     },
     "all": {
-      "minifiedBytes": 11202,
-      "sha256": "a5ffb6c534b82baf9e4cd76aadaa73f95d0b6a7c714834515907c34f020da26b",
-      "gzipBytes": 3902
+      "minifiedBytes": 11203,
+      "sha256": "5b0a195ed117eaeb29b70170952eb9a677b7f0ea9ea02e11a7740e6b3ba586b6",
+      "gzipBytes": 3901
     }
   }
 }

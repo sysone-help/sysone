@@ -21,8 +21,8 @@ const cases = {
   core: { providers: [], budget: 2800 },
   typesafe: { providers: ['typesafe'], budget: 3800 },
   vercel: { providers: ['vercel'], budget: 3500 },
-  systemOne: { providers: ['system-one'], budget: 3700 },
-  all: { providers: ['typesafe', 'vercel', 'system-one'], budget: 4000 },
+  customProvider: { providers: ['custom'], budget: 3700 },
+  all: { providers: ['typesafe', 'vercel', 'custom'], budget: 4000 },
 };
 const bundles = {};
 for (const [name, { providers, budget }] of Object.entries(cases)) {
@@ -79,7 +79,7 @@ const sizeBlock = [
   '| --- | ---: | ---: |',
   ...Object.entries(reference.bundles).map(
     ([name, size]) =>
-      `| ${{ core: 'Core', typesafe: 'Core + TypeSafe', vercel: 'Core + Vercel', systemOne: 'Core + System One HTTP', all: 'Core + all providers' }[name]} | ${size.minifiedBytes.toLocaleString('en-US')} B | ${size.gzipBytes.toLocaleString('en-US')} B |`,
+      `| ${{ core: 'Core', typesafe: 'Core + TypeSafe', vercel: 'Core + Vercel', customProvider: 'Core + custom HTTP', all: 'Core + all providers' }[name]} | ${size.minifiedBytes.toLocaleString('en-US')} B | ${size.gzipBytes.toLocaleString('en-US')} B |`,
   ),
   '',
   `Measured on ${pkg.version} with all core exports retained, esbuild ${esbuildVersion}, ESM/ES2022 and gzip level 9 (zlib ${reference.zlib}). Gzip sizes can vary slightly between compression versions. Bundle sizes exclude types/docs and are not the package download size. No third-party runtime code is bundled.`,

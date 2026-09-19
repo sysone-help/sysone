@@ -21,7 +21,7 @@ const result = await build({
     'src/index.ts',
     'src/providers/typesafe.ts',
     'src/providers/vercel.ts',
-    'src/providers/system-one.ts',
+    'src/providers/custom.ts',
   ],
   outbase: 'src',
   outdir: 'dist',

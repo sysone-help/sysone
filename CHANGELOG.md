@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0
+
+- Rename `systemOne()` from `sysone/providers/system-one` to `customProvider()` from `sysone/providers/custom`. Rename its options type to `CustomProviderOptions` and default provider ID to `custom`. This is a breaking name change; explicit IDs and the HTTP contract are unchanged.
+- Distinguish endpoint ownership from model licensing. Open models on a hosted gateway use that gateway's provider; your own compatible endpoint uses `customProvider`. System One names the supported wire protocol.
+- Update examples, the migration guide, package exports and measured bundle sizes. Zero dependencies and the 4 kB min+gzip budget remain enforced.
+
 ## 0.3.0
 
 - Remove all runtime, optional and peer dependencies. Vercel now uses native fetch against the Gateway evaluation protocol; `ai` and `@ai-sdk/gateway` are no longer required. The provider/model configuration from 0.2 is unchanged.

@@ -3,7 +3,7 @@ import { SysoneError } from '../errors.js';
 import { record, validateAnswer } from '../validation.js';
 import type { Answer, EvaluationMetadata, EvaluationProvider } from '../types.js';
 
-export interface SystemOneOptions {
+export interface CustomProviderOptions {
   /** API base including its version, e.g. http://localhost:8080/v1. */
   readonly baseURL: string;
   readonly apiKey?: string;
@@ -15,8 +15,8 @@ export interface SystemOneOptions {
   readonly rounding?: EvaluationMetadata['rounding'];
 }
 
-/** Experimental transport for servers implementing the System One HTTP protocol. */
-export function systemOne(options: SystemOneOptions): EvaluationProvider {
+/** Connect to your own endpoint implementing the System One HTTP protocol. */
+export function customProvider(options: CustomProviderOptions): EvaluationProvider {
   let endpoint: URL;
   try {
     endpoint = new URL(options.baseURL);
@@ -35,7 +35,7 @@ export function systemOne(options: SystemOneOptions): EvaluationProvider {
       'CONFIGURATION',
     );
   }
-  const id = options.id ?? 'system-one';
+  const id = options.id ?? 'custom';
   return {
     id,
     async evaluate(request, call = {}) {

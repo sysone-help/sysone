@@ -80,3 +80,7 @@ Sysone 0.1.1 includes the experimental `sysone/providers/system-one` transport w
 ## Atualização da API em 0.2.0
 
 A conexão agora é `systemOne({ baseURL, id: 'local' })`; a seleção é independente em `createSysone({ provider, model: 'openjev-latest' })`. Os providers são reutilizáveis por múltiplos modelos. Metadados adicionais do Gateway mantêm seus namespaces, sem assumir semântica TypeSafe para outros modelos. A pesquisa e os limites dos modelos acima permanecem os mesmos.
+
+## Atualização de nomenclatura em 0.4.0
+
+O transporte para endpoint próprio chama-se `customProvider`, importado de `sysone/providers/custom`. System One é o protocolo HTTP aceito, não a identidade do provider. Licença aberta não determina o provider: um modelo aberto oferecido pelo Gateway continua usando `vercel()`. A seleção de modelo permanece separada.

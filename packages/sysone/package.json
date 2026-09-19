@@ -1,6 +1,6 @@
 {
   "name": "sysone",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Zero-dependency TypeScript primitives for evaluation models. Predicates, classifiers, rubrics and collections.",
   "type": "module",
   "sideEffects": false,
@@ -26,9 +26,9 @@
       "import": "./dist/providers/vercel.js"
     },
     "./package.json": "./package.json",
-    "./providers/system-one": {
-      "types": "./dist/providers/system-one.d.ts",
-      "import": "./dist/providers/system-one.js"
+    "./providers/custom": {
+      "types": "./dist/providers/custom.d.ts",
+      "import": "./dist/providers/custom.js"
     }
   },
   "scripts": {

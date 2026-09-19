@@ -1,6 +1,6 @@
 import { SysoneError } from '../errors.js';
 import type { EvaluationProvider } from '../types.js';
-import { systemOne } from './system-one.js';
+import { customProvider } from './custom.js';
 
 export interface TypeSafeOptions {
   readonly apiKey?: string;
@@ -20,7 +20,7 @@ export function typesafe(options: TypeSafeOptions = {}): EvaluationProvider {
           'Set TYPESAFE_API_KEY or pass apiKey to typesafe().',
           'CONFIGURATION',
         );
-      return systemOne({
+      return customProvider({
         baseURL: 'https://api.typesafe.ai/v1',
         id: 'typesafe',
         apiKey,

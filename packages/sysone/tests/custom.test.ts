@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { classifier, createSysone, predicate, rubric } from '../src/index.js';
-import { systemOne } from '../src/providers/system-one.js';
+import { customProvider } from '../src/providers/custom.js';
 
 test('System One preserves OpenJev evidence and translates all three question types', async () => {
-  const provider = systemOne({
+  const provider = customProvider({
     baseURL: 'http://127.0.0.1:8080/v1/',
     id: 'openjev-local',
     fetch: async (url, options) => {
@@ -64,7 +64,7 @@ test('System One preserves OpenJev evidence and translates all three question ty
 
 test('System One supports explicit auth, custom headers and the caller abort signal', async () => {
   const controller = new AbortController();
-  const provider = systemOne({
+  const provider = customProvider({
     baseURL: 'https://example.test/v1',
     apiKey: 'fixture-only',
     headers: { 'x-origin-secret': 'fixture-origin' },
@@ -88,7 +88,7 @@ test('System One supports explicit auth, custom headers and the caller abort sig
 test('System One does not assume TypeSafe rounding or repair malformed evidence', async () => {
   const sys = createSysone({
     model: 'local-model',
-    provider: systemOne({
+    provider: customProvider({
       baseURL: 'http://localhost:8080/v1',
       fetch: async () =>
         Response.json({
@@ -110,7 +110,7 @@ test('System One rejects missing answers and redacts server errors', async () =>
   ]) {
     const sys = createSysone({
       model: 'local-model',
-      provider: systemOne({
+      provider: customProvider({
         baseURL: 'http://localhost/v1',
         fetch: async () => response,
       }),
@@ -130,7 +130,7 @@ test('System One rejects malformed or credential-bearing base URLs without echoi
     'not-a-url',
   ]) {
     assert.throws(
-      () => systemOne({ baseURL }),
+      () => customProvider({ baseURL }),
       (error) => error instanceof Error && !error.message.includes('secret'),
     );
   }
@@ -138,7 +138,7 @@ test('System One rejects malformed or credential-bearing base URLs without echoi
 
 test('one compatible endpoint forwards each model ID independently', async () => {
   const seen: string[] = [];
-  const provider = systemOne({
+  const provider = customProvider({
     baseURL: 'http://localhost:8080/v1',
     id: 'local',
     fetch: async (_url, options) => {
