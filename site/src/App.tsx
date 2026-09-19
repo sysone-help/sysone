@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Playground } from './components/Playground';
 import { Comparison } from './components/Comparison';
+import { Recipes } from './components/Recipes';
 import { Reference } from './components/Reference';
 import { releaseUrl } from './release';
 import size from '../../packages/sysone/size.json';
@@ -28,7 +29,7 @@ export function App() {
           <a href="#playground">Playground</a>
           <a href="#comparison">Why Sysone?</a>
           <a href="#docs">API</a>
-          <a href="#models">Models</a>
+          <a href="#recipes">Recipes</a>
           <a href={repo}>GitHub ↗</a>
           <button
             className="theme-button"
@@ -55,6 +56,7 @@ export function App() {
         </div>
         <Playground />
         <Comparison />
+        <Recipes />
         <Reference />
         <details id="privacy" className="privacy section-anchor">
           <summary>Playground data &amp; limits</summary>

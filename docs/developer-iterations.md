@@ -45,3 +45,9 @@ Validation: tests cover all six presets, malformed criteria and colons inside de
 Predicate code now includes a runnable three-branch `switch`; the result highlights the branch selected by the current threshold. Moving the threshold reuses the response with no extra request. Rubric distributions display the user's level descriptions and actual scale instead of an unrelated hardcoded 1.6 example.
 
 Validation: build/typecheck; existing boundary tests cover the same decision rule. Visual/interaction checks are included in the final browser pass. The model does not execute the action.
+
+## 8. Show the work saved beyond a single call
+
+Added typed, reusable recipes for routing with two questions in one call, partitioning RAG context while preserving uncertain items and original IDs, and ranking passages against a descriptive rubric. The site renders the repository files directly through generated snippets. Each recipe states its request count and concurrency behavior. No new runtime dependency or API surface was needed.
+
+Validation: repository typecheck now includes examples and tests; recipe tests verify batched routing, review behavior and original-object preservation. Existing rank tests cover ordering and equal-score stability.
