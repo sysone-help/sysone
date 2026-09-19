@@ -22,7 +22,17 @@ export function Playground() {
   const abort = useRef<AbortController | null>(null);
   useEffect(() => () => abort.current?.abort(), []);
   const example = examples[mode];
-  const canRun = Boolean(input.trim() && instructions.trim());
+  let validationError = '';
+  if (!input.trim()) validationError = 'Enter some text to evaluate.';
+  else if (!instructions.trim()) validationError = 'Enter a question about the text.';
+  else if (mode !== 'predicate') {
+    try {
+      parseCriteria(mode, criteria);
+    } catch (cause) {
+      validationError = (cause as Error).message;
+    }
+  }
+  const canRun = !validationError;
 
   function clearResult() {
     abort.current?.abort();
@@ -210,6 +220,8 @@ console.log(result.answers.score);`
               </label>
               <textarea
                 id="criteria"
+                aria-invalid={Boolean(validationError)}
+                aria-describedby={validationError ? 'validation-error' : undefined}
                 className="criteria-input"
                 rows={4}
                 maxLength={3000}
@@ -241,6 +253,11 @@ console.log(result.answers.score);`
                 uncertain
               </p>
             </div>
+          )}
+          {validationError && (
+            <p id="validation-error" className="validation-error" role="status">
+              {validationError}
+            </p>
           )}
           <div className="run-row">
             <button className="run-button" onClick={run} disabled={loading || !canRun}>
@@ -280,7 +297,19 @@ console.log(result.answers.score);`
             </span>
           </div>
           {view === 'code' ? (
-            <Code label="Copy and run on your server">{snippet}</Code>
+            validationError ? (
+              <p className="empty-result">
+                Fix the input to generate runnable code: {validationError}
+              </p>
+            ) : (
+              <>
+                <Code label="Copy and run on your server">{snippet}</Code>
+                <p className="code-next">
+                  <a href="#installation">Install & run this example ↗</a> · Your own provider key
+                  is required.
+                </p>
+              </>
+            )
           ) : (
             <div className="result-panel">
               <div className="answer-space" aria-live="polite" aria-busy={loading}>

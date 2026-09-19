@@ -33,3 +33,9 @@ Validation: site TypeScript compilation; examples use ESM JavaScript syntax that
 Added six selectable, editable scenarios: message triage, team routing, urgency, RAG relevance, agent capability routing and source-grounded answer evaluation. Reset restores the selected scenario. Switching scenarios cancels stale requests. Generated predicate code now uses the shorter question-string API.
 
 Validation: site typecheck and build. Examples are prompts to experiment with, not claims of task-level accuracy. The shared endpoint still fixes provider/model and bounds input.
+
+## 6. Catch editing mistakes before running
+
+The editor now checks category counts, duplicate/long labels, descriptions and rubric levels before enabling Run. Invalid inputs display specific guidance instead of copyable broken code. Valid code links straight to installation. Limits describe this shared playground; library limits remain broader.
+
+Validation: tests cover all six presets, malformed criteria and colons inside descriptions. The server retains its own independent validation. Site compilation checks conditional rendering.

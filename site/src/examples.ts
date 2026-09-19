@@ -40,13 +40,20 @@ export function parseCriteria(mode: Mode, value: string): Record<string, string>
     .split('\n')
     .map((x) => x.trim())
     .filter(Boolean);
-  if (mode === 'rubric') return lines;
+  if (mode === 'rubric') {
+    if (lines.length < 2 || lines.length > 5 || lines.some((line) => line.length > 300))
+      throw new Error('Use 2–5 levels of up to 300 characters each.');
+    return lines;
+  }
+  if (lines.length < 2 || lines.length > 8) throw new Error('Use 2–8 categories.');
   const entries = lines.map((line) => {
     const index = line.indexOf(':');
     if (index <= 0 || !line.slice(index + 1).trim())
       throw new Error('Use one label: description per line.');
     return [line.slice(0, index).trim(), line.slice(index + 1).trim()] as const;
   });
+  if (entries.some(([label, description]) => label.length > 40 || description.length > 300))
+    throw new Error('Use labels up to 40 and descriptions up to 300 characters.');
   if (new Set(entries.map(([key]) => key)).size !== entries.length)
     throw new Error('Each label must be unique.');
   return Object.fromEntries(entries);

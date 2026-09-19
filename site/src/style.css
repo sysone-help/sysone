@@ -1031,3 +1031,14 @@ footer a {
   border: 1px solid var(--line);
   border-radius: 5px;
 }
+
+.validation-error {
+  color: var(--danger);
+  font-size: 12px;
+}
+.code-next {
+  margin: 14px 18px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
