@@ -1,7 +1,15 @@
 import * as React from 'react';
 import type { Answer } from 'sysone';
 
-export function Result({ answer, threshold }: { answer: Answer; threshold: number }) {
+export function Result({
+  answer,
+  threshold,
+  levels = [],
+}: {
+  answer: Answer;
+  threshold: number;
+  levels?: string[];
+}) {
   if (answer.type === 'boolean') {
     const decision =
       answer.probability >= threshold
@@ -32,6 +40,10 @@ export function Result({ answer, threshold }: { answer: Answer; threshold: numbe
             ? 'The evidence is between your thresholds. Your code can keep this for review.'
             : `Your current threshold classifies this as “${decision}”. The probability is evidence from the model, not a guarantee.`}
         </p>
+        <div className="branch-preview">
+          <span>Your code takes this branch</span>
+          <code>case '{decision}':</code>
+        </div>
       </>
     );
   }
@@ -73,7 +85,9 @@ export function Result({ answer, threshold }: { answer: Answer; threshold: numbe
       <div className="distribution">
         {Object.entries(answer.probabilities ?? {}).map(([level, p]) => (
           <div key={level}>
-            <span>Level {level}</span>
+            <span title={levels[Number(level)]}>
+              {level} · {levels[Number(level)] ?? `Level ${level}`}
+            </span>
             <div className="mini-track">
               <i style={{ width: `${p * 100}%` }} />
             </div>
@@ -82,7 +96,9 @@ export function Result({ answer, threshold }: { answer: Answer; threshold: numbe
         ))}
       </div>
       <p className="result-explainer">
-        A score of 1.6 falls between your second and third levels. It is not a percentage.
+        {levels.length > 0 ? `Your scale runs from 0 to ${levels.length - 1}. ` : ''}
+        This is a probability-weighted level index, not a percentage. Fractional scores sit between
+        levels.
       </p>
     </>
   );

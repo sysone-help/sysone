@@ -114,8 +114,12 @@ ${
     ? `const result = await sys.check(input, ${JSON.stringify(instructions)}, {
   minProbability: ${threshold.toFixed(2)},
 });
-// decision: "yes" | "no" | "uncertain"
-console.log(result);`
+console.log(result.probability); // P(yes), preserved as evidence
+switch (result.decision) {
+  case "yes": console.log("Yes branch"); break;
+  case "no": console.log("No branch"); break;
+  case "uncertain": console.log("Keep for review"); break;
+}`
     : mode === 'classifier'
       ? `const category = classifier(${criteriaCode}, ${JSON.stringify(instructions)});
 
@@ -250,7 +254,7 @@ console.log(result.answers.score);`
               />
               <p>
                 yes ≥ {threshold.toFixed(2)} · no ≤ {(1 - threshold).toFixed(2)} · otherwise
-                uncertain
+                uncertain. Changing this reuses the result — no extra request.
               </p>
             </div>
           )}
@@ -322,7 +326,11 @@ console.log(result.answers.score);`
                     </button>
                   </div>
                 ) : answer ? (
-                  <Result answer={answer} threshold={threshold} />
+                  <Result
+                    answer={answer}
+                    threshold={threshold}
+                    levels={mode === 'rubric' ? (parseCriteria(mode, criteria) as string[]) : []}
+                  />
                 ) : (
                   <div className="empty-result">
                     <code>{loading ? 'await model.evaluate(…)' : '// No result yet'}</code>

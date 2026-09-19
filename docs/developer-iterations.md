@@ -39,3 +39,9 @@ Validation: site typecheck and build. Examples are prompts to experiment with, n
 The editor now checks category counts, duplicate/long labels, descriptions and rubric levels before enabling Run. Invalid inputs display specific guidance instead of copyable broken code. Valid code links straight to installation. Limits describe this shared playground; library limits remain broader.
 
 Validation: tests cover all six presets, malformed criteria and colons inside descriptions. The server retains its own independent validation. Site compilation checks conditional rendering.
+
+## 7. Connect evidence to ordinary control flow
+
+Predicate code now includes a runnable three-branch `switch`; the result highlights the branch selected by the current threshold. Moving the threshold reuses the response with no extra request. Rubric distributions display the user's level descriptions and actual scale instead of an unrelated hardcoded 1.6 example.
+
+Validation: build/typecheck; existing boundary tests cover the same decision rule. Visual/interaction checks are included in the final browser pass. The model does not execute the action.
