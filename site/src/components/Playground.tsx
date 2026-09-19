@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import type { EvaluationResult } from 'sysone';
-import { examples, scenarios, parseCriteria, type Mode } from '../examples';
+import { examples, scenarios, scenarioFromSearch, parseCriteria, type Mode } from '../examples';
 import { Code } from './Code';
 import { Result } from './Result';
 
@@ -21,6 +21,9 @@ export function Playground() {
   const [view, setView] = useState<'result' | 'code'>('code');
   const abort = useRef<AbortController | null>(null);
   useEffect(() => () => abort.current?.abort(), []);
+  useEffect(() => {
+    loadScenario(scenarioFromSearch(window.location.search).id);
+  }, []);
   const example = examples[mode];
   let validationError = '';
   if (!input.trim()) validationError = 'Enter some text to evaluate.';
@@ -182,6 +185,14 @@ console.log(result.answers.score);`
               </option>
             ))}
           </select>
+          <p className="preset-link">
+            <a
+              href={`?example=${scenario}#playground`}
+              title="Links to the original preset, without your edits"
+            >
+              Link to this preset ↗
+            </a>
+          </p>
           <label htmlFor="state">
             state <span>string</span>
           </label>

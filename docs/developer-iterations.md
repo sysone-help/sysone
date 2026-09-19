@@ -59,3 +59,16 @@ Used hosted Jev to compare three API approaches on ceremony, explicit control/ev
 Evidence: [full prompts, responses and model metadata](../research/developer-proposals.json). Jev assigned selected-candidate probabilities of .89, .73 and .90 for the API and .82 for the existing heading. These are subjective model judgments, not usability scores or independent user research. Candidate order was not randomized. Implementation decisions also rely on type checks, parity tests and preserving uncertainty.
 
 Validation: site typecheck. The API remains five execution methods and three reusable definition factories; no `if`/`switch` wrappers or silent action execution were added.
+
+## 10. Close the loop on mobile and sharing
+
+The browser pass found a real regression: the expanded header exceeded a 390px mobile viewport. Reflowed mobile navigation into two rows with larger tap targets. Added stable preset links (`?example=rag#playground`, for example) so developers can share a useful starting point without putting edited input in the URL. Unknown IDs fall back to the default. The displayed version now comes from the measured package manifest instead of a second hardcoded string.
+
+Validation: preset resolution tests, desktop/mobile browser checks, mocked inference interactions, complete build/typecheck/test suite, isolated package installation and size-budget check. Final deployment checks are recorded below after release.
+
+### Final local evidence
+
+- 39 automated tests passed (30 library, 9 endpoint/comparison/editor/recipe tests), plus TypeScript inference checks.
+- Browser at 390px: document width 390px after the header fix. A fixture probability of .75 changed from uncertain at .80 to yes at .70 with no additional request. Duplicate labels disabled Run; reset restored the chosen preset. Rubric result displayed the supplied level descriptions.
+- Isolated normal package installation installed only Sysone; all three provider imports executed with contract fixtures.
+- Complete bundle: 3,914 bytes min+gzip; core + Vercel: 3,268 bytes. Zero external runtime packages. Both remain within existing CI budgets.

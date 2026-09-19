@@ -103,3 +103,9 @@ export const scenarios: readonly Scenario[] = [
       'Contradicted: includes a claim that conflicts with the source\nIncomplete: no contradiction, but key claims lack support\nSupported: all material claims are supported by the source',
   },
 ];
+
+/** Shared links contain a known preset ID, never the visitor's edited input. */
+export function scenarioFromSearch(search: string): Scenario {
+  const id = new URLSearchParams(search).get('example');
+  return scenarios.find((scenario) => scenario.id === id) ?? scenarios[0]!;
+}

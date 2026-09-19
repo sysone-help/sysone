@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { parseCriteria, scenarios } from '../site/src/examples.js';
+import { parseCriteria, scenarios, scenarioFromSearch } from '../site/src/examples.js';
 
 test('all supplied scenarios fit the hosted playground contract', () => {
   for (const scenario of scenarios) {
@@ -24,4 +24,13 @@ test('criteria editor rejects requests the hosted endpoint cannot accept', () =>
     a: 'link: https://example.org',
     b: 'other',
   });
+});
+
+test('preset links resolve only known examples and ignore edited input', () => {
+  assert.equal(scenarioFromSearch('?example=rag').id, 'rag');
+  assert.equal(scenarioFromSearch('?example=unknown').id, 'predicate');
+  assert.equal(
+    scenarioFromSearch('?example=agent&input=private').input,
+    scenarios.find((s) => s.id === 'agent')?.input,
+  );
 });

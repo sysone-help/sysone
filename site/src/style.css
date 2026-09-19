@@ -895,7 +895,11 @@ footer a {
     padding-inline: 15px;
   }
   .site-header {
-    height: 55px;
+    height: auto;
+    min-height: 55px;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-block: 12px;
   }
   .brand {
     gap: 7px;
@@ -906,12 +910,18 @@ footer a {
     margin-left: 1px;
   }
   nav {
-    gap: 14px;
+    width: 100%;
+    gap: 8px;
+    justify-content: space-between;
     font-size: 11px;
   }
+  nav > a {
+    white-space: nowrap;
+    padding-block: 8px;
+  }
   .theme-button {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
   }
   .brand-mark {
     display: none;
@@ -1060,4 +1070,10 @@ footer a {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.preset-link {
+  margin: -7px 0 20px;
+  color: var(--muted);
+  font-size: 11px;
 }
