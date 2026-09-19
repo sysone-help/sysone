@@ -52,7 +52,7 @@ const sys = createSysone({ provider: gateway, model: 'typesafe-ai/jev' });
 The first npm publication is awaiting maintainer authentication. The same package is available as a GitHub release asset:
 
 ```sh
-npm install https://github.com/sysone-help/sysone/releases/download/v0.4.0/sysone-0.4.0.tgz
+npm install https://github.com/sysone-help/sysone/releases/download/v0.5.0/sysone-0.5.0.tgz
 ```
 
 Once published to the registry:
@@ -79,7 +79,7 @@ See [open evaluation models and compatibility](research/open-evaluation-models.m
 | Core + custom HTTP   |  9,904 B |         3,526 B |
 | Core + all providers | 11,255 B |         3,914 B |
 
-Measured on 0.4.0 with all core exports retained, esbuild 0.28.2, ESM/ES2022 and gzip level 9 (zlib 1.3.1.zlib-ng). Gzip sizes can vary slightly between compression versions. Bundle sizes exclude types/docs and are not the package download size. No third-party runtime code is bundled.
+Measured on 0.5.0 with all core exports retained, esbuild 0.28.2, ESM/ES2022 and gzip level 9 (zlib 1.3.1.zlib-ng). Gzip sizes can vary slightly between compression versions. Bundle sizes exclude types/docs and are not the package download size. No third-party runtime code is bundled.
 
 [Reproduce the measurement](https://github.com/sysone-help/sysone/blob/main/scripts/package-size.mjs): `npm run build && npm run size`. CI enforces a 4,000-byte gzip budget for the complete bundle. Build/test tools belong to the private workspace, not your installation.
 <!-- size:end -->
@@ -105,6 +105,6 @@ The hosted endpoint is limited to 6,000 input characters, one question per reque
 
 ## Development status
 
-Current release: `0.4.0`. Cloudflare and OpenRouter adapters are possible future integrations; they are not advertised as implemented. No benchmark or universal calibration claim is made. Test your application rules against representative data.
+Current release: `0.5.0`. Cloudflare and OpenRouter adapters are possible future integrations; they are not advertised as implemented. No benchmark or universal calibration claim is made. Test your application rules against representative data.
 
 MIT © Sysone contributors.

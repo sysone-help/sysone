@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0
+
+- Accept plain question strings in `check`, `partition` and `filter`, while preserving reusable predicates and explicit uncertainty. Backward-compatible with 0.4.
+- Add executable native Jev comparisons with request, threshold and failure parity checks.
+- Add six playground presets, shareable preset links, immediate editor validation, visible decision branches and descriptive rubric results.
+- Add executable routing and RAG recipes, simpler onboarding and an operation chooser. Record ten improvement cycles and advisory Jev evaluations in the repository.
+- Keep zero dependencies and the existing 4,000-byte min+gzip budget: all providers plus core measure 3,914 bytes in the reference environment.
+
 ## 0.4.0
 
 - Rename `systemOne()` from `sysone/providers/system-one` to `customProvider()` from `sysone/providers/custom`. Rename its options type to `CustomProviderOptions` and default provider ID to `custom`. This is a breaking name change; explicit IDs and the HTTP contract are unchanged.
