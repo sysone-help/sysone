@@ -72,3 +72,5 @@ Validation: preset resolution tests, desktop/mobile browser checks, mocked infer
 - Browser at 390px: document width 390px after the header fix. A fixture probability of .75 changed from uncertain at .80 to yes at .70 with no additional request. Duplicate labels disabled Run; reset restored the chosen preset. Rubric result displayed the supplied level descriptions.
 - Isolated normal package installation installed only Sysone; all three provider imports executed with contract fixtures.
 - Complete bundle: 3,914 bytes min+gzip; core + Vercel: 3,268 bytes. Zero external runtime packages. Both remain within existing CI budgets.
+
+The final desktop pass also removed nested scrolling from the comparison: both complete implementations remain readable in the page flow, including their decision logic.

@@ -1022,8 +1022,8 @@ footer a {
   min-width: 0;
 }
 .comparison-grid pre {
-  max-height: 440px;
-  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 @media (max-width: 760px) {
   .comparison-grid {
