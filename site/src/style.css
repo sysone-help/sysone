@@ -993,3 +993,30 @@ footer a {
 .library-footprint a {
   color: var(--muted);
 }
+
+.comparison {
+  padding: 48px 0;
+  border-bottom: 1px solid var(--line);
+}
+.comparison > p,
+.comparison details {
+  color: var(--muted);
+  line-height: 1.7;
+}
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.comparison-grid > div {
+  min-width: 0;
+}
+.comparison-grid pre {
+  max-height: 440px;
+  overflow: auto;
+}
+@media (max-width: 760px) {
+  .comparison-grid {
+    grid-template-columns: 1fr;
+  }
+}

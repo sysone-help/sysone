@@ -7,7 +7,7 @@
     "site"
   ],
   "scripts": {
-    "build": "npm run build -w sysone && npm run build -w @sysone/site && tsx --tsconfig site/tsconfig.json scripts/prerender.tsx",
+    "build": "npm run build -w sysone && node scripts/example-snippets.mjs && npm run build -w @sysone/site && tsx --tsconfig site/tsconfig.json scripts/prerender.tsx",
     "test": "npm test -w sysone",
     "typecheck": "npm run typecheck --workspaces && tsc --noEmit",
     "check": "npm run build && npm run typecheck && npm test && npm run test:api",

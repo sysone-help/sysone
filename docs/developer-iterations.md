@@ -15,3 +15,9 @@ Sources: [HTTP API](https://docs.typesafe.ai/api), [official JavaScript SDK](htt
 `check`, `filter` and `partition` now accept a plain question string as well as a reusable `predicate`. No new method or implicit model/provider was added. Reusable definitions still support explicit yes/no criteria. Updated the executable comparison to use the shorthand.
 
 Validation: tested direct decisions, collections, empty questions rejected before requests, existing threshold/validation regressions and identical native requests. The full bundle must continue to fit the existing 4,000-byte gzip budget.
+
+## 3. Put the comparison on the site
+
+Added side-by-side native HTTP and Sysone examples, sourced at build time from the actual tested files. Explicitly describes the common behavior and the extra validation Sysone performs. Acknowledges that native fetch has zero dependencies and that the official SDK already has inferred types. No invented speed/cost win or padded SDK-size comparison.
+
+Validation: site build and prerender, with both implementations included in static HTML. Source generation avoids an independently maintained marketing snippet.
