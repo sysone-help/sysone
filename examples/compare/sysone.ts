@@ -1,4 +1,4 @@
-import { createSysone, predicate } from 'sysone';
+import { createSysone } from 'sysone';
 import { typesafe } from 'sysone/providers/typesafe';
 
 export async function checkReply(
@@ -10,9 +10,6 @@ export async function checkReply(
     provider: typesafe({ apiKey, fetch: transport }),
     model: 'jev-latest',
   });
-  const { decision, probability } = await sys.check(
-    input,
-    predicate('Does this message need a reply?'),
-  );
+  const { decision, probability } = await sys.check(input, 'Does this message need a reply?');
   return { decision, probability };
 }

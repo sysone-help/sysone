@@ -1,3 +1,4 @@
+import { predicate } from './definitions.js';
 import { SysoneError } from './errors.js';
 import { validateInput, validateQuestions, validateResult } from './validation.js';
 import type {
@@ -94,11 +95,15 @@ export function createSysone({
 
   async function check(
     state: Input,
-    question: Predicate,
+    question: Predicate | string,
     options: CheckOptions = {},
   ): Promise<CheckResult> {
     const min = threshold(options.minProbability);
-    const result = await evaluate(state, { result: question }, options);
+    const result = await evaluate(
+      state,
+      { result: typeof question === 'string' ? predicate(question) : question },
+      options,
+    );
     const answer = result.answers.result;
     const decision =
       answer.probability >= min
@@ -111,10 +116,11 @@ export function createSysone({
 
   async function partition<T>(
     items: readonly T[],
-    question: Predicate,
+    question: Predicate | string,
     options: CollectionOptions<T> = {},
   ): Promise<Partition<T>> {
     threshold(options.minProbability);
+    question = typeof question === 'string' ? predicate(question) : question;
     validateQuestions({ result: question });
     const states = items.map((item) => {
       const state = options.select ? options.select(item) : item;
@@ -131,7 +137,7 @@ export function createSysone({
 
   async function filter<T>(
     items: readonly T[],
-    question: Predicate,
+    question: Predicate | string,
     options: CollectionOptions<T> = {},
   ): Promise<T[]> {
     return (await partition(items, question, options)).yes;

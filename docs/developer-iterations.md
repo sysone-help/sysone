@@ -9,3 +9,9 @@ Added executable `examples/compare/{native,sysone}.ts`. Both call the same TypeS
 Validation: comparison tests cover seven probabilities including both decision boundaries, request equality, HTTP errors and malformed probabilities. Native HTTP already has zero dependencies. The official SDK also offers typed questions; Sysone's differentiators must be decision policy, collections, provider separation and footprint, not a claim that typing is unique.
 
 Sources: [HTTP API](https://docs.typesafe.ai/api), [official JavaScript SDK](https://docs.typesafe.ai/sdk/javascript). These fixtures verify the documented contract, not live TypeSafe service availability.
+
+## 2. Remove ceremony from a single question
+
+`check`, `filter` and `partition` now accept a plain question string as well as a reusable `predicate`. No new method or implicit model/provider was added. Reusable definitions still support explicit yes/no criteria. Updated the executable comparison to use the shorthand.
+
+Validation: tested direct decisions, collections, empty questions rejected before requests, existing threshold/validation regressions and identical native requests. The full bundle must continue to fit the existing 4,000-byte gzip budget.

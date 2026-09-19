@@ -204,3 +204,24 @@ test('client requires an explicit nonempty model before making requests', () => 
     code: 'CONFIGURATION',
   });
 });
+
+test('plain questions work in check and collections; empty questions make no requests', async () => {
+  let calls = 0;
+  const provider = fixture((request) => {
+    calls++;
+    assert.equal(request.questions.result?.instructions, 'Needs a reply?');
+    return { type: 'boolean', probability: 0.9 };
+  });
+  const sys = createSysone({ provider, model: 'test' });
+  assert.equal((await sys.check('Hi', 'Needs a reply?')).decision, 'yes');
+  assert.deepEqual(await sys.partition(['Hi'], 'Needs a reply?'), {
+    yes: ['Hi'],
+    no: [],
+    uncertain: [],
+  });
+  assert.deepEqual(await sys.filter(['Hi'], 'Needs a reply?'), ['Hi']);
+  assert.equal(calls, 3);
+  await assert.rejects(sys.check('Hi', '  '), /non-empty/);
+  await assert.rejects(sys.partition([], '  '), /non-empty/);
+  assert.equal(calls, 3);
+});

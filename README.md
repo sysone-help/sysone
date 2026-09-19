@@ -8,11 +8,11 @@
 
 | Included JavaScript  | Minified | Minified + gzip |
 | -------------------- | -------: | --------------: |
-| Core                 |  7,534 B |         2,711 B |
-| Core + TypeSafe      | 10,216 B |         3,647 B |
-| Core + Vercel        |  9,000 B |         3,257 B |
-| Core + custom HTTP   |  9,852 B |         3,514 B |
-| Core + all providers | 11,203 B |         3,901 B |
+| Core                 |  7,586 B |         2,720 B |
+| Core + TypeSafe      | 10,268 B |         3,662 B |
+| Core + Vercel        |  9,052 B |         3,268 B |
+| Core + custom HTTP   |  9,904 B |         3,526 B |
+| Core + all providers | 11,255 B |         3,914 B |
 
 Measured on 0.4.0 with all core exports retained, esbuild 0.28.2, ESM/ES2022 and gzip level 9 (zlib 1.3.1.zlib-ng). Gzip sizes can vary slightly between compression versions. Bundle sizes exclude types/docs and are not the package download size. No third-party runtime code is bundled.
 
