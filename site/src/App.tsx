@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Playground } from './components/Playground';
 import { Reference } from './components/Reference';
 import { releaseUrl } from './release';
+import size from '../../packages/sysone/size.json';
 const repo = 'https://github.com/sysone-help/sysone';
 
 export function App() {
@@ -20,7 +21,7 @@ export function App() {
           <span className="brand-mark" aria-hidden="true">
             s₁
           </span>
-          sysone<span className="version">0.2.0</span>
+          sysone<span className="version">0.3.0</span>
         </a>
         <nav aria-label="Main navigation">
           <a href="#playground">Playground</a>
@@ -44,6 +45,10 @@ export function App() {
           <p>
             Define a condition, a set of labels, or a rubric. Inspect the evidence before using it
             in code.
+          </p>
+          <p className="library-footprint">
+            <strong>Zero dependencies.</strong> {(size.bundles.all.gzipBytes / 1000).toFixed(1)} kB
+            min+gzip, including all providers. <a href="#size">See the numbers ↗</a>
           </p>
         </div>
         <Playground />

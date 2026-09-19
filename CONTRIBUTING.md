@@ -21,3 +21,9 @@ Production deployments can be performed with `vercel --prod` from the repository
 ## Community
 
 Be respectful and concrete. Describe the input, expected behavior and observed behavior when reporting an issue, using anonymized examples. Never include API keys or private messages. Security reports belong in the private reporting channel described in `SECURITY.md`.
+
+## Dependency and size budget
+
+The published library must have no runtime, optional, peer or bundled third-party dependencies. Native platform APIs implement transport and validation. Build/test tools stay in the private workspace.
+
+After changing runtime code, run `npm run build && npm run size:write` to update the measured report and README size blocks. `npm run size` checks the report and enforces a 4,000-byte gzip limit for core plus every provider. `npm run test:package` installs the tarball normally into an empty project, verifies no other packages were installed, and runs all providers. Do not remove evidence validation or cancellation to meet the budget.

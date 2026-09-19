@@ -1,0 +1,27 @@
+{
+  "version": "0.3.0",
+  "esbuild": "0.28.2",
+  "gzipLevel": 9,
+  "bundles": {
+    "core": {
+      "minifiedBytes": 7534,
+      "gzipBytes": 2711
+    },
+    "typesafe": {
+      "minifiedBytes": 10220,
+      "gzipBytes": 3647
+    },
+    "vercel": {
+      "minifiedBytes": 9000,
+      "gzipBytes": 3257
+    },
+    "systemOne": {
+      "minifiedBytes": 9851,
+      "gzipBytes": 3512
+    },
+    "all": {
+      "minifiedBytes": 11202,
+      "gzipBytes": 3902
+    }
+  }
+}

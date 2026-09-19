@@ -1,13 +1,14 @@
 {
   "name": "sysone",
-  "version": "0.2.0",
-  "description": "Typed decisions for TypeScript. Predicates, classifiers and collections powered by evaluation models.",
+  "version": "0.3.0",
+  "description": "Zero-dependency TypeScript primitives for evaluation models. Predicates, classifiers, rubrics and collections.",
   "type": "module",
   "sideEffects": false,
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "size.json"
   ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -31,22 +32,10 @@
     }
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "node ../../scripts/build-library.mjs",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",
     "prepack": "npm run build"
-  },
-  "peerDependencies": {
-    "ai": "7.0.105",
-    "@ai-sdk/gateway": "4.0.85"
-  },
-  "peerDependenciesMeta": {
-    "ai": {
-      "optional": true
-    },
-    "@ai-sdk/gateway": {
-      "optional": true
-    }
   },
   "engines": {
     "node": ">=22"

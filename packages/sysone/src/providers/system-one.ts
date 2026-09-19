@@ -1,3 +1,4 @@
+import { postJson } from './http.js';
 import { SysoneError } from '../errors.js';
 import { record, validateAnswer } from '../validation.js';
 import type { Answer, EvaluationMetadata, EvaluationProvider } from '../types.js';
@@ -47,33 +48,16 @@ export function systemOne(options: SystemOneOptions): EvaluationProvider {
           { ...q, type: q.type === 'boolean' ? 'noul' : q.type },
         ]),
       );
-      let response: Response;
-      try {
-        response = await (options.fetch ?? globalThis.fetch)(endpoint.href, {
+      const { body, response } = await postJson(
+        endpoint.href,
+        {
           method: 'POST',
           headers,
           body: JSON.stringify({ model: request.model, state: request.state, questions }),
           signal: call.signal,
-        });
-      } catch {
-        call.signal?.throwIfAborted();
-        throw new SysoneError(
-          'Could not reach the evaluation server. Check your connection and try again.',
-          'PROVIDER_ERROR',
-        );
-      }
-      if (!response.ok)
-        throw new SysoneError(
-          `The evaluation server returned HTTP ${response.status}.`,
-          'PROVIDER_ERROR',
-        );
-      let body: unknown;
-      try {
-        body = await response.json();
-      } catch {
-        call.signal?.throwIfAborted();
-        throw new SysoneError('The evaluation server returned invalid JSON.', 'INVALID_RESPONSE');
-      }
+        },
+        options.fetch ?? globalThis.fetch,
+      );
       if (!record(body) || !record(body.answers))
         throw new SysoneError(
           'The evaluation server returned an invalid evaluation.',

@@ -134,15 +134,48 @@ export function validateAnswer(
   }
 }
 
-export function validateResult(result: EvaluationResult, questions: Questions): void {
+export function validateResult(
+  result: unknown,
+  questions: Questions,
+): asserts result is EvaluationResult {
   if (!record(result) || !record(result.answers) || !record(result.metadata))
     throw new SysoneError('Invalid evaluation response.', 'INVALID_RESPONSE');
-  const decimals = result.metadata.rounding?.probabilityDecimals;
-  const scoreDecimals = result.metadata.rounding?.scoreDecimals;
+  const { metadata } = result;
+  if (typeof metadata.provider !== 'string' || typeof metadata.requestedModel !== 'string')
+    throw new SysoneError('Invalid model identity.', 'INVALID_RESPONSE');
+  for (const field of ['requestId', 'resolvedModel'])
+    if (metadata[field] !== undefined && typeof metadata[field] !== 'string')
+      throw new SysoneError('Invalid model metadata.', 'INVALID_RESPONSE');
+  if (metadata.usage !== undefined) {
+    if (
+      !record(metadata.usage) ||
+      ['inputTokens', 'outputTokens'].some((field) => {
+        const value = metadata.usage && record(metadata.usage) ? metadata.usage[field] : undefined;
+        return (
+          value !== undefined &&
+          (typeof value !== 'number' || !Number.isSafeInteger(value) || value < 0)
+        );
+      })
+    )
+      throw new SysoneError('Invalid token usage.', 'INVALID_RESPONSE');
+  }
+  if (
+    metadata.providerMetadata !== undefined &&
+    (!record(metadata.providerMetadata) ||
+      Object.values(metadata.providerMetadata).some((value) => !record(value)))
+  )
+    throw new SysoneError('Invalid provider metadata.', 'INVALID_RESPONSE');
+  if (metadata.rounding !== undefined && !record(metadata.rounding))
+    throw new SysoneError('Invalid rounding metadata.', 'INVALID_RESPONSE');
+  const decimals = metadata.rounding?.probabilityDecimals;
+  const scoreDecimals = metadata.rounding?.scoreDecimals;
   for (const precision of [decimals, scoreDecimals]) {
     if (
       precision !== undefined &&
-      (!Number.isInteger(precision) || precision < 0 || precision > 15)
+      (typeof precision !== 'number' ||
+        !Number.isInteger(precision) ||
+        precision < 0 ||
+        precision > 15)
     )
       throw new SysoneError('Invalid rounding metadata.', 'INVALID_RESPONSE');
   }
@@ -154,6 +187,11 @@ export function validateResult(result: EvaluationResult, questions: Questions): 
   for (const [id, q] of Object.entries(questions)) {
     if (!Object.hasOwn(result.answers, id))
       throw new SysoneError(`Missing answer for question ${id}.`, 'INVALID_RESPONSE');
-    validateAnswer(result.answers[id], q, decimals, scoreDecimals);
+    validateAnswer(
+      result.answers[id],
+      q,
+      decimals as number | undefined,
+      scoreDecimals as number | undefined,
+    );
   }
 }

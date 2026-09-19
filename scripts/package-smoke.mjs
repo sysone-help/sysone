@@ -1,9 +1,8 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { mkdtemp, readFile, rm, writeFile, access } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { pathToFileURL } from 'node:url';
 
 const directory = await mkdtemp(join(tmpdir(), 'sysone-package-'));
 try {
@@ -17,45 +16,50 @@ try {
     join(directory, 'package.json'),
     JSON.stringify({ private: true, type: 'module' }),
   );
+  // A normal install must bring in only sysone, without special omit/legacy-peer flags.
   execFileSync(
     'npm',
-    [
-      'install',
-      '--ignore-scripts',
-      '--omit=optional',
-      join(directory, `sysone-${pkg.version}.tgz`),
-    ],
+    ['install', '--ignore-scripts', join(directory, `sysone-${pkg.version}.tgz`)],
     { cwd: directory, stdio: 'pipe' },
   );
-  const root = join(directory, 'node_modules/sysone/dist/');
-  const { createSysone, predicate } = await import(pathToFileURL(join(root, 'index.js')));
-  const { typesafe } = await import(pathToFileURL(join(root, 'providers/typesafe.js')));
-  const sys = createSysone({
-    model: 'jev-latest',
-    provider: typesafe({
-      apiKey: 'local-fixture-only',
-      fetch: async () =>
-        Response.json({ model: 'jev-1.13.0', answers: { result: { type: 'noul', noul: 0.95 } } }),
-    }),
-  });
-  assert.equal((await sys.check('Hello', predicate('Greeting?'))).decision, 'yes');
+  const lock = JSON.parse(await readFile(join(directory, 'package-lock.json'), 'utf8'));
+  assert.deepEqual(Object.keys(lock.packages).sort(), ['', 'node_modules/sysone']);
+  const installed = JSON.parse(
+    await readFile(join(directory, 'node_modules/sysone/package.json'), 'utf8'),
+  );
+  for (const field of [
+    'dependencies',
+    'optionalDependencies',
+    'peerDependencies',
+    'bundledDependencies',
+  ])
+    assert.equal(Object.keys(installed[field] ?? {}).length, 0);
   await writeFile(
-    join(directory, 'generic-consumer.mjs'),
+    join(directory, 'consumer.mjs'),
     `
 import assert from 'node:assert/strict';
-import { createSysone, predicate } from 'sysone';
+import { createSysone, predicate, SysoneError } from 'sysone';
+import { typesafe } from 'sysone/providers/typesafe';
+import { vercel } from 'sysone/providers/vercel';
 import { systemOne } from 'sysone/providers/system-one';
-const sys = createSysone({ model: 'openjev-latest', provider: systemOne({
-  baseURL: 'http://localhost:8080/v1',
-  fetch: async () => Response.json({ answers: { result: { type: 'noul', noul: 0.9 } } }),
-}) });
-assert.equal((await sys.check('Hello', predicate('Greeting?'))).decision, 'yes');
+const nativeFetch = async () => Response.json({ answers: { result: { type: 'noul', noul: 0.9 } } });
+const providers = [
+  typesafe({ apiKey: 'fixture-only', fetch: nativeFetch }),
+  systemOne({ baseURL: 'http://localhost:8080/v1', fetch: nativeFetch }),
+  vercel({ apiKey: 'fixture-only', fetch: async () => Response.json({ answers: { result: { type: 'boolean', probability: 0.9 } } }) }),
+];
+for (const provider of providers) {
+  const result = await createSysone({ provider, model: 'fixture-model' }).check('Hello', predicate('Greeting?'));
+  assert.equal(result.decision, 'yes');
+}
+const failing = vercel({ apiKey: 'fixture-only', fetch: async () => new Response('failure', { status: 500 }) });
+await assert.rejects(createSysone({ provider: failing, model: 'fixture' }).check('Hi', predicate('Greeting?')), SysoneError);
 `,
   );
-  execFileSync(process.execPath, [join(directory, 'generic-consumer.mjs')], { stdio: 'pipe' });
-  await assert.rejects(access(join(directory, 'node_modules/ai')));
-  await assert.rejects(access(join(directory, 'node_modules/@ai-sdk/gateway')));
-  process.stdout.write('Packed consumer smoke passed; optional AI SDK peers were not installed.\n');
+  execFileSync(process.execPath, [join(directory, 'consumer.mjs')], { stdio: 'pipe' });
+  console.log(
+    'Normal install contains only sysone. All three providers work with zero external packages.',
+  );
 } finally {
   await rm(directory, { recursive: true, force: true });
 }

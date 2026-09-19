@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0
+
+- Remove all runtime, optional and peer dependencies. Vercel now uses native fetch against the Gateway evaluation protocol; `ai` and `@ai-sdk/gateway` are no longer required. The provider/model configuration from 0.2 is unchanged.
+- Share the HTTP transport, retain cancellation and sanitized errors, and validate Gateway responses locally. Malformed Gateway evidence now consistently throws `INVALID_RESPONSE` instead of an AI SDK `PROVIDER_ERROR`.
+- Publish compact ESM with separate provider entry points, shared code and TypeScript declarations. No third-party runtime code is bundled.
+- Add reproducible bundle measurements, an enforced 4,000-byte min+gzip budget for core plus all providers, and a normal-install check proving the package brings no external dependencies.
+- Document the footprint in the README and website, with exact scope and measurement commands.
+
 ## 0.2.0
 
 Breaking API correction: provider connection and model selection are separate.

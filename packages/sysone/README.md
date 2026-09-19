@@ -2,6 +2,23 @@
 
 **Typed decisions for TypeScript.**
 
+<!-- size:start -->
+
+**Zero dependencies. 3.9 kB min+gzip, including all providers.**
+
+| Included JavaScript    | Minified | Minified + gzip |
+| ---------------------- | -------: | --------------: |
+| Core                   |  7,534 B |         2,711 B |
+| Core + TypeSafe        | 10,220 B |         3,647 B |
+| Core + Vercel          |  9,000 B |         3,257 B |
+| Core + System One HTTP |  9,851 B |         3,512 B |
+| Core + all providers   | 11,202 B |         3,902 B |
+
+Measured on 0.3.0 with all core exports retained, esbuild 0.28.2, ESM/ES2022 and gzip level 9. Bundle sizes exclude types/docs and are not the package download size. No third-party runtime code is bundled.
+
+[Reproduce the measurement](https://github.com/sysone-help/sysone/blob/main/scripts/package-size.mjs): `npm run build && npm run size`. CI enforces a 4,000-byte gzip budget for the complete bundle. Build/test tools belong to the private workspace, not your installation.
+<!-- size:end -->
+
 Ask questions in plain language. Get answers your code can use.
 
 [Interactive playground](https://sysone.help/#playground) · [Documentation](https://sysone.help/#docs) · [GitHub](https://github.com/sysone-help/sysone)
@@ -28,15 +45,15 @@ Independent, MIT-licensed, and not affiliated with TypeSafe or Vercel.
 
 ## Install
 
-The initial npm publication is being prepared. Until the registry listing is available, install the [GitHub release package](https://github.com/sysone-help/sysone/releases/tag/v0.2.0):
+The initial npm publication is being prepared. Until the registry listing is available, install the [GitHub release package](https://github.com/sysone-help/sysone/releases/tag/v0.3.0):
 
 ```sh
-npm install https://github.com/sysone-help/sysone/releases/download/v0.2.0/sysone-0.2.0.tgz
+npm install https://github.com/sysone-help/sysone/releases/download/v0.3.0/sysone-0.3.0.tgz
 ```
 
 After npm publication, the equivalent registry command is:
 
-Node.js 22+ and ESM. The core and direct TypeSafe adapter have no runtime dependencies.
+Node.js 22+ and ESM. The entire library has zero runtime, optional or peer dependencies. All providers use native fetch.
 
 ```sh
 npm install sysone
@@ -45,7 +62,7 @@ npm install sysone
 Set `TYPESAFE_API_KEY` in your server environment. To use your Vercel AI Gateway account instead:
 
 ```sh
-npm install sysone ai@7.0.105 @ai-sdk/gateway@4.0.85
+npm install sysone
 ```
 
 ```ts
@@ -56,7 +73,7 @@ const sys = createSysone({ provider: vercel(), model: 'typesafe-ai/jev' });
 // Reads AI_GATEWAY_API_KEY from the server environment.
 ```
 
-The AI SDK peers are optional and pinned because the evaluation API is experimental. Importing the core or TypeSafe adapter does not import the AI SDK. Never put a provider secret in client-side application code.
+No additional packages are needed for Vercel, TypeSafe or compatible HTTP servers. Provider entry points are separate and the package supports tree shaking. Never put a provider secret in client-side application code.
 
 ## Define questions
 
@@ -258,7 +275,7 @@ The default timeout is 30 seconds per request. Provided adapters honor the combi
 - `CONFIGURATION`
 - `PROVIDER_ERROR`
 
-Provider error bodies, headers, credentials and raw requests are not included in errors. Cancellation and timeout use their native abort reasons. The experimental AI SDK may reject a malformed Gateway response before Sysone can validate it; this is surfaced as `PROVIDER_ERROR`.
+Provider error bodies, headers, credentials and raw requests are not included in errors. Cancellation and timeout use their native abort reasons. Malformed provider responses use `INVALID_RESPONSE`. The Vercel adapter calls the experimental Gateway evaluation protocol directly; see [transport details](https://github.com/sysone-help/sysone/blob/main/docs/vercel-transport.md).
 
 ## Playground and project
 

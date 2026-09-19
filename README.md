@@ -2,6 +2,23 @@
 
 **Typed decisions for TypeScript.** Ask a question, inspect the evidence, keep control of what happens next.
 
+<!-- size:start -->
+
+**Zero dependencies. 3.9 kB min+gzip, including all providers.**
+
+| Included JavaScript    | Minified | Minified + gzip |
+| ---------------------- | -------: | --------------: |
+| Core                   |  7,534 B |         2,711 B |
+| Core + TypeSafe        | 10,220 B |         3,647 B |
+| Core + Vercel          |  9,000 B |         3,257 B |
+| Core + System One HTTP |  9,851 B |         3,512 B |
+| Core + all providers   | 11,202 B |         3,902 B |
+
+Measured on 0.3.0 with all core exports retained, esbuild 0.28.2, ESM/ES2022 and gzip level 9. Bundle sizes exclude types/docs and are not the package download size. No third-party runtime code is bundled.
+
+[Reproduce the measurement](https://github.com/sysone-help/sysone/blob/main/scripts/package-size.mjs): `npm run build && npm run size`. CI enforces a 4,000-byte gzip budget for the complete bundle. Build/test tools belong to the private workspace, not your installation.
+<!-- size:end -->
+
 [Playground & docs](https://sysone.help) · [Library reference](packages/sysone/README.md) · [Contributing](CONTRIBUTING.md)
 
 ```ts
@@ -34,7 +51,7 @@ const sys = createSysone({ provider: gateway, model: 'typesafe-ai/jev' });
 The first npm publication is awaiting maintainer authentication. The same package is available as a GitHub release asset:
 
 ```sh
-npm install https://github.com/sysone-help/sysone/releases/download/v0.2.0/sysone-0.2.0.tgz
+npm install https://github.com/sysone-help/sysone/releases/download/v0.3.0/sysone-0.3.0.tgz
 ```
 
 Once published to the registry:
@@ -43,7 +60,7 @@ Once published to the registry:
 npm install sysone
 ```
 
-Node.js 22+ and ESM. Set `TYPESAFE_API_KEY` on your server. The Vercel adapter additionally needs the pinned optional peers `ai@7.0.105` and `@ai-sdk/gateway@4.0.85` and `AI_GATEWAY_API_KEY`. See the [complete library reference](packages/sysone/README.md).
+Node.js 22+ and ESM. Set `TYPESAFE_API_KEY` on your server. The Vercel adapter uses `AI_GATEWAY_API_KEY` and native fetch; no additional packages are needed. See the [complete library reference](packages/sysone/README.md).
 
 See [open evaluation models and compatibility](research/open-evaluation-models.md) for OpenJev, Bespoke Nimble and Kotoba. The HTTP adapter is contract-tested; open model GPU inference has not been tested by this project.
 
@@ -68,6 +85,6 @@ The hosted endpoint is limited to 6,000 input characters, one question per reque
 
 ## Development status
 
-Current release: `0.2.0`. Cloudflare and OpenRouter adapters are possible future integrations; they are not advertised as implemented. No benchmark or universal calibration claim is made. Test your application rules against representative data.
+Current release: `0.3.0`. Cloudflare and OpenRouter adapters are possible future integrations; they are not advertised as implemented. No benchmark or universal calibration claim is made. Test your application rules against representative data.
 
 MIT © Sysone contributors.

@@ -16,17 +16,18 @@
     "dev:api": "tsx scripts/dev-api.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test:package": "node scripts/package-smoke.mjs"
+    "test:package": "node scripts/package-smoke.mjs",
+    "size": "node scripts/package-size.mjs",
+    "size:write": "node scripts/package-size.mjs --write"
   },
   "engines": {
     "node": "24.x"
   },
   "devDependencies": {
-    "@ai-sdk/gateway": "^4.0.85",
     "@types/node": "^24.13.6",
-    "ai": "^7.0.105",
     "prettier": "3.9.8",
     "tsx": "^4.23.13",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "esbuild": "0.28.2"
   }
 }

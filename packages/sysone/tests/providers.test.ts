@@ -172,3 +172,97 @@ test('TypeSafe receives each explicitly selected model through one provider', as
   }
   assert.deepEqual(seen, ['jev-latest', 'jev-1.13.0']);
 });
+
+test('Vercel native HTTP sends the evaluation contract without SDK headers or model defaults', async () => {
+  const provider = vercel({
+    apiKey: 'fixture-key',
+    fetch: async (url, options) => {
+      assert.equal(url, 'https://ai-gateway.vercel.sh/v4/ai/evaluation-model');
+      const headers = new Headers(options?.headers);
+      assert.equal(headers.get('ai-model-id'), 'fixture-lab/evaluator');
+      assert.equal(headers.get('ai-gateway-protocol-version'), '0.0.1');
+      assert.equal(headers.get('ai-evaluation-model-specification-version'), '4');
+      assert.equal(headers.get('ai-gateway-auth-method'), 'api-key');
+      assert.equal(headers.get('authorization'), 'Bearer fixture-key');
+      assert.equal(headers.has('user-agent'), false);
+      assert.deepEqual(JSON.parse(String(options?.body)), {
+        state: 'Hello',
+        questions: { result: { type: 'boolean', instructions: 'Greeting?' } },
+      });
+      return Response.json(
+        {
+          answers: { result: { type: 'boolean', probability: 0.9 } },
+          usage: { inputTokens: 9, outputTokens: 0 },
+        },
+        { headers: { 'x-request-id': 'fixture-request' } },
+      );
+    },
+  });
+  const result = await createSysone({ provider, model: 'fixture-lab/evaluator' }).check(
+    'Hello',
+    predicate('Greeting?'),
+  );
+  assert.equal(result.metadata.requestId, 'fixture-request');
+  assert.equal(result.metadata.usage?.inputTokens, 9);
+});
+
+test('native Vercel parsing rejects malformed evidence and metadata without exposing bodies', async () => {
+  const valid = { result: { type: 'boolean', probability: 0.9 } };
+  for (const body of [
+    { answers: { result: { type: 'boolean', probability: 2 } } },
+    { answers: {} },
+    { answers: valid, rounding: [] },
+    { answers: valid, rounding: { probabilityDecimals: '2' } },
+    { answers: valid, usage: { inputTokens: -1 } },
+    { answers: valid, providerMetadata: { vendor: 42 } },
+  ]) {
+    const sys = createSysone({
+      provider: vercel({ apiKey: 'never-echo', fetch: async () => Response.json(body) }),
+      model: 'fixture',
+    });
+    await assert.rejects(sys.check('text', predicate('Test?')), { code: 'INVALID_RESPONSE' });
+  }
+  for (const response of [
+    new Response('never-echo', { status: 403 }),
+    new Response('never-echo'),
+  ]) {
+    const sys = createSysone({
+      provider: vercel({ apiKey: 'never-echo', fetch: async () => response }),
+      model: 'fixture',
+    });
+    await assert.rejects(
+      sys.check('text', predicate('Test?')),
+      (error) => error instanceof Error && !JSON.stringify(error).includes('never-echo'),
+    );
+  }
+});
+
+test('native Vercel transport preserves abort reasons during fetch and JSON reading', async () => {
+  for (const stage of ['fetch', 'body']) {
+    const controller = new AbortController();
+    const reason = new Error('caller cancellation');
+    const provider = vercel({
+      apiKey: 'fixture-only',
+      fetch: async (_url, options) => {
+        assert.equal(options?.signal, controller.signal);
+        if (stage === 'fetch') {
+          controller.abort(reason);
+          throw reason;
+        }
+        const response = new Response('{}');
+        response.json = async () => {
+          controller.abort(reason);
+          throw reason;
+        };
+        return response;
+      },
+    });
+    await assert.rejects(
+      provider.evaluate(
+        { model: 'fixture', state: 'text', questions: { result: predicate('Test?') } },
+        { signal: controller.signal },
+      ),
+      (error) => error === reason,
+    );
+  }
+});

@@ -981,3 +981,15 @@ footer a {
     transition: none !important;
   }
 }
+
+.project-description .library-footprint {
+  margin-top: 12px;
+  font: 11px/1.7 var(--mono);
+}
+.library-footprint strong {
+  color: var(--ink);
+  font-weight: 550;
+}
+.library-footprint a {
+  color: var(--muted);
+}

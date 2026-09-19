@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Code } from './Code';
 import { Arrow } from './Symbols';
 import { installCommand, npmPublished } from '../release';
+import size from '../../../packages/sysone/size.json';
 const repo = 'https://github.com/sysone-help/sysone';
 export function Reference() {
   const [provider, setProvider] = useState<'vercel' | 'typesafe'>('typesafe');
@@ -20,6 +21,7 @@ export function Reference() {
       <div className="docs-layout">
         <aside className="docs-nav">
           <a href="#installation">Installation</a>
+          <a href="#size">Size & dependencies</a>
           <a href="#definitions">Reusable questions</a>
           <a href="#collections">Working with lists</a>
           <a href="#providers">Adapters</a>
@@ -30,7 +32,8 @@ export function Reference() {
           <article id="installation" className="section-anchor">
             <h3>Install</h3>
             <p>
-              Use Node.js 22 or later and ESM. Keep provider credentials in your server environment.
+              Zero runtime, optional or peer dependencies — including the Vercel provider. Uses
+              native fetch. Requires Node.js 22+ and ESM; keep credentials on your server.
             </p>
             {!npmPublished && (
               <p className="doc-note">
@@ -51,7 +54,7 @@ export function Reference() {
             </div>
             <Code label="Terminal">
               {provider === 'vercel'
-                ? `${installCommand}\nnpm install ai@7.0.105 @ai-sdk/gateway@4.0.85\n\n# Set AI_GATEWAY_API_KEY in your server environment`
+                ? `${installCommand}\n\n# Set AI_GATEWAY_API_KEY in your server environment`
                 : `${installCommand}\n\n# Set TYPESAFE_API_KEY in your server environment`}
             </Code>
             <Code>{`import { createSysone, predicate } from "sysone";
@@ -65,6 +68,54 @@ const needsReply = predicate("Does this message need a reply?");
 
 const result = await sys.check("Can you send the proposal?", needsReply);
 // { decision: "yes" | "no" | "uncertain", probability, metadata }`}</Code>
+          </article>
+          <article id="size" className="section-anchor">
+            <h3>Small by design</h3>
+            <p>
+              No SDK, schema library, polyfill or third-party code is installed or bundled into
+              Sysone. Providers are separate ESM entry points; import the ones you use. TypeScript
+              declarations are included.
+            </p>
+            <div className="table-scroll">
+              <table className="models-table">
+                <thead>
+                  <tr>
+                    <th>Included code</th>
+                    <th>Minified</th>
+                    <th>Minified + gzip</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    ['Core', size.bundles.core],
+                    ['Core + Vercel', size.bundles.vercel],
+                    ['Core + TypeSafe', size.bundles.typesafe],
+                    ['Core + System One HTTP', size.bundles.systemOne],
+                    ['Core + all providers', size.bundles.all],
+                  ].map(
+                    ([label, measurement]) =>
+                      typeof measurement === 'object' && (
+                        <tr key={String(label)}>
+                          <td>{String(label)}</td>
+                          <td>{measurement.minifiedBytes.toLocaleString('en-US')} B</td>
+                          <td>{measurement.gzipBytes.toLocaleString('en-US')} B</td>
+                        </tr>
+                      ),
+                  )}
+                </tbody>
+              </table>
+            </div>
+            <p className="doc-note">
+              Version {size.version}. All core exports retained, esbuild {size.esbuild}, ESM/ES2022,
+              gzip level {size.gzipLevel}. These are JavaScript bundle sizes, not package download
+              size or this website's size. Types and docs are excluded. CI enforces a 4,000-byte
+              gzip budget for the complete bundle.
+            </p>
+            <p>
+              <a href={`${repo}/blob/main/scripts/package-size.mjs`}>
+                Reproduce with npm run build &amp;&amp; npm run size ↗
+              </a>
+            </p>
           </article>
           <article id="definitions" className="section-anchor">
             <h3>Definitions and evaluation</h3>
@@ -158,10 +209,11 @@ const direct = createSysone({
               <code>EvaluationProvider</code> interface.
             </p>
             <p className="doc-note">
-              The Vercel adapter uses an experimental AI SDK evaluation API. Its optional
-              dependencies are pinned to tested versions. Confidence and probabilities may differ
-              across models; thresholds need evaluation on your own examples. Gateway extensions
-              remain namespaced in metadata.providerMetadata, without assuming TypeSafe semantics.
+              The Vercel adapter calls the Gateway evaluation protocol directly using native fetch.
+              The protocol is experimental; no SDK or additional package is required. Confidence and
+              probabilities may differ across models; thresholds need evaluation on your own
+              examples. Gateway extensions remain namespaced in metadata.providerMetadata, without
+              assuming TypeSafe semantics.
             </p>
             <Code>{`import { createSysone, predicate } from "sysone";
 import { systemOne } from "sysone/providers/system-one";
