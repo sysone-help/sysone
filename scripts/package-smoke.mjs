@@ -9,7 +9,7 @@ try {
   const pkg = JSON.parse(
     await readFile(new URL('../packages/sysone/package.json', import.meta.url)),
   );
-  execFileSync('npm', ['pack', '--workspace', 'sysone', '--pack-destination', directory], {
+  execFileSync('npm', ['pack', '--workspace', pkg.name, '--pack-destination', directory], {
     stdio: 'pipe',
   });
   await writeFile(
@@ -19,13 +19,17 @@ try {
   // A normal install must bring in only sysone, without special omit/legacy-peer flags.
   execFileSync(
     'npm',
-    ['install', '--ignore-scripts', join(directory, `sysone-${pkg.version}.tgz`)],
+    [
+      'install',
+      '--ignore-scripts',
+      join(directory, `${pkg.name.replace(/^@/, '').replace('/', '-')}-${pkg.version}.tgz`),
+    ],
     { cwd: directory, stdio: 'pipe' },
   );
   const lock = JSON.parse(await readFile(join(directory, 'package-lock.json'), 'utf8'));
-  assert.deepEqual(Object.keys(lock.packages).sort(), ['', 'node_modules/sysone']);
+  assert.deepEqual(Object.keys(lock.packages).sort(), ['', `node_modules/${pkg.name}`]);
   const installed = JSON.parse(
-    await readFile(join(directory, 'node_modules/sysone/package.json'), 'utf8'),
+    await readFile(join(directory, `node_modules/${pkg.name}/package.json`), 'utf8'),
   );
   for (const field of [
     'dependencies',
@@ -38,10 +42,10 @@ try {
     join(directory, 'consumer.mjs'),
     `
 import assert from 'node:assert/strict';
-import { createSysone, predicate, SysoneError } from 'sysone';
-import { typesafe } from 'sysone/providers/typesafe';
-import { vercel } from 'sysone/providers/vercel';
-import { customProvider } from 'sysone/providers/custom';
+import { createSysone, predicate, SysoneError } from '@sysone-help/sysone';
+import { typesafe } from '@sysone-help/sysone/providers/typesafe';
+import { vercel } from '@sysone-help/sysone/providers/vercel';
+import { customProvider } from '@sysone-help/sysone/providers/custom';
 const nativeFetch = async () => Response.json({ answers: { result: { type: 'noul', noul: 0.9 } } });
 const providers = [
   typesafe({ apiKey: 'fixture-only', fetch: nativeFetch }),

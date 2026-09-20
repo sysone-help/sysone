@@ -7,8 +7,8 @@ Ask questions in plain language. Get answers your code can use.
 [Interactive playground](https://sysone.help/#playground) · [Documentation](https://sysone.help/docs) · [GitHub](https://github.com/sysone-help/sysone)
 
 ```ts
-import { createSysone } from 'sysone';
-import { vercel } from 'sysone/providers/vercel';
+import { createSysone } from '@sysone-help/sysone';
+import { vercel } from '@sysone-help/sysone/providers/vercel';
 
 const sys = createSysone({ provider: vercel(), model: 'typesafe-ai/jev' });
 const result = await sys.check(
@@ -30,7 +30,7 @@ Independent, MIT-licensed, and not affiliated with TypeSafe or Vercel.
 ## Install
 
 ```sh
-npm install sysone
+npm install @sysone-help/sysone
 ```
 
 Node.js 22+ and ESM. The library has zero runtime, optional or peer dependencies. All providers use native fetch. Save the first example as `demo.mjs`, set `AI_GATEWAY_API_KEY` in your server environment, then run `node demo.mjs`.
@@ -38,8 +38,8 @@ Node.js 22+ and ESM. The library has zero runtime, optional or peer dependencies
 The examples default to Jev through Vercel AI Gateway. [Check current pricing](https://vercel.com/ai-gateway/models/jev); its free promotion ends September 25, 2026. To use TypeSafe directly, set `TYPESAFE_API_KEY` and replace the client configuration:
 
 ```ts
-import { createSysone } from 'sysone';
-import { typesafe } from 'sysone/providers/typesafe';
+import { createSysone } from '@sysone-help/sysone';
+import { typesafe } from '@sysone-help/sysone/providers/typesafe';
 
 const sys = createSysone({ provider: typesafe(), model: 'jev-latest' });
 // Reads TYPESAFE_API_KEY from the server environment.
@@ -52,7 +52,7 @@ No additional packages are needed for Vercel, TypeSafe or compatible HTTP server
 ## Define questions
 
 ```ts
-import { predicate, classifier, rubric } from 'sysone';
+import { predicate, classifier, rubric } from '@sysone-help/sysone';
 
 const needsReply = predicate('Does this message need a reply?');
 
@@ -148,8 +148,8 @@ const ranked = await sys.rank(messages, urgency, {
 A **provider** configures how to connect: credentials, transport and endpoint. A **model** selects what runs through that provider. Neither implies the other. There is no default model.
 
 ```ts
-import { createSysone } from 'sysone';
-import { vercel } from 'sysone/providers/vercel';
+import { createSysone } from '@sysone-help/sysone';
+import { vercel } from '@sysone-help/sysone/providers/vercel';
 
 const gateway = vercel({ apiKey: process.env.AI_GATEWAY_API_KEY });
 const sys = createSysone({
@@ -163,7 +163,7 @@ Reuse `gateway` in other clients with different model IDs from its evaluation ca
 For TypeSafe's native endpoint, select the model separately too:
 
 ```ts
-import { typesafe } from 'sysone/providers/typesafe';
+import { typesafe } from '@sysone-help/sysone/providers/typesafe';
 
 const sys = createSysone({
   provider: typesafe(), // Reads TYPESAFE_API_KEY.
@@ -178,8 +178,8 @@ Results distinguish `metadata.provider`, `requestedModel`, and `resolvedModel` w
 ### Compatible servers and open models
 
 ```ts
-import { createSysone, predicate } from 'sysone';
-import { customProvider } from 'sysone/providers/custom';
+import { createSysone, predicate } from '@sysone-help/sysone';
+import { customProvider } from '@sysone-help/sysone/providers/custom';
 
 const local = customProvider({
   baseURL: 'http://127.0.0.1:8080/v1',
@@ -204,7 +204,7 @@ Other open evaluation models include [Bespoke Nimble 9B](https://huggingface.co/
 Cloudflare and OpenRouter also offer Jev access; Sysone adapters for those routes are not yet included. Custom transports implement `EvaluationProvider`, independently of the model selection:
 
 ```ts
-import type { EvaluationProvider } from 'sysone';
+import type { EvaluationProvider } from '@sysone-help/sysone';
 
 const provider: EvaluationProvider = {
   id: 'my-endpoint',
@@ -226,10 +226,10 @@ The generic endpoint factory is now named `customProvider`, describing the conne
 
 ```ts
 // 0.3
-import { systemOne } from 'sysone/providers/system-one';
+import { systemOne } from '@sysone-help/sysone/providers/system-one';
 
 // 0.4
-import { customProvider } from 'sysone/providers/custom';
+import { customProvider } from '@sysone-help/sysone/providers/custom';
 ```
 
 Replace `systemOne(options)` with `customProvider(options)`. The default metadata provider ID changes from `system-one` to `custom`; an explicit `id` is unchanged. Request/response formats and model selection are unchanged. System One remains the supported HTTP protocol, not a provider identity.

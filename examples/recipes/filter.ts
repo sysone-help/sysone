@@ -1,5 +1,5 @@
-import { createSysone } from 'sysone';
-import { vercel } from 'sysone/providers/vercel';
+import { createSysone } from '@sysone-help/sysone';
+import { vercel } from '@sysone-help/sysone/providers/vercel';
 
 const client = createSysone({ provider: vercel(), model: 'typesafe-ai/jev' });
 type Chunk = { id: string; text: string };

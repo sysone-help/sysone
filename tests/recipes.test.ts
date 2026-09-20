@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { createSysone, type EvaluationProvider } from 'sysone';
+import { createSysone, type EvaluationProvider } from '@sysone-help/sysone';
 import { route } from '../examples/recipes/route.js';
 import { relevantContext } from '../examples/recipes/filter.js';
 

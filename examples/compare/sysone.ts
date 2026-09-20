@@ -1,5 +1,5 @@
-import { createSysone } from 'sysone';
-import { vercel } from 'sysone/providers/vercel';
+import { createSysone } from '@sysone-help/sysone';
+import { vercel } from '@sysone-help/sysone/providers/vercel';
 
 export async function checkReply(
   input: string,

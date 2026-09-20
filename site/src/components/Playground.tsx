@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
-import type { EvaluationResult } from 'sysone';
+import type { EvaluationResult } from '@sysone-help/sysone';
 import { examples, scenarios, scenarioFromSearch, parseCriteria, type Mode } from '../examples';
 import { installCommand } from '../release';
 import { Code } from './Code';
@@ -99,8 +99,8 @@ export function Playground() {
       criteriaCode = '{ /* fix the categories in Options */ }';
     }
   }
-  const snippet = `import { createSysone${mode === 'predicate' ? '' : `, ${mode}`} } from "sysone";
-import { vercel } from "sysone/providers/vercel";
+  const snippet = `import { createSysone${mode === 'predicate' ? '' : `, ${mode}`} } from "@sysone-help/sysone";
+import { vercel } from "@sysone-help/sysone/providers/vercel";
 
 // Set AI_GATEWAY_API_KEY in your server environment.
 const sys = createSysone({

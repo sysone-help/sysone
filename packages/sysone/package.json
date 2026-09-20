@@ -1,5 +1,5 @@
 {
-  "name": "sysone",
+  "name": "@sysone-help/sysone",
   "version": "0.5.1",
   "description": "Zero-dependency TypeScript primitives for evaluation models. Predicates, classifiers, rubrics and collections.",
   "type": "module",

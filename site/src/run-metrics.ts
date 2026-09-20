@@ -1,4 +1,4 @@
-import type { EvaluationMetadata } from 'sysone';
+import type { EvaluationMetadata } from '@sysone-help/sysone';
 
 /** Cost charged by the Gateway, not the undiscounted marketCost. */
 export function gatewayCost(metadata: EvaluationMetadata): number | null {

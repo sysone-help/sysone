@@ -8,7 +8,7 @@ Use Node.js 22 or 24, install with `npm ci`, then run `npm run check`. Tests use
 
 Keep the core independent of provider SDKs. Provider adapters translate a single evaluation operation. Preserve evidence and missing metadata; do not invent confidence. Add tests for observable behavior, cancellation, invalid responses and type inference when a change affects those contracts.
 
-Before a pull request, run `npm run check` and `npm pack --dry-run -w sysone`. Update the library reference and changelog for public API changes. Keep credentials, submitted user data, generated tarballs and deployment files out of Git.
+Before a pull request, run `npm run check` and `npm pack --dry-run -w @sysone-help/sysone`. Update the library reference and changelog for public API changes. Keep credentials, submitted user data, generated tarballs and deployment files out of Git.
 
 ## Releases
 

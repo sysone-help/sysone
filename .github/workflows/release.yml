@@ -25,4 +25,4 @@ jobs:
         env:
           RELEASE_TAG: ${{ github.event.release.tag_name }}
         run: node -e 'const p=require("./packages/sysone/package.json"); if(process.env.RELEASE_TAG !== "v"+p.version) process.exit(1)'
-      - run: npm publish --workspace sysone --access public --provenance
+      - run: npm publish --workspace @sysone-help/sysone --access public --provenance

@@ -22,4 +22,4 @@ jobs:
       - run: npm run format:check
       - run: npm run test:package
       - run: npm run size
-      - run: npm pack --dry-run -w sysone
+      - run: npm pack --dry-run -w @sysone-help/sysone

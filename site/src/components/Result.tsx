@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { Answer } from 'sysone';
+import type { Answer } from '@sysone-help/sysone';
 
 export function Result({
   answer,
