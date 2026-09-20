@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import { Code } from './Code';
 import { Arrow } from './Symbols';
-import { installCommand, npmPublished } from '../release';
+import { installCommand } from '../release';
 import size from '../../../packages/sysone/size.json';
 const repo = 'https://github.com/sysone-help/sysone';
 export function Reference() {
@@ -36,12 +36,6 @@ export function Reference() {
               Zero runtime, optional or peer dependencies — including the Vercel provider. Uses
               native fetch. Requires Node.js 22+ and ESM; keep credentials on your server.
             </p>
-            {!npmPublished && (
-              <p className="doc-note">
-                The first npm publication is pending. Install the same package from the GitHub
-                release below; the imports and API are unchanged.
-              </p>
-            )}
             <div className="provider-toggle" aria-label="Installation provider">
               <button aria-pressed={provider === 'vercel'} onClick={() => setProvider('vercel')}>
                 Vercel AI Gateway

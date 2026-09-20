@@ -49,14 +49,6 @@ const sys = createSysone({ provider: gateway, model: 'typesafe-ai/jev' });
 
 ## Install
 
-The first npm publication is awaiting maintainer authentication. The same package is available as a GitHub release asset:
-
-```sh
-npm install https://github.com/sysone-help/sysone/releases/download/v0.5.1/sysone-help-0.5.1.tgz
-```
-
-Once published to the registry:
-
 ```sh
 npm install sysone-help
 ```
