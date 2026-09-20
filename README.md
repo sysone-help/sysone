@@ -5,8 +5,8 @@
 [Playground & docs](https://sysone.help) · [Library reference](packages/sysone/README.md) · [Contributing](CONTRIBUTING.md)
 
 ```ts
-import { createSysone } from '@sysone-help/sysone';
-import { vercel } from '@sysone-help/sysone/providers/vercel';
+import { createSysone } from 'sysone-help';
+import { vercel } from 'sysone-help/providers/vercel';
 
 const sys = createSysone({ provider: vercel(), model: 'typesafe-ai/jev' });
 const result = await sys.check('Can you send the proposal?', 'Does this message need a reply?');
@@ -26,7 +26,7 @@ Use [Jev](https://docs.typesafe.ai) through TypeSafe or Vercel AI Gateway, or co
 The provider owns the connection; the model is an explicit ID in that provider's catalog. Reuse one provider with several models:
 
 ```ts
-import { vercel } from '@sysone-help/sysone/providers/vercel';
+import { vercel } from 'sysone-help/providers/vercel';
 
 const gateway = vercel();
 const sys = createSysone({ provider: gateway, model: 'typesafe-ai/jev' });
@@ -58,7 +58,7 @@ npm install https://github.com/sysone-help/sysone/releases/download/v0.5.0/syson
 Once published to the registry:
 
 ```sh
-npm install @sysone-help/sysone
+npm install sysone-help
 ```
 
 Node.js 22+ and ESM. Set `AI_GATEWAY_API_KEY` on your server. The examples default to Jev through Vercel AI Gateway, using native fetch with no additional packages. TypeSafe direct remains available with `typesafe()` and `TYPESAFE_API_KEY`. See the [complete library reference](packages/sysone/README.md).

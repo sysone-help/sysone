@@ -58,8 +58,8 @@ export function Reference() {
                 ? `${installCommand}\n\n# Set AI_GATEWAY_API_KEY in your server environment`
                 : `${installCommand}\n\n# Set TYPESAFE_API_KEY in your server environment`}
             </Code>
-            <Code label="demo.mjs · JavaScript and TypeScript compatible">{`import { createSysone } from "@sysone-help/sysone";
-import { ${provider} } from "@sysone-help/sysone/providers/${provider}";
+            <Code label="demo.mjs · JavaScript and TypeScript compatible">{`import { createSysone } from "sysone-help";
+import { ${provider} } from "sysone-help/providers/${provider}";
 
 const sys = createSysone({
   provider: ${provider}(),
@@ -180,7 +180,7 @@ if (result.decision === "yes") {
               Definitions are immutable data. Creating them is local and free. <code>evaluate</code>{' '}
               asks multiple independent questions about the same input in one request.
             </p>
-            <Code>{`import { predicate, classifier } from "@sysone-help/sysone";
+            <Code>{`import { predicate, classifier } from "sysone-help";
 
 const needsReply = predicate("Does this need a reply?");
 const team = classifier({
@@ -214,7 +214,7 @@ const actionable = await sys.filter(messages, needsReply, {
   select: message => message.body,
 });`}</Code>
             <p>For ranking, define a rubric rather than an unexplained score:</p>
-            <Code>{`import { rubric } from "@sysone-help/sysone";
+            <Code>{`import { rubric } from "sysone-help";
 
 const urgency = rubric("How urgent is this request?", [
   "Routine: no time pressure",
@@ -238,9 +238,9 @@ const ranked = await sys.rank(messages, urgency, {
               through it. The same provider can serve multiple evaluation models; choose a model
               explicitly.
             </p>
-            <Code>{`import { createSysone } from "@sysone-help/sysone";
-import { vercel } from "@sysone-help/sysone/providers/vercel";
-import { typesafe } from "@sysone-help/sysone/providers/typesafe";
+            <Code>{`import { createSysone } from "sysone-help";
+import { vercel } from "sysone-help/providers/vercel";
+import { typesafe } from "sysone-help/providers/typesafe";
 
 const gateway = vercel(); // Connection and credentials.
 
@@ -272,8 +272,8 @@ const direct = createSysone({
               examples. Gateway extensions remain namespaced in metadata.providerMetadata, without
               assuming TypeSafe semantics.
             </p>
-            <Code>{`import { createSysone, predicate } from "@sysone-help/sysone";
-import { customProvider } from "@sysone-help/sysone/providers/custom";
+            <Code>{`import { createSysone, predicate } from "sysone-help";
+import { customProvider } from "sysone-help/providers/custom";
 
 const sys = createSysone({
   provider: customProvider({

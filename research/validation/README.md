@@ -34,7 +34,7 @@ Run these commands from the repository root. Python dependencies are for the sep
 
 ```sh
 npm ci
-npm run build -w @sysone-help/sysone
+npm run build -w sysone-help
 uv venv --python 3.12 /tmp/sysone-kotoba-venv
 uv pip install --python /tmp/sysone-kotoba-venv/bin/python torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu
 uv pip install --python /tmp/sysone-kotoba-venv/bin/python transformers==4.57.6 huggingface-hub==0.36.2 safetensors==0.8.0 numpy==2.5.3 sentencepiece==0.2.2 protobuf==7.36.2
@@ -53,8 +53,8 @@ The loader uses the model bundle's Python code. For this run, its `open_jev.py`,
 Use the same server from your application:
 
 ```ts
-import { createSysone } from '@sysone-help/sysone';
-import { customProvider } from '@sysone-help/sysone/providers/custom';
+import { createSysone } from 'sysone-help';
+import { customProvider } from 'sysone-help/providers/custom';
 
 const sys = createSysone({
   provider: customProvider({ baseURL: 'http://127.0.0.1:8086/v1' }),

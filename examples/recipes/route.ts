@@ -1,5 +1,5 @@
-import { createSysone, classifier, predicate } from '@sysone-help/sysone';
-import { vercel } from '@sysone-help/sysone/providers/vercel';
+import { createSysone, classifier, predicate } from 'sysone-help';
+import { vercel } from 'sysone-help/providers/vercel';
 
 const client = createSysone({ provider: vercel(), model: 'typesafe-ai/jev' });
 const team = classifier({

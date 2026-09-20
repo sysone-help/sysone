@@ -42,10 +42,10 @@ try {
     join(directory, 'consumer.mjs'),
     `
 import assert from 'node:assert/strict';
-import { createSysone, predicate, SysoneError } from '@sysone-help/sysone';
-import { typesafe } from '@sysone-help/sysone/providers/typesafe';
-import { vercel } from '@sysone-help/sysone/providers/vercel';
-import { customProvider } from '@sysone-help/sysone/providers/custom';
+import { createSysone, predicate, SysoneError } from 'sysone-help';
+import { typesafe } from 'sysone-help/providers/typesafe';
+import { vercel } from 'sysone-help/providers/vercel';
+import { customProvider } from 'sysone-help/providers/custom';
 const nativeFetch = async () => Response.json({ answers: { result: { type: 'noul', noul: 0.9 } } });
 const providers = [
   typesafe({ apiKey: 'fixture-only', fetch: nativeFetch }),

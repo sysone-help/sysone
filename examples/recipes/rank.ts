@@ -1,5 +1,5 @@
-import { createSysone, rubric } from '@sysone-help/sysone';
-import { vercel } from '@sysone-help/sysone/providers/vercel';
+import { createSysone, rubric } from 'sysone-help';
+import { vercel } from 'sysone-help/providers/vercel';
 
 const client = createSysone({ provider: vercel(), model: 'typesafe-ai/jev' });
 const relevance = rubric('How useful is the passage for answering the question?', [

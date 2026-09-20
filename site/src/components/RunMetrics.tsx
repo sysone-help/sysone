@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { EvaluationMetadata } from '@sysone-help/sysone';
+import type { EvaluationMetadata } from 'sysone-help';
 import { formatCost, formatDuration, gatewayCost } from '../run-metrics';
 
 export function RunMetrics({

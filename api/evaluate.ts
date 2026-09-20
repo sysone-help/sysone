@@ -1,6 +1,6 @@
 import type { ApiRequest, ApiResponse } from '../server/http.js';
-import { classifier, createSysone, predicate, rubric, SysoneError } from '@sysone-help/sysone';
-import { vercel } from '@sysone-help/sysone/providers/vercel';
+import { classifier, createSysone, predicate, rubric, SysoneError } from 'sysone-help';
+import { vercel } from 'sysone-help/providers/vercel';
 
 export const config = { maxDuration: 30 };
 
