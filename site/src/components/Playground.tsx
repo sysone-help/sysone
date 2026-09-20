@@ -264,7 +264,8 @@ console.log(result.answers.score);`
           )}
         </div>
         <p className="model-note">
-          Runs on <a href="/docs#providers">Jev via Vercel</a>. Your text is sent to the model.
+          Runs on <a href="/docs#providers">TypeSafe’s Jev via Vercel</a>. Your text is sent to the
+          model.
         </p>
       </div>
       <div className="live-result" aria-live="polite" aria-busy={loading}>

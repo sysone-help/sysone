@@ -70,11 +70,12 @@ export function App({ page = 'home' }: { page?: 'home' | 'docs' }) {
         {page === 'home' ? (
           <>
             <div className="project-description">
-              <h1>Turn text into decisions.</h1>
+              <h1>Try Jev. Use it in TypeScript.</h1>
               <p>
-                A tiny TypeScript library for AI checks, categories and scores.
+                A tiny library for <a href="https://docs.typesafe.ai">Jev</a>,{' '}
+                <a href="https://typesafe.ai">TypeSafe</a>’s evaluation model.
                 <br />
-                Try an example. Change the text. See what happens.
+                Change the text. Ask a question. Get a decision.
               </p>
             </div>
             <Playground />

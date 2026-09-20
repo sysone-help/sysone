@@ -11,7 +11,7 @@ for (const page of ['home', 'docs'] as const) {
   if (page === 'docs') {
     html = html
       .replace(
-        '<title>Sysone — evaluation playground & TypeScript API</title>',
+        '<title>Sysone — Jev by TypeSafe, in TypeScript</title>',
         '<title>Sysone — API documentation</title>',
       )
       .replace(

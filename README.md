@@ -1,6 +1,8 @@
 # Sysone
 
-**Typed decisions for TypeScript.** Ask a question, inspect the evidence, keep control of what happens next.
+**Jev by TypeSafe, with a simpler TypeScript API.**
+
+Check, classify and score text with [Jev](https://docs.typesafe.ai), [TypeSafe](https://typesafe.ai)’s System One evaluation model. Sysone wraps it in a small, typed API with zero runtime dependencies.
 
 [Playground & docs](https://sysone.help) · [Library reference](packages/sysone/README.md) · [Contributing](CONTRIBUTING.md)
 
