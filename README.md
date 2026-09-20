@@ -52,7 +52,7 @@ const sys = createSysone({ provider: gateway, model: 'typesafe-ai/jev' });
 The first npm publication is awaiting maintainer authentication. The same package is available as a GitHub release asset:
 
 ```sh
-npm install https://github.com/sysone-help/sysone/releases/download/v0.5.0/sysone-0.5.0.tgz
+npm install https://github.com/sysone-help/sysone/releases/download/v0.5.1/sysone-help-0.5.1.tgz
 ```
 
 Once published to the registry:
@@ -107,6 +107,6 @@ The hosted endpoint is limited to 6,000 input characters, one question per reque
 
 ## Development status
 
-Current release: `0.5.0`. Cloudflare and OpenRouter adapters are possible future integrations; they are not advertised as implemented. No benchmark or universal calibration claim is made. Test your application rules against representative data.
+Current release: `0.5.1`. Cloudflare and OpenRouter adapters are possible future integrations; they are not advertised as implemented. No benchmark or universal calibration claim is made. Test your application rules against representative data.
 
 MIT © Sysone contributors.
